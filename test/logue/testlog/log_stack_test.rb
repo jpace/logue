@@ -77,7 +77,6 @@ class LogStackTestCase < Test::Unit::TestCase
 
   def run_test setup, log, *expected
     io = setup.call
-    puts "io: #{io}"
 
     log.call
 
@@ -86,8 +85,6 @@ class LogStackTestCase < Test::Unit::TestCase
     assert_not_nil str
 
     lines = str.split "\n"
-
-    puts lines
 
     (0 ... expected.size).each do |idx|
       if expected[idx]

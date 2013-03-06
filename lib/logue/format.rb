@@ -43,7 +43,6 @@ module Logue
       end
 
       hdr = sprintf @format, file, line, func
-      puts "$$$$ hdr: #{hdr}".color(:yellow)
       print hdr, msg, lvl, &blk
     end
   end

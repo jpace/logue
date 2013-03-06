@@ -24,7 +24,7 @@ class LoggableTestCase < Test::Unit::TestCase
     te = LgblTestee.new
     te.crystal
 
-    puts io.string
+    # puts io.string
 
     assert_equal expected.join(''), io.string
   end
