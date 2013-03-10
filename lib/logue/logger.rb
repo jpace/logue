@@ -11,6 +11,7 @@
 
 require 'rubygems'
 require 'rainbow'
+require 'pathname'
 require 'logue/severity'
 require 'logue/format'
 
