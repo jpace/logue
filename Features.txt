@@ -17,3 +17,7 @@ Fri Feb  8 18:38:48 2013
 Tue Mar  5 20:07:00 2013
 
   Removed output from tests.
+
+Wed May  8 19:13:38 2013
+
+  Added recursive require for 'logue'.
