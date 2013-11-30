@@ -14,7 +14,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "logue"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
   s.author = "Jeff Pace"
   s.email = "jeugenepace@gmail.com"
   s.homepage = "http://jeugenepace.github.com/logue"
@@ -26,6 +26,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = FileList["{test}/**/*test.rb"].to_a
   s.has_rdoc = true
   s.extra_rdoc_files = [ "README.md" ]
+  s.license = 'MIT'
 
   s.add_dependency "rainbow", ">= 1.1.4"
 end
