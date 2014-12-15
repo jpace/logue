@@ -14,7 +14,7 @@ end
 
 spec = Gem::Specification.new do |s| 
   s.name = "logue"
-  s.version = "1.0.1"
+  s.version = "1.0.2"
   s.author = "Jeff Pace"
   s.email = "jeugenepace@gmail.com"
   s.homepage = "http://jeugenepace.github.com/logue"
@@ -28,7 +28,7 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = [ "README.md" ]
   s.license = 'MIT'
 
-  s.add_dependency "rainbow", ">= 1.1.4"
+  s.add_dependency "rainbow", ">= 2.0.0"
 end
  
 Gem::PackageTask.new(spec) do |pkg| 

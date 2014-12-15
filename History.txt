@@ -3,3 +3,9 @@
 * 1 major enhancement:
   * Initial release
 
+=== 1.0.2 2014-12-14
+
+* 1 major fix:
+  * Made compatible with Rainbow 2.0.0.
+
+

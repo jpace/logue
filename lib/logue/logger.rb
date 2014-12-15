@@ -5,11 +5,10 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace <jpace@incava.org>
+# Author:: Jeff Pace <jeugenepace@gmail.com>
 # Documentation:: Author
 #
 
-require 'rubygems'
 require 'rainbow'
 require 'pathname'
 require 'logue/severity'

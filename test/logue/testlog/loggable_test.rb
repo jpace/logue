@@ -17,9 +17,9 @@ class LoggableTestCase < Test::Unit::TestCase
     Logue::Log.output = io
 
     expected = Array.new
-    expected << "[...testlog/lgbl_testee.rb:  11] {LgblTestee#crystal  } hello!\n"
-    expected << "[...testlog/lgbl_testee.rb:  12] {LgblTestee#crystal  } [34mazul ... [0m\n"
-    expected << "[...testlog/lgbl_testee.rb:  13] {LgblTestee#crystal  } [31mrojo?[0m\n"
+    expected << "[...testlog/lgbl_testee.rb:  10] {LgblTestee#crystal  } hello!\n"
+    expected << "[...testlog/lgbl_testee.rb:  11] {LgblTestee#crystal  } [34mazul ... [0m\n"
+    expected << "[...testlog/lgbl_testee.rb:  12] {LgblTestee#crystal  } [31mrojo?[0m\n"
     
     te = LgblTestee.new
     te.crystal

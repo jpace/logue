@@ -5,7 +5,7 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace <jpace@incava.org>
+# Author:: Jeff Pace <jeugenepace@gmail.com>
 # Documentation:: Author
 #
 

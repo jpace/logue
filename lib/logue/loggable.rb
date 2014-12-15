@@ -5,13 +5,12 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace <jpace@incava.org>
+# Author:: Jeff Pace <jeugenepace@gmail.com>
 # Documentation:: Author
 #
 
 require 'logue/log'
-require 'rubygems'
-require 'rainbow'
+require 'logue/colors'
 
 #
 # == Loggable
@@ -75,9 +74,8 @@ module Logue
     end
 
     def method_missing meth, *args, &blk
-      validcolors = Sickill::Rainbow::TERM_COLORS
       # only handling foregrounds, not backgrounds
-      if code = validcolors[meth]
+      if code = Colors::valid_colors[meth]
         add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
@@ -86,8 +84,7 @@ module Logue
     end
 
     def respond_to? meth
-      validcolors = Sickill::Rainbow::TERM_COLORS
-      validcolors.include?(meth) || super
+      Colors::valid_colors.include?(meth) || super
     end
 
     def add_color_method color, code
