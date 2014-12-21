@@ -57,7 +57,7 @@ class LogStackTestCase < Test::Unit::TestCase
                        "[            ...:  36] {screech                                 } ",
                       ]
 
-    run_test @verbose_setup, log, *expected_output
+    do_run_test @verbose_setup, log, *expected_output
   end
 
   # the ctor is down here so the lines above are less likely to change.
@@ -75,7 +75,7 @@ class LogStackTestCase < Test::Unit::TestCase
     super test
   end
 
-  def run_test setup, log, *expected
+  def do_run_test setup, log, *expected
     io = setup.call
 
     log.call
