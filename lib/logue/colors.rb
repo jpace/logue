@@ -9,6 +9,7 @@
 # Documentation:: Author
 #
 
+require 'rainbow/x11_color_names'
 require 'rainbow/color'
 
 class Colors

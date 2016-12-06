@@ -83,7 +83,7 @@ module Logue
       end
     end
 
-    def respond_to? meth
+    def respond_to? meth, include_all = false
       Colors::valid_colors.include?(meth) || super
     end
 
