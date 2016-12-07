@@ -11,29 +11,32 @@ module Logue
     def trim_right str, maxlen
       mxln = maxlen.abs
 
-      # magic number 3 for the ellipses ...
-
       if str.length > mxln
-        path = str.split('/')
-        newstr = "..."
-        path.reverse.each do |element|
-          if newstr.length + element.length > mxln
-            while newstr.length < mxln
-              newstr.insert 0, " "
-            end
-            return newstr
-          else
-            if newstr.length > 3
-              newstr.insert 3, "/"
-            end
-            newstr.insert 3, element
-          end
-        end
-        newstr
+        trim_path_right str, maxlen
       else
         str
       end
     end
+
+    def trim_path_right path, maxlen
+      mxln = maxlen.abs
+      
+      comps = path.split "/"
+      str = comps.pop
+      comps.reverse.each do |comp|
+        newstr = comp + "/" + str
+        if newstr.length + 4 <= mxln
+          str = newstr
+        else
+          newstr = "..." + "/" + str
+          if newstr.length <= mxln
+            str = newstr
+          end
+          break
+        end
+      end
+      str
+    end    
 
     def print_formatted file, line, func, msg, lvl, &blk
       if trim

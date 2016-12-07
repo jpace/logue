@@ -11,6 +11,8 @@ module Logue
   class FormatTestCase < Test::Unit::TestCase
     include Logue::Loggable
 
+    # trim_left
+
     def run_trim_left_test expected, length, str = "something"
       trimmed = Format.new.trim_left(str, length)
       assert_equal expected, trimmed
@@ -28,21 +30,51 @@ module Logue
       run_trim_left_test "some", -4
     end
 
-    def run_trim_right_test expected, length, str = "something"
-      trimmed = Format.new.trim_right(str, length)
-      assert_equal expected, trimmed
+    # trim_right
+
+    def assert_trim_right expected, length, str
+      trimmed = Format.new.trim_right str, length
+      assert_equal expected, trimmed, "length: #{length}"
     end
 
-    def test_trim_right_short_positive_number
-      run_trim_right_test "  ...", 5
+    def test_trim_right_path_excess
+      assert_trim_right "ab/cd/ef.t", 11, "ab/cd/ef.t"
     end
 
-    def test_trim_right_long
-      run_trim_right_test "something", 10
+    def test_trim_right_path_at_length
+      assert_trim_right "ab/cd/ef.t", 10, "ab/cd/ef.t"
     end
 
-    def test_trim_right_short_negative_number
-      run_trim_right_test "  ...", -5
+    def test_trim_right_path_one_less
+      assert_trim_right ".../ef.t", 9, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_two_less
+      assert_trim_right ".../ef.t", 8, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_three_less
+      assert_trim_right "ef.t", 7, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_four_less
+      assert_trim_right "ef.t", 6, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_five_less
+      assert_trim_right "ef.t", 5, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_six_less
+      assert_trim_right "ef.t", 4, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_seven_less
+      assert_trim_right "ef.t", 3, "ab/cd/ef.t"
+    end
+
+    def test_trim_right_path_eight_less
+      assert_trim_right "ef.t", 2, "ab/cd/ef.t"
     end
   end
 end
