@@ -24,7 +24,7 @@ require 'logue/colors'
 # == Usage
 #
 #  class YourClass
-#    include Loggable
+#    include Logue::Loggable
 #
 #    def some_method(...)
 #      log "my message"

@@ -9,7 +9,7 @@
 # Documentation:: Author
 #
 
-require 'rainbow'
+require 'rainbow/x11_color_names'
 require 'pathname'
 require 'logue/severity'
 require 'logue/format'
@@ -73,7 +73,7 @@ module Logue
     end
 
     def set_default_widths
-      set_widths Log::DEFAULT_FILENAME_WIDTH, Log::DEFAULT_LINENUM_WIDTH, Log::DEFAULT_FUNCTION_WIDTH
+      set_widths FormatWidths::DEFAULT_FILENAME, FormatWidths::DEFAULT_LINENUM, FormatWidths::DEFAULT_FUNCTION
     end
 
     def verbose
@@ -233,7 +233,7 @@ module Logue
     end
 
     def method_missing meth, *args, &blk
-      validcolors = Sickill::Rainbow::TERM_COLORS
+      validcolors = Rainbow::X11ColorNames::NAMES
       # only handling foregrounds, not backgrounds
       if code = validcolors[meth]
         add_color_method meth.to_s, code + 30
@@ -244,7 +244,7 @@ module Logue
     end
 
     def respond_to? meth
-      validcolors = Sickill::Rainbow::TERM_COLORS
+      validcolors = Rainbow::X11ColorNames::NAMES
       validcolors.include?(meth) || super
     end
 

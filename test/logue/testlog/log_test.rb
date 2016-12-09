@@ -6,6 +6,7 @@ require 'test/unit'
 require 'stringio'
 require 'logue/loggable'
 require 'logue/testlog/logtestee'
+require 'logue/format'
 
 include Logue
 
@@ -59,7 +60,7 @@ class LogTestCase < Test::Unit::TestCase
   end
 
   def msg lnum, methname, msg
-    sprintf("[  ...testlog/logtestee.rb:  %2d] {%-20s} %s", 16 + lnum, methname[0 .. 19], msg)
+    sprintf("[ .../testlog/logtestee.rb :  %2d] {%-20s} %s", 16 + lnum, methname[0 .. 19], msg)
   end
 
   def test_output_arg
@@ -71,7 +72,7 @@ class LogTestCase < Test::Unit::TestCase
       if lnum == 4 || lnum == 5
         msg = "EXPECTED OUTPUT TO STDERR: hello, world."
       end
-      expected << sprintf("[  ...testlog/logtestee.rb:  %2d] {%-20s} %s", 16 + lnum, methname[0 .. 19], msg)
+      expected << sprintf("[.../testlog/logtestee.rb :  %2d] {%-20s} %s", 16 + lnum, methname[0 .. 19], msg)
     end
 
     run_log_testee_test(:log_all, expected)
@@ -85,7 +86,7 @@ class LogTestCase < Test::Unit::TestCase
     msg = "block party"
 
     expected = Array.new
-    expected << sprintf("[  ...testlog/logtestee.rb:  %2d] {%-20s} %s", 26, methname[0 .. 19], msg)
+    expected << sprintf("[.../testlog/logtestee.rb :  %2d] {%-20s} %s", 26, methname[0 .. 19], msg)
 
     run_log_testee_test(:log_block, expected)
   end
@@ -101,15 +102,15 @@ class LogTestCase < Test::Unit::TestCase
   def test_colors_foreground
     methname = "log_foregrounds"
     expected = Array.new
-    expected << sprintf("[  ...testlog/logtestee.rb:  %2d] {%-20s} %s", 30, methname[0 .. 19], "\e[37mwhite wedding\e[0m")
-    expected << sprintf("[  ...testlog/logtestee.rb:  %2d] {%-20s} %s", 31, methname[0 .. 19], "\e[34mblue iris\e[0m")
+    expected << sprintf("[.../testlog/logtestee.rb :  %2d] {%-20s} %s", 30, methname[0 .. 19], "\e[37mwhite wedding\e[0m")
+    expected << sprintf("[.../testlog/logtestee.rb :  %2d] {%-20s} %s", 31, methname[0 .. 19], "\e[34mblue iris\e[0m")
     
     run_log_testee_test(:log_foregrounds, expected)
   end
 
   def xxxtest_colors_background
     expected = Array.new
-    expected << "[ ...test/logue/log_test.rb: 109] {LogTestCase#test_col} \e[46mred\e[0m"
+    expected << "[.../test/logue/log_test.rb: 109] {LogTestCase#test_col} \e[46mred\e[0m"
 
     run_log_testee_test(:log_foregrounds, expected) do
     end
@@ -117,7 +118,7 @@ class LogTestCase < Test::Unit::TestCase
 
   def test_format_default
     expected = Array.new
-    expected << "[  ...testlog/logtestee.rb:  10] {format_test         } tamrof\n"
+    expected << "[.../testlog/logtestee.rb :  10] {format_test         } tamrof\n"
 
     run_format_test expected do
       Log.set_default_widths
@@ -126,37 +127,37 @@ class LogTestCase < Test::Unit::TestCase
 
   def test_format_flush_filename_left
     expected = Array.new
-    expected << "[ ...test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
+    expected << "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(-35, Log::DEFAULT_LINENUM_WIDTH, Log::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(-35, Logue::FormatWidths::DEFAULT_LINENUM, Logue::FormatWidths::DEFAULT_FUNCTION)
     end
   end
 
   def test_format_flush_linenum_left
     expected = Array.new
-    expected << "[  ...testlog/logtestee.rb:10        ] {format_test         } tamrof\n"
+    expected << "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, -10, Log::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(Logue::FormatWidths::DEFAULT_FILENAME, -10, Logue::FormatWidths::DEFAULT_FUNCTION)
     end
   end
 
   def test_format_flush_function_right
     expected = Array.new
-    expected << "[  ...testlog/logtestee.rb:  10] {                        format_test} tamrof\n"
+    expected << "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, Log::DEFAULT_LINENUM_WIDTH, 35)
+      Log.set_widths(Logue::FormatWidths::DEFAULT_FILENAME, Logue::FormatWidths::DEFAULT_LINENUM, 35)
     end
   end
 
   def test_format_pad_linenum_zeros
     expected = Array.new
-    expected << "[  ...testlog/logtestee.rb:00000010] {format_test         } tamrof\n"
+    expected << "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Log::DEFAULT_FILENAME_WIDTH, "08", Log::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(Logue::FormatWidths::DEFAULT_FILENAME, "08", Logue::FormatWidths::DEFAULT_FUNCTION)
     end
   end
 

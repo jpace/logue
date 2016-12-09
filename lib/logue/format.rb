@@ -2,8 +2,13 @@
 # -*- ruby -*-
 
 module Logue
+  class FormatWidths
+    DEFAULT_FILENAME = -25
+    DEFAULT_LINENUM = 4
+    DEFAULT_FUNCTION = -20
+  end    
+  
   class Format
-    
     def trim_left str, maxlen
       str[0 ... maxlen.to_i.abs]
     end
@@ -37,16 +42,5 @@ module Logue
       end
       str
     end    
-
-    def print_formatted file, line, func, msg, lvl, &blk
-      if trim
-        file = trim_right file, @file_width
-        line = trim_left  line, @line_width
-        func = trim_left  func, @function_width
-      end
-
-      hdr = sprintf @format, file, line, func
-      print hdr, msg, lvl, &blk
-    end
   end
 end

@@ -49,12 +49,12 @@ class LogStackTestCase < Test::Unit::TestCase
     }
 
     expected_output = [
-                       "[            ...:  35] {LogInner#screech                        } hello from the innerds",
-                       "[            ...:  24] {LogDepths#speak                         } hello from the depths",
-                       "[            ...:  15] {LogAbyss#squeal                         } hello from the abyss",
-                       "[            ...:  16] {LogAbyss#squeal                         } turtles all the way down",
-                       "[            ...:  26] {speak                                   } ",
-                       "[            ...:  36] {screech                                 } ",
+                       "[log_stack_test.rb:  35] {LogInner#screech                        } hello from the innerds",
+                       "[log_stack_test.rb:  24] {LogDepths#speak                         } hello from the depths",
+                       "[log_stack_test.rb:  15] {LogAbyss#squeal                         } hello from the abyss",
+                       "[log_stack_test.rb:  16] {LogAbyss#squeal                         } turtles all the way down",
+                       "[log_stack_test.rb:  26] {speak                                   } ",
+                       "[log_stack_test.rb:  36] {screech                                 } ",
                       ]
 
     do_run_test @verbose_setup, log, *expected_output

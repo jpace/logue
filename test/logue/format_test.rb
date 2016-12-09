@@ -1,16 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'pathname'
 require 'test/unit'
-require 'stringio'
 require 'logue/format'
-require 'logue/loggable'
 
 module Logue
   class FormatTestCase < Test::Unit::TestCase
-    include Logue::Loggable
-
     # trim_left
 
     def run_trim_left_test expected, length, str = "something"
