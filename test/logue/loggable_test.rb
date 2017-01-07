@@ -47,7 +47,6 @@ class LoggableTest < Test::Unit::TestCase
     obj = Object.new
     obj.extend Logue::Loggable
 
-    orig_delegate = obj.delegate_log_class
     def obj.delegate_log_class
       TestLogDelegate
     end

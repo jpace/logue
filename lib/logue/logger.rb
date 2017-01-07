@@ -86,6 +86,10 @@ module Logue
       @output = f.kind_of?(IO) ? f : File.new(f, "w")
     end
 
+    def outfile
+      output
+    end
+
     # Creates a printf format for the given widths, for aligning output. To lead
     # lines with zeros (e.g., "00317") the line_width argument must be a string,
     # not an integer.
@@ -233,7 +237,8 @@ module Logue
     end
 
     def method_missing meth, *args, &blk
-      validcolors = Rainbow::X11ColorNames::NAMES
+      # validcolors = Rainbow::X11ColorNames::NAMES
+      validcolors = Rainbow::Color::Named::NAMES
       # only handling foregrounds, not backgrounds
       if code = validcolors[meth]
         add_color_method meth.to_s, code + 30
@@ -254,13 +259,6 @@ module Logue
       instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       instmeth << "end"
       instance_eval instmeth.join("\n")
-
-      clsmeth = Array.new
-      clsmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-      clsmeth << "  logger.#{color}(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      clsmeth << "end"
-
-      class_eval clsmeth.join("\n")
     end
   end
 end

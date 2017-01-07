@@ -50,7 +50,6 @@ module Logue
     end
 
     def info msg = "", depth = 1, &blk
-      puts "delegate_log_class: #{delegate_log_class}"
       delegate_log_class.info msg, depth + 1, self.class.to_s, &blk
     end
 

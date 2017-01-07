@@ -5,7 +5,7 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace <jpace@gmail.com>
+# Author:: Jeff Pace
 # Documentation:: Author
 #
 
@@ -67,134 +67,84 @@ module Logue
       @@log
     end
 
+    def self.accessors methname
+      [ methname.to_sym, (methname.to_s + "=").to_sym ]
+    end
+    
+    def self.logger_delegated? meth
+      @@logger_delegated ||= Array.new.tap do |ary|
+        acc_methods = [
+          :colorize_line,
+          :format,
+          :level,
+          :outfile,
+          :output,
+          :quiet,
+          :verbose,
+        ]
+        acc_methods.each do |am|
+          ary.concat accessors(am)          
+        end
+        read_methods = [
+          :ignore_class,
+          :ignore_file,
+          :ignore_method,
+          :log_class,
+          :log_file,
+          :log_method,
+        ]
+        ary.concat read_methods
+      end
+      @@logger_delegated.include? meth
+    end
+    
     def self.method_missing meth, *args, &blk
-      # only handling foregrounds, not backgrounds
-      if code = Colors::valid_colors[meth]
-        add_color_method meth.to_s, code + 30
-        send meth, *args, &blk
+      if logger_delegated? meth
+        logger.send meth, *args, &blk
+      elsif Colors::valid_colors[meth]
+        # only handling foregrounds, not backgrounds
+        logger.send meth, *args, &blk
       else
         super
       end
     end
 
     def self.respond_to? meth
-      Colors::valid_colors.include?(meth) || super
+      logger_delegated?(meth) || Colors::valid_colors.include?(meth) || super
     end
 
     def self.add_color_method color, code
       instmeth = Array.new
       instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
-      instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+      instmeth << "  puts 'self: " + self.class.to_s + "'"
+      instmeth << "  puts 'INSTMETH, from " + color + "'"
+      instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       instmeth << "end"
-      instance_eval instmeth.join("\n")
+      puts instmeth
 
-      clsmeth = Array.new
-      clsmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
-      clsmeth << "  logger.#{color}(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      clsmeth << "end"
-
-      class_eval clsmeth.join("\n")
+      # an instance, but on the class object, not the log instance:
+      self.instance_eval instmeth.join("\n")
     end
 
     def self.set_default_widths
       logger.set_default_widths
     end
-
-    def self.verbose
-      logger.verbose
-    end
-
-    def self.verbose= v
-      logger.verbose = v && v != 0 ? DEBUG : FATAL
-    end
-
-    def self.level= lvl
-      logger.level = lvl
-    end
-
-    def self.quiet
-      logger.quiet
-    end
-
-    def self.quiet= q
-      logger.quiet = q
-    end
-
-    def self.format
-      logger.format
-    end
-
-    def self.format= fmt
-      logger.format = fmt
-    end
-
-    # Assigns output to the given stream.
-    def self.output= io
-      logger.output = io
-    end
-
-    def self.output
-      logger.output
-    end
-
-    # sets whether to colorize the entire line, or just the message.
-    def self.colorize_line= col
-      logger.colorize_line = col
-    end
-
-    def self.colorize_line
-      logger.colorize_line
-    end
-
-    # Assigns output to a file with the given name. Returns the file; client
-    # is responsible for closing it.
-    def self.outfile= fname
-      logger.outfile = fname
-    end
-
-    def self.outfile
-      logger.outfile
-    end
-
+    
     # Creates a printf format for the given widths, for aligning output.
     def self.set_widths file_width, line_width, func_width
       logger.set_widths file_width, line_width, func_width
     end
-
-    def self.ignore_file fname
-      logger.ignore_file fname
-    end
     
-    def self.ignore_method methname
-      logger.ignored_method methname
-    end
-    
-    def self.ignore_class classname
-      logger.ignored_class classname
-    end
-
-    def self.log_file fname
-      logger.log_file fname
-    end
-    
-    def self.log_method methname
-      logger.log_method methname
-    end
-    
-    def self.log_class classname
-      logger.log_class classname
-    end
-
     def self.debug msg = "", depth = 1, cname = nil, &blk
-      logger.log msg, DEBUG, depth + 1, cname, &blk
+      logger.debug msg, depth + 1, cname, &blk
     end
 
     def self.info msg = "", depth = 1, cname = nil, &blk
-      logger.log msg, INFO, depth + 1, cname, &blk
+      logger.info msg, depth + 1, cname, &blk
     end
 
     def self.fatal msg = "", depth = 1, cname = nil, &blk
-      logger.log msg, FATAL, depth + 1, cname, &blk
+      logger.fatal msg, depth + 1, cname, &blk
     end
 
     def self.log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
