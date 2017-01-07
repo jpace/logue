@@ -42,35 +42,36 @@ module Logue
   module Loggable
     # Logs the given message, including the class whence invoked.
     def log msg = "", lvl = Log::DEBUG, depth = 1, &blk
-      Log.log msg, lvl, depth + 1, self.class.to_s, &blk
+      delegate_log_class.log msg, lvl, depth + 1, self.class.to_s, &blk
     end
 
     def debug msg = "", depth = 1, &blk
-      Log.log msg, Log::DEBUG, depth + 1, self.class.to_s, &blk
+      delegate_log_class.debug msg, depth + 1, self.class.to_s, &blk
     end
 
     def info msg = "", depth = 1, &blk
-      Log.log msg, Log::INFO, depth + 1, self.class.to_s, &blk
+      puts "delegate_log_class: #{delegate_log_class}"
+      delegate_log_class.info msg, depth + 1, self.class.to_s, &blk
     end
 
     def warn msg = "", depth = 1, &blk
-      Log.log msg, Log::WARN, depth + 1, self.class.to_s, &blk
+      delegate_log_class.warn msg, depth + 1, self.class.to_s, &blk
     end
 
     def error msg = "", depth = 1, &blk
-      Log.log msg, Log::ERROR, depth + 1, self.class.to_s, &blk
+      delegate_log_class.error msg, depth + 1, self.class.to_s, &blk
     end
 
     def fatal msg = "", depth = 1, &blk
-      Log.log msg, Log::FATAL, depth + 1, self.class.to_s, &blk
+      delegate_log_class.fatal msg, depth + 1, self.class.to_s, &blk
     end
 
     def stack msg = "", lvl = Log::DEBUG, depth = 1, &blk
-      Log.stack msg, lvl, depth + 1, self.class.to_s, &blk
+      delegate_log_class.stack msg, lvl, depth + 1, self.class.to_s, &blk
     end
 
     def write msg = "", depth = 1, &blk
-      Log.write msg, depth + 1, self.class.to_s, &blk
+      delegate_log_class.write msg, depth + 1, self.class.to_s, &blk
     end
 
     def method_missing meth, *args, &blk
@@ -93,6 +94,10 @@ module Logue
       meth << "  Log.#{color} msg, lvl, depth + 1, self.class.to_s, &blk"
       meth << "end"
       self.class.module_eval meth.join("\n")
+    end
+
+    def delegate_log_class
+      Log
     end
   end
 end

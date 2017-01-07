@@ -121,24 +121,24 @@ module Logue
       ignored_classes.delete classname
     end
 
-    def debug msg = "", depth = 1, &blk
-      log msg, DEBUG, depth + 1, &blk
+    def debug msg = "", depth = 1, cname = nil, &blk
+      log msg, DEBUG, depth + 1, cname, &blk
     end
 
-    def info msg = "", depth = 1, &blk
-      log msg, INFO, depth + 1, &blk
+    def info msg = "", depth = 1, cname = nil, &blk
+      log msg, INFO, depth + 1, cname, &blk
     end
 
-    def warn msg = "", depth = 1, &blk
-      log msg, WARN, depth + 1, &blk
+    def warn msg = "", depth = 1, cname = nil, &blk
+      log msg, WARN, depth + 1, cname, &blk
     end
 
-    def error msg = "", depth = 1, &blk
-      log msg, ERROR, depth + 1, &blk
+    def error msg = "", depth = 1, cname = nil, &blk
+      log msg, ERROR, depth + 1, cname, &blk
     end
 
-    def fatal msg = "", depth = 1, &blk
-      log msg, FATAL, depth + 1, &blk
+    def fatal msg = "", depth = 1, cname = nil, &blk
+      log msg, FATAL, depth + 1, cname, &blk
     end
 
     # Logs the given message.

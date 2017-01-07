@@ -5,7 +5,7 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace <jeugenepace@gmail.com>
+# Author:: Jeff Pace <jpace@gmail.com>
 # Documentation:: Author
 #
 
@@ -37,7 +37,7 @@ require 'rainbow'
 #  That will simply log the given message.
 #
 #  class YourClass
-#    include Loggable
+#    include Logue::Loggable
 #
 #    def some_method(...)
 #      log "my message"
@@ -185,16 +185,16 @@ module Logue
       logger.log_class classname
     end
 
-    def self.debug msg = "", depth = 1, &blk
-      logger.log msg, DEBUG, depth + 1, &blk
+    def self.debug msg = "", depth = 1, cname = nil, &blk
+      logger.log msg, DEBUG, depth + 1, cname, &blk
     end
 
-    def self.info msg = "", depth = 1, &blk
-      logger.log msg, INFO, depth + 1, &blk
+    def self.info msg = "", depth = 1, cname = nil, &blk
+      logger.log msg, INFO, depth + 1, cname, &blk
     end
 
-    def self.fatal msg = "", depth = 1, &blk
-      logger.log msg, FATAL, depth + 1, &blk
+    def self.fatal msg = "", depth = 1, cname = nil, &blk
+      logger.log msg, FATAL, depth + 1, cname, &blk
     end
 
     def self.log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
