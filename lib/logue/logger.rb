@@ -62,7 +62,6 @@ module Logue
       @ignored_files   = Hash.new
       @ignored_methods = Hash.new
       @ignored_classes = Hash.new
-      @width           = 0
       @output          = $stdout
       @colors          = Array.new
       @colorize_line   = false
