@@ -18,7 +18,7 @@ class LogTest < Test::Unit::TestCase
   
   def assert_read_method rdmeth, *values
     values.each do |value|
-      Logue::Log.send rdmeth, value
+      Logue::Log.send rdmeth, *value
     end
   end
   
@@ -79,5 +79,10 @@ class LogTest < Test::Unit::TestCase
     
   def test_log_class
     assert_read_method :log_class, true, false
+  end
+    
+  def test_set_color
+    lvl = Logue::Log::Severity::FATAL
+    assert_read_method :set_color, [ lvl, :red ], [ lvl, :none ]
   end
 end

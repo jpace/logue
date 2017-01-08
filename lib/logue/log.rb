@@ -12,7 +12,6 @@
 require 'logue/logger'
 require 'logue/severity'
 require 'logue/colors'
-require 'rainbow'
 
 #
 # == Log
@@ -82,9 +81,7 @@ module Logue
           :quiet,
           :verbose,
         ]
-        acc_methods.each do |am|
-          ary.concat accessors(am)          
-        end
+        ary.concat acc_methods.collect { |am| accessors(am) }.flatten!
         read_methods = [
           :ignore_class,
           :ignore_file,
@@ -92,6 +89,9 @@ module Logue
           :log_class,
           :log_file,
           :log_method,
+          :set_color,
+          :set_default_widths,
+          :set_widths,
         ]
         ary.concat read_methods
       end
@@ -116,8 +116,6 @@ module Logue
     def self.add_color_method color, code
       instmeth = Array.new
       instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
-      instmeth << "  puts 'self: " + self.class.to_s + "'"
-      instmeth << "  puts 'INSTMETH, from " + color + "'"
       instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       instmeth << "end"
       puts instmeth
@@ -126,10 +124,6 @@ module Logue
       self.instance_eval instmeth.join("\n")
     end
 
-    def self.set_default_widths
-      logger.set_default_widths
-    end
-    
     # Creates a printf format for the given widths, for aligning output.
     def self.set_widths file_width, line_width, func_width
       logger.set_widths file_width, line_width, func_width
@@ -179,10 +173,6 @@ module Logue
       else
         $stderr.puts msg
       end
-    end
-
-    def self.set_color lvl, color
-      logger.set_color lvl, color
     end
   end
 end
