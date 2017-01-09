@@ -118,8 +118,7 @@ module Logue
       instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
       instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
       instmeth << "end"
-      puts instmeth
-
+      
       # an instance, but on the class object, not the log instance:
       self.instance_eval instmeth.join("\n")
     end

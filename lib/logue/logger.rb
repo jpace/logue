@@ -169,7 +169,7 @@ class Logue::Logger
   def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
     if lvl >= level
       stk = caller depth
-      for frame in stk
+      stk.each do |frame|
         print_stack_frame frame, cname, msg, lvl, &blk
         cname = nil
         msg = ""
@@ -199,15 +199,9 @@ class Logue::Logger
   end
 
   def print_formatted file, line, func, msg, lvl, &blk
-    if trim
-      fmt = Logue::Format.new
-      file = Logue::PathUtil.trim_right file, @file_width
-      line = Logue::PathUtil.trim_left  line, @line_width
-      func = Logue::PathUtil.trim_left  func, @function_width
-    end
-
-    hdr = sprintf @format, file, line, func
-    print hdr, msg, lvl, &blk
+    fmt = Logue::Format.new file_width: @file_width, line_width: @line_width, method_width: @function_width, trim: @trim
+    location = fmt.format file, line, nil, func
+    print location, msg, lvl, &blk
   end
   
   def print hdr, msg, lvl, &blk
