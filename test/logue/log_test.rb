@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'logue/log'
 
-class LogTest < Test::Unit::TestCase
+class LogTest < Minitest::Test
   def assert_accessor_methods rdmeth, *values
     wrmeth = (rdmeth.to_s + "=").to_sym
     logger = Logue::Log.logger

@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
+require 'minitest/autorun'
 require 'logue/logger'
 
-class LoggerTest < Test::Unit::TestCase
+class LoggerTest < Minitest::Test
   def test_default
     logger = Logue::Logger.new
 

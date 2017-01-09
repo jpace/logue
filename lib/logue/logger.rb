@@ -13,6 +13,7 @@ require 'rainbow/x11_color_names'
 require 'pathname'
 require 'logue/severity'
 require 'logue/format'
+require 'logue/pathutil'
 
 #
 # == Logger
@@ -26,238 +27,239 @@ require 'logue/format'
 # 
 
 module Logue
-  class Logger
-    $LOGGING_LEVEL = nil
+end
 
-    attr_accessor :quiet
-    attr_accessor :output
-    attr_accessor :colorize_line
-    attr_accessor :level
-    attr_accessor :ignored_files
-    attr_accessor :ignored_methods
-    attr_accessor :ignored_classes
-    attr_accessor :trim
+class Logue::Logger
+  $LOGGING_LEVEL = nil
 
-    include Log::Severity
+  attr_accessor :quiet
+  attr_accessor :output
+  attr_accessor :colorize_line
+  attr_accessor :level
+  attr_accessor :ignored_files
+  attr_accessor :ignored_methods
+  attr_accessor :ignored_classes
+  attr_accessor :trim
 
-    FRAME_RE = Regexp.new('(.*):(\d+)(?::in \`(.*)\')?')
+  include Logue::Log::Severity
 
-    def initialize
-      set_defaults
-    end
+  FRAME_RE = Regexp.new('(.*):(\d+)(?::in \`(.*)\')?')
+
+  def initialize
+    set_defaults
+  end
+  
+  def verbose= v
+    @level = case v
+             when TrueClass 
+               DEBUG
+             when FalseClass 
+               FATAL
+             when Integer
+               v
+             end
+  end
+
+  def set_defaults
+    $LOGGING_LEVEL   = @level = FATAL
+    @ignored_files   = Hash.new
+    @ignored_methods = Hash.new
+    @ignored_classes = Hash.new
+    @output          = $stdout
+    @colors          = Array.new
+    @colorize_line   = false
+    @quiet           = false
+    @trim            = true
+
+    set_default_widths
+  end
+
+  def set_default_widths
+    set_widths Logue::FormatWidths::DEFAULT_FILENAME, Logue::FormatWidths::DEFAULT_LINENUM, Logue::FormatWidths::DEFAULT_FUNCTION
+  end
+
+  def verbose
+    level <= DEBUG
+  end
+
+  # Assigns output to a file with the given name. Returns the file; client
+  # is responsible for closing it.
+  def outfile= f
+    @output = f.kind_of?(IO) ? f : File.new(f, "w")
+  end
+
+  def outfile
+    output
+  end
+
+  # Creates a printf format for the given widths, for aligning output. To lead
+  # lines with zeros (e.g., "00317") the line_width argument must be a string,
+  # not an integer.
+  def set_widths file_width, line_width, func_width
+    @file_width = file_width
+    @line_width = line_width
+    @function_width = func_width
     
-    def verbose= v
-      @level = case v
-               when TrueClass 
-                 DEBUG
-               when FalseClass 
-                 FATAL
-               when Integer
-                 v
-               end
-    end
+    @format = "[%#{file_width}s:%#{line_width}d] {%#{func_width}s}"
+  end
 
-    def set_defaults
-      $LOGGING_LEVEL   = @level = FATAL
-      @ignored_files   = Hash.new
-      @ignored_methods = Hash.new
-      @ignored_classes = Hash.new
-      @output          = $stdout
-      @colors          = Array.new
-      @colorize_line   = false
-      @quiet           = false
-      @trim            = true
+  def ignore_file fname
+    ignored_files[fname] = true
+  end
+  
+  def ignore_method methname
+    ignored_methods[methname] = true
+  end
+  
+  def ignore_class classname
+    ignored_classes[classname] = true
+  end
 
-      set_default_widths
-    end
+  def log_file fname
+    ignored_files.delete fname
+  end
+  
+  def log_method methname
+    ignored_methods.delete methname
+  end
+  
+  def log_class classname
+    ignored_classes.delete classname
+  end
 
-    def set_default_widths
-      set_widths FormatWidths::DEFAULT_FILENAME, FormatWidths::DEFAULT_LINENUM, FormatWidths::DEFAULT_FUNCTION
-    end
+  def debug msg = "", depth = 1, cname = nil, &blk
+    log msg, DEBUG, depth + 1, cname, &blk
+  end
 
-    def verbose
-      level <= DEBUG
-    end
+  def info msg = "", depth = 1, cname = nil, &blk
+    log msg, INFO, depth + 1, cname, &blk
+  end
 
-    # Assigns output to a file with the given name. Returns the file; client
-    # is responsible for closing it.
-    def outfile= f
-      @output = f.kind_of?(IO) ? f : File.new(f, "w")
-    end
+  def warn msg = "", depth = 1, cname = nil, &blk
+    log msg, WARN, depth + 1, cname, &blk
+  end
 
-    def outfile
-      output
-    end
+  def error msg = "", depth = 1, cname = nil, &blk
+    log msg, ERROR, depth + 1, cname, &blk
+  end
 
-    # Creates a printf format for the given widths, for aligning output. To lead
-    # lines with zeros (e.g., "00317") the line_width argument must be a string,
-    # not an integer.
-    def set_widths file_width, line_width, func_width
-      @file_width = file_width
-      @line_width = line_width
-      @function_width = func_width
-      
-      @format = "[%#{file_width}s:%#{line_width}d] {%#{func_width}s}"
-    end
+  def fatal msg = "", depth = 1, cname = nil, &blk
+    log msg, FATAL, depth + 1, cname, &blk
+  end
 
-    def ignore_file fname
-      ignored_files[fname] = true
-    end
-    
-    def ignore_method methname
-      ignored_methods[methname] = true
-    end
-    
-    def ignore_class classname
-      ignored_classes[classname] = true
-    end
+  # Logs the given message.
+  def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+    if lvl >= level
+      frame = nil
 
-    def log_file fname
-      ignored_files.delete fname
-    end
-    
-    def log_method methname
-      ignored_methods.delete methname
-    end
-    
-    def log_class classname
-      ignored_classes.delete classname
-    end
-
-    def debug msg = "", depth = 1, cname = nil, &blk
-      log msg, DEBUG, depth + 1, cname, &blk
-    end
-
-    def info msg = "", depth = 1, cname = nil, &blk
-      log msg, INFO, depth + 1, cname, &blk
-    end
-
-    def warn msg = "", depth = 1, cname = nil, &blk
-      log msg, WARN, depth + 1, cname, &blk
-    end
-
-    def error msg = "", depth = 1, cname = nil, &blk
-      log msg, ERROR, depth + 1, cname, &blk
-    end
-
-    def fatal msg = "", depth = 1, cname = nil, &blk
-      log msg, FATAL, depth + 1, cname, &blk
-    end
-
-    # Logs the given message.
-    def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
-      if lvl >= level
-        frame = nil
-
-        stk = caller 0
-        stk.reverse.each_with_index do |frm, idx|
-          if frm.index(%r{logue/log.*:\d+:in\b})
-            break
-          else
-            frame = frm
-          end
+      stk = caller 0
+      stk.reverse.each_with_index do |frm, idx|
+        if frm.index(%r{logue/log.*:\d+:in\b})
+          break
+        else
+          frame = frm
         end
+      end
 
+      print_stack_frame frame, cname, msg, lvl, &blk
+    end
+  end
+
+  # Shows the current stack.
+  def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+    if lvl >= level
+      stk = caller depth
+      for frame in stk
         print_stack_frame frame, cname, msg, lvl, &blk
+        cname = nil
+        msg = ""
       end
     end
+  end
 
-    # Shows the current stack.
-    def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
-      if lvl >= level
-        stk = caller depth
-        for frame in stk
-          print_stack_frame frame, cname, msg, lvl, &blk
-          cname = nil
-          msg = ""
-        end
-      end
-    end
+  def print_stack_frame frame, cname, msg, lvl, &blk
+    md = FRAME_RE.match frame
+    file, line, func = md[1], md[2], (md[3] || "")
+    # file.sub!(/.*\//, "")
 
-    def print_stack_frame frame, cname, msg, lvl, &blk
-      md = FRAME_RE.match frame
-      file, line, func = md[1], md[2], (md[3] || "")
-      # file.sub!(/.*\//, "")
+    # Ruby 1.9 expands the file name, but 1.8 doesn't:
+    pn = Pathname.new(file).expand_path
+    
+    file = pn.to_s
 
-      # Ruby 1.9 expands the file name, but 1.8 doesn't:
-      pn = Pathname.new(file).expand_path
-      
-      file = pn.to_s
-
-      if cname
-        func = cname + "#" + func
-      end
-      
-      if ignored_files[file] || (cname && ignored_classes[cname]) || ignored_methods[func]
-        # skip this one.
-      else
-        print_formatted(file, line, func, msg, lvl, &blk)
-      end
-    end
-
-    def print_formatted file, line, func, msg, lvl, &blk
-      if trim
-        fmt = Format.new
-        file = fmt.trim_right file, @file_width
-        line = fmt.trim_left  line, @line_width
-        func = fmt.trim_left  func, @function_width
-      end
-
-      hdr = sprintf @format, file, line, func
-      print hdr, msg, lvl, &blk
+    if cname
+      func = cname + "#" + func
     end
     
-    def print hdr, msg, lvl, &blk
-      if blk
-        x = blk.call
-        if x.kind_of? String
-          msg = x
-        else
-          return
-        end
-      end
+    if ignored_files[file] || (cname && ignored_classes[cname]) || ignored_methods[func]
+    # skip this one.
+    else
+      print_formatted(file, line, func, msg, lvl, &blk)
+    end
+  end
 
-      msg = msg.to_s.chomp
-
-      if lvlcol = @colors[lvl]
-        if colorize_line
-          line = hdr + " " + msg
-          @output.puts line.color(lvlcol)
-        else
-          @output.puts hdr + " " + msg.color(lvlcol)
-        end
-      else
-        @output.puts hdr + " " + msg
-      end      
+  def print_formatted file, line, func, msg, lvl, &blk
+    if trim
+      fmt = Logue::Format.new
+      file = Logue::PathUtil.trim_right file, @file_width
+      line = Logue::PathUtil.trim_left  line, @line_width
+      func = Logue::PathUtil.trim_left  func, @function_width
     end
 
-    def set_color lvl, color
-      @colors[lvl] = color
-    end
-
-    def method_missing meth, *args, &blk
-      # validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors = Rainbow::Color::Named::NAMES
-      # only handling foregrounds, not backgrounds
-      if code = validcolors[meth]
-        add_color_method meth.to_s, code + 30
-        send meth, *args, &blk
+    hdr = sprintf @format, file, line, func
+    print hdr, msg, lvl, &blk
+  end
+  
+  def print hdr, msg, lvl, &blk
+    if blk
+      x = blk.call
+      if x.kind_of? String
+        msg = x
       else
-        super
+        return
       end
     end
 
-    def respond_to? meth
-      validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors.include?(meth) || super
-    end
+    msg = msg.to_s.chomp
 
-    def add_color_method color, code
-      instmeth = Array.new
-      instmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-      instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      instmeth << "end"
-      instance_eval instmeth.join("\n")
+    if lvlcol = @colors[lvl]
+      if colorize_line
+        line = hdr + " " + msg
+        @output.puts line.color(lvlcol)
+      else
+        @output.puts hdr + " " + msg.color(lvlcol)
+      end
+    else
+      @output.puts hdr + " " + msg
+    end      
+  end
+
+  def set_color lvl, color
+    @colors[lvl] = color
+  end
+
+  def method_missing meth, *args, &blk
+    # validcolors = Rainbow::X11ColorNames::NAMES
+    validcolors = Rainbow::Color::Named::NAMES
+    # only handling foregrounds, not backgrounds
+    if code = validcolors[meth]
+      add_color_method meth.to_s, code + 30
+      send meth, *args, &blk
+    else
+      super
     end
+  end
+
+  def respond_to? meth
+    validcolors = Rainbow::X11ColorNames::NAMES
+    validcolors.include?(meth) || super
+  end
+
+  def add_color_method color, code
+    instmeth = Array.new
+    instmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
+    instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+    instmeth << "end"
+    instance_eval instmeth.join("\n")
   end
 end
