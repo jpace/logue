@@ -16,6 +16,11 @@ class Logue::Format
     @method_width = args.fetch :method_width, Logue::FormatWidths::DEFAULT_FUNCTION
     @trim = args.fetch :trim, true
   end
+
+  def copy args
+    values = { file_width: @file_width, line_width: @line_width, method_width: @method_width, trim: @trim }
+    self.class.new values.merge(args)
+  end
   
   def format path, lineno, cls, func
     if cls

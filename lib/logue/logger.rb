@@ -39,7 +39,9 @@ class Logue::Logger
   attr_accessor :ignored_files
   attr_accessor :ignored_methods
   attr_accessor :ignored_classes
-  attr_accessor :trim
+  
+  attr_reader :output
+  attr_reader :trim
 
   include Logue::Log::Severity
 
@@ -71,7 +73,12 @@ class Logue::Logger
     @quiet           = false
     @trim            = true
 
+    @format = Logue::Format.new
+
     set_default_widths
+  end
+
+  def trim= what
   end
 
   def set_default_widths
@@ -88,10 +95,6 @@ class Logue::Logger
     @output = f.kind_of?(IO) ? f : File.new(f, "w")
   end
 
-  def outfile
-    output
-  end
-
   # Creates a printf format for the given widths, for aligning output. To lead
   # lines with zeros (e.g., "00317") the line_width argument must be a string,
   # not an integer.
@@ -99,8 +102,6 @@ class Logue::Logger
     @file_width = file_width
     @line_width = line_width
     @function_width = func_width
-    
-    @format = "[%#{file_width}s:%#{line_width}d] {%#{func_width}s}"
   end
 
   def ignore_file fname
