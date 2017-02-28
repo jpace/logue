@@ -53,5 +53,5 @@ class WriterTest < Test::Unit::TestCase
       $stdout = orig_stdout
       $stderr = orig_stderr
     end
-    end
+  end
 end
