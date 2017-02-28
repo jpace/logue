@@ -40,7 +40,6 @@ class Logue::Logger
   attr_accessor :ignored_methods
   attr_accessor :ignored_classes
   
-  attr_reader :output
   attr_reader :trim
 
   include Logue::Log::Severity

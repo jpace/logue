@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'minitest/autorun'
+require 'test/unit'
 require 'logue/pathutil'
 
-class Logue::PathUtilTestCase < Minitest::Test
+class Logue::PathUtilTestCase < Test::Unit::TestCase
   # trim_left
 
   def run_trim_left_test expected, length, str = "something"

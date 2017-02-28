@@ -1,9 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'minitest/autorun'
+require 'test/unit'
 require 'logue/writer'
 require 'logue/format'
+require 'stringio'
 
 class FakeLocation
   attr_reader :absolute_path
@@ -18,7 +19,7 @@ class FakeLocation
   end
 end
 
-class WriterTest < Minitest::Test
+class WriterTest < Test::Unit::TestCase
   def test_write_one
     fake_stack = Array.new.tap do |ary|
       ary << FakeLocation.new(absolute_path: "/a/long/path/to/the/directory/abc.t", label: "block (2 levels) in one", lineno: 1)
@@ -37,4 +38,20 @@ class WriterTest < Minitest::Test
     refute_empty out
     assert_empty err
   end
+
+  def capture_io
+    begin
+      captured_stdout, captured_stderr = StringIO.new, StringIO.new
+
+      orig_stdout, orig_stderr = $stdout, $stderr
+      $stdout, $stderr         = captured_stdout, captured_stderr
+
+      yield
+
+      return captured_stdout.string, captured_stderr.string
+    ensure
+      $stdout = orig_stdout
+      $stderr = orig_stderr
+    end
+    end
 end

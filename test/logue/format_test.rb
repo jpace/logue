@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'minitest/autorun'
+require 'test/unit'
 require 'logue/format'
 
-class Logue::FormatTestCase < Minitest::Test
+class Logue::FormatTestCase < Test::Unit::TestCase
   # use as:
   # msg "path", path, "lineno", lineno, "cls", cls, "func", func
   def message(*fields)

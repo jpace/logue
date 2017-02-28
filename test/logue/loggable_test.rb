@@ -1,10 +1,10 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'minitest/autorun'
+require 'test/unit'
 require 'logue/loggable'
 
-class LoggableTest < Minitest::Test
+class LoggableTest < Test::Unit::TestCase
   def test_respond_to_colors
     obj = Object.new
     obj.extend Logue::Loggable
