@@ -13,5 +13,5 @@ Pathname.glob(loguelibdir + '/logue/**/*.rb').each do |file|
 end
 
 module Logue
-  VERSION = '1.0.6'
+  VERSION = '1.0.8'
 end

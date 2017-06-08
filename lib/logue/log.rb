@@ -148,17 +148,17 @@ module Logue
       logger.stack msg, lvl, depth + 1, cname, &blk
     end
 
-    def self.warn msg = "", depth = 1, &blk
+    def self.warn msg = "", depth = 1, cname = nil, &blk
       if verbose
-        logger.log msg, WARN, depth + 1, &blk
+        logger.log msg, WARN, depth + 1, cname, &blk
       else
         $stderr.puts "WARNING: " + msg
       end
     end
 
-    def self.error msg = "", depth = 1, &blk
+    def self.error msg = "", depth = 1, cname = nil, &blk
       if verbose
-        logger.log msg, ERROR, depth + 1, &blk
+        logger.log msg, ERROR, depth + 1, cname, &blk
       else
         $stderr.puts "ERROR: " + msg
       end
