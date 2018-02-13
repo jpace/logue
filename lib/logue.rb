@@ -11,7 +11,3 @@ Pathname.glob(loguelibdir + '/logue/**/*.rb').each do |file|
   fname = file.sub(Regexp.new('^' + loguelibdir + '/'), '').sub(rbre, '')
   require fname
 end
-
-module Logue
-  VERSION = '1.0.8'
-end

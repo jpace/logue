@@ -5,16 +5,16 @@ require 'logue/pathutil'
 
 class Logue::FormatWidths
   DEFAULT_FILENAME = -25
-  DEFAULT_LINENUM = 4
+  DEFAULT_LINENUM  = 4
   DEFAULT_FUNCTION = -20
 end    
 
 class Logue::Format
   def initialize args = Hash.new
-    @file_width = args.fetch :file_width, Logue::FormatWidths::DEFAULT_FILENAME
-    @line_width = args.fetch :line_width, Logue::FormatWidths::DEFAULT_LINENUM
+    @file_width   = args.fetch :file_width,   Logue::FormatWidths::DEFAULT_FILENAME
+    @line_width   = args.fetch :line_width,   Logue::FormatWidths::DEFAULT_LINENUM
     @method_width = args.fetch :method_width, Logue::FormatWidths::DEFAULT_FUNCTION
-    @trim = args.fetch :trim, true
+    @trim         = args.fetch :trim,         true
   end
 
   def copy args

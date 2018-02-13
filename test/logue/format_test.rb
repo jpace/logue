@@ -22,7 +22,7 @@ class Logue::FormatTestCase < Test::Unit::TestCase
   def test_default_values
     fmt = Logue::Format.new
     assert_instance_variable Logue::FormatWidths::DEFAULT_FILENAME, fmt, "@file_width"
-    assert_instance_variable Logue::FormatWidths::DEFAULT_LINENUM, fmt, "@line_width"
+    assert_instance_variable Logue::FormatWidths::DEFAULT_LINENUM,  fmt, "@line_width"
     assert_instance_variable Logue::FormatWidths::DEFAULT_FUNCTION, fmt, "@method_width"
     assert_instance_variable true, fmt, "@trim"
   end
@@ -35,7 +35,7 @@ class Logue::FormatTestCase < Test::Unit::TestCase
     assert_equal expected, result, msg
   end
 
-  def test_write
+  def test_format
     path = "/a/long/path/to/the/directory/abc.t"
     lineno = 1    
     func = "block (2 levels) in one"
@@ -44,16 +44,18 @@ class Logue::FormatTestCase < Test::Unit::TestCase
     assert_format expected, path, lineno, cls, func
   end
 
+  def test_init
+    fmt = Logue::Format.new line_width: 7, file_width: 8, method_width: 11, trim: false
+    assert_instance_variable 7, fmt, "@line_width"
+    assert_instance_variable 8, fmt, "@file_width"
+    assert_instance_variable 11, fmt, "@method_width"
+    assert_instance_variable false, fmt, "@trim"
+  end
+
   def test_copy
-    fmt = Logue::Format.new line_width: 77
-    val = fmt.instance_eval "@line_width"
-    assert_equal 77, val
-    
+    fmt = Logue::Format.new line_width: 2
     copy = fmt.copy method_width: 123
-    val = copy.instance_eval "@line_width"
-    assert_equal 77, val
-    
-    val = copy.instance_eval "@method_width"
-    assert_equal 123, val
+    assert_instance_variable 2, copy, "@line_width"
+    assert_instance_variable 123, copy, "@method_width"
   end
 end

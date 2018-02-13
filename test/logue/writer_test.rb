@@ -22,9 +22,9 @@ end
 class WriterTest < Test::Unit::TestCase
   def test_write_one
     fake_stack = Array.new.tap do |ary|
-      ary << FakeLocation.new(absolute_path: "/a/long/path/to/the/directory/abc.t", label: "block (2 levels) in one", lineno: 1)
-      ary << FakeLocation.new(absolute_path: "/another/path/def.t", label: "two", lineno: 11)
-      ary << FakeLocation.new(absolute_path: "/a/whole/nother/path/ghi.t", label: "three", lineno: 101)
+      ary << FakeLocation.new(absolute_path: "/path/a/b/c", label: "labc", lineno: 3)
+      ary << FakeLocation.new(absolute_path: "/path/d/e/f", label: "lghi", lineno: 1)
+      ary << FakeLocation.new(absolute_path: "/path/g/h/i", label: "ljkl", lineno: 7)
     end
 
     fmt = Logue::Format.new
@@ -36,6 +36,7 @@ class WriterTest < Test::Unit::TestCase
       wr.write fmt, fake_stack, 1
     end
     refute_empty out
+    puts "out: #{out}"
     assert_empty err
   end
 
@@ -53,5 +54,11 @@ class WriterTest < Test::Unit::TestCase
       $stdout = orig_stdout
       $stderr = orig_stderr
     end
+  end
+
+  def test_dump_collection
+    ary = %w{ abc def ghi }
+
+    #~~~ now write the collection, and test it ...
   end
 end
