@@ -5,8 +5,9 @@ require 'test/unit'
 require 'logue/writer'
 require 'logue/format'
 require 'stringio'
+require 'paramesan'
 
-class FakeLocation
+class TestFrame
   attr_reader :absolute_path
   attr_reader :lineno
   attr_reader :label
@@ -14,24 +15,32 @@ class FakeLocation
 
   def initialize args
     @absolute_path = args[:absolute_path]
-    @lineno = args[:lineno]
-    @label = args[:label]
+    @lineno        = args[:lineno]
+    @label         = args[:label]
   end
 end
 
 class WriterTest < Test::Unit::TestCase
-  def setup
-    @stack = Array.new.tap do |ary|
-      ary << FakeLocation.new(absolute_path: "/path/a/b/c", label: "labc", lineno: 3)
-      ary << FakeLocation.new(absolute_path: "/path/d/e/f", label: "lghi", lineno: 1)
-      ary << FakeLocation.new(absolute_path: "/path/g/h/i", label: "ljkl", lineno: 7)
+  include Paramesan
+  
+  class << self
+    def frame path, label, lineno
+      TestFrame.new absolute_path: path, label: label, lineno: lineno
+    end
+    
+    def stack
+      Array.new.tap do |ary|
+        ary << frame("/path/a/b/c", "labc", 3)
+        ary << frame("/path/d/e/f", "lghi", 1)
+        ary << frame("/path/g/h/i", "ljkl", 7)
+      end
     end
   end
   
   def test_write
     out, err = capture_io do
       wr = Logue::Writer.new Logue::Format.new
-      wr.write @stack, 3
+      wr.write self.class.stack, 3
     end
     refute_empty out
     lines = out.lines
@@ -39,13 +48,16 @@ class WriterTest < Test::Unit::TestCase
     assert_empty err
   end
 
-  def test_write_frame
+  param_test [
+    [ "[/path/a/b/c              :   3] {labc                }\n", stack.first ],
+    [ "[/path/a/b/c              :   3] {cdef#labc           }\n", stack.first, "cdef" ]
+  ].each do |exp, *args|
     out, err = capture_io do
       wr = Logue::Writer.new Logue::Format.new
-      wr.write_frame @stack.first
+      wr.write_frame(*args)
     end
     refute_empty out
-    assert_equal "[/path/a/b/c              :   3] {labc                }\n", out
+    assert_equal exp, out
     assert_empty err
   end
 
@@ -66,7 +78,7 @@ class WriterTest < Test::Unit::TestCase
   end
 
   def test_dump_collection
-    ary = %w{ abc def ghi }
+    # ary = %w{ abc def ghi }
 
     #~~~ now write the collection, and test it ...
   end
