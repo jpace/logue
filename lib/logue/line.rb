@@ -6,7 +6,7 @@ require 'logue/format'
 module Logue
 end
 
-class Logue::Writer
+class Logue::Line
   attr_accessor :out
   attr_reader :format
   

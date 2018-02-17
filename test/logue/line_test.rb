@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 require 'test/unit'
-require 'logue/writer'
+require 'logue/line'
 require 'logue/format'
 require 'stringio'
 require 'paramesan'
@@ -20,8 +20,28 @@ class TestFrame
   end
 end
 
-class WriterTest < Test::Unit::TestCase
+module IOCapture  
+  def capture_io
+    begin
+      orig_stdout = $stdout
+      captured_stdout = $stdout = StringIO.new
+      
+      orig_stderr = $stderr
+      captured_stderr = $stderr = StringIO.new
+
+      yield
+
+      return captured_stdout.string, captured_stderr.string
+    ensure
+      $stdout = orig_stdout
+      $stderr = orig_stderr
+    end
+  end
+end
+
+class LineTest < Test::Unit::TestCase
   include Paramesan
+  include IOCapture
   
   class << self
     def frame path, label, lineno
@@ -39,7 +59,7 @@ class WriterTest < Test::Unit::TestCase
   
   def test_write
     out, err = capture_io do
-      wr = Logue::Writer.new Logue::Format.new
+      wr = Logue::Line.new Logue::Format.new
       wr.write self.class.stack, 3
     end
     refute_empty out
@@ -53,28 +73,12 @@ class WriterTest < Test::Unit::TestCase
     [ "[/path/a/b/c              :   3] {cdef#labc           }\n", stack.first, "cdef" ]
   ].each do |exp, *args|
     out, err = capture_io do
-      wr = Logue::Writer.new Logue::Format.new
+      wr = Logue::Line.new Logue::Format.new
       wr.write_frame(*args)
     end
     refute_empty out
     assert_equal exp, out
     assert_empty err
-  end
-
-  def capture_io
-    begin
-      captured_stdout, captured_stderr = StringIO.new, StringIO.new
-
-      orig_stdout, orig_stderr = $stdout, $stderr
-      $stdout, $stderr         = captured_stdout, captured_stderr
-
-      yield
-
-      return captured_stdout.string, captured_stderr.string
-    ensure
-      $stdout = orig_stdout
-      $stderr = orig_stderr
-    end
   end
 
   def test_dump_collection
