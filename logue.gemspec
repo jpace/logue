@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{A minimalist logging module.}
   spec.description   = %q{A module that adds logging/trace functionality.}
-  spec.homepage      = "http://www.github.com/jpace/logue"
+  spec.homepage      = "https://www.github.com/jpace/logue"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

@@ -7,24 +7,17 @@ module Logue
 end
 
 class Logue::Line
-  attr_accessor :out
-  attr_reader :format
+  attr_reader :location
+  attr_reader :msg
   
-  def initialize format, out = $stdout
-    @format = format
-    @out = out
+  def initialize location, msg
+    @location = location
+    @msg = msg
   end
 
-  def write stack, nframes, cls = nil
-    stack[0 ... nframes].each do |frame|
-      path   = frame.absolute_path
-      lineno = frame.lineno
-      func   = frame.label
-      @out.puts @format.format path, lineno, cls, func
-    end
-  end
-
-  def write_frame frame, cls = nil
-    @out.puts @format.format frame.absolute_path, frame.lineno, cls, frame.label
+  def write format, out = $stdout
+    logmsg = @location.format format
+    logmsg += " " + @msg
+    out.puts logmsg
   end
 end

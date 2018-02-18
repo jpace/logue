@@ -4,7 +4,8 @@
 require 'test/unit'
 require 'logue/line'
 require 'logue/format'
-require 'stringio'
+require 'logue/location'
+require 'logue/io'
 require 'paramesan'
 
 class TestFrame
@@ -17,25 +18,6 @@ class TestFrame
     @absolute_path = args[:absolute_path]
     @lineno        = args[:lineno]
     @label         = args[:label]
-  end
-end
-
-module IOCapture  
-  def capture_io
-    begin
-      orig_stdout = $stdout
-      captured_stdout = $stdout = StringIO.new
-      
-      orig_stderr = $stderr
-      captured_stderr = $stderr = StringIO.new
-
-      yield
-
-      return captured_stdout.string, captured_stderr.string
-    ensure
-      $stdout = orig_stdout
-      $stderr = orig_stderr
-    end
   end
 end
 
@@ -57,24 +39,25 @@ class LineTest < Test::Unit::TestCase
     end
   end
   
-  def test_write
-    out, err = capture_io do
-      wr = Logue::Line.new Logue::Format.new
-      wr.write self.class.stack, 3
-    end
-    refute_empty out
-    lines = out.lines
-    assert_equal 3, lines.size
-    assert_empty err
-  end
+  # def test_write
+  #   out, err = capture_io do
+  #     wr = Logue::Line.new Logue::Format.new
+  #     wr.write self.class.stack, 3
+  #   end
+  #   refute_empty out
+  #   lines = out.lines
+  #   assert_equal 3, lines.size
+  #   assert_empty err
+  # end
 
   param_test [
-    [ "[/path/a/b/c              :   3] {labc                }\n", stack.first ],
-    [ "[/path/a/b/c              :   3] {cdef#labc           }\n", stack.first, "cdef" ]
-  ].each do |exp, *args|
+    [ "[/path/a/b/c              :   3] {labc                } mabc\n", stack.first, nil, "mabc" ],
+    [ "[/path/a/b/c              :   3] {cdef#labc           } mabc\n", stack.first, "cdef", "mabc" ]
+  ].each do |exp, frame, cls, msg|
     out, err = capture_io do
-      wr = Logue::Line.new Logue::Format.new
-      wr.write_frame(*args)
+      loc = Logue::Location.new frame.absolute_path, frame.lineno, cls, frame.label
+      wr = Logue::Line.new loc, msg
+      wr.write Logue::Format.new
     end
     refute_empty out
     assert_equal exp, out
