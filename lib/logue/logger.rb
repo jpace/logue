@@ -12,7 +12,7 @@
 require 'rainbow/x11_color_names'
 require 'pathname'
 require 'logue/severity'
-require 'logue/format'
+require 'logue/location_format'
 require 'logue/pathutil'
 
 #
@@ -72,7 +72,7 @@ class Logue::Logger
     @quiet           = false
     @trim            = true
 
-    @format = Logue::Format.new
+    @format = Logue::LocationFormat.new
 
     set_default_widths
   end
@@ -199,7 +199,7 @@ class Logue::Logger
   end
 
   def print_formatted file, line, func, msg, lvl, &blk
-    fmt = Logue::Format.new file_width: @file_width, line_width: @line_width, method_width: @function_width, trim: @trim
+    fmt = Logue::LocationFormat.new file_width: @file_width, line_width: @line_width, method_width: @function_width, trim: @trim
     location = fmt.format file, line, nil, func
     print location, msg, lvl, &blk
   end

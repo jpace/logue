@@ -9,11 +9,20 @@ class Logue::FormatWidths
   DEFAULT_FUNCTION = -20
 end    
 
-class Logue::Format
+class Logue::LocationFormat
+  DEFAULT_FILENAME_WIDTH = -25
+  DEFAULT_LINENUM_WIDTH  = 4
+  DEFAULT_FUNCTION_WIDTH = -20
+
+  attr_accessor :file_width
+  attr_accessor :line_width
+  attr_accessor :method_width
+  attr_accessor :trim
+  
   def initialize args = Hash.new
-    @file_width   = args.fetch :file_width,   Logue::FormatWidths::DEFAULT_FILENAME
-    @line_width   = args.fetch :line_width,   Logue::FormatWidths::DEFAULT_LINENUM
-    @method_width = args.fetch :method_width, Logue::FormatWidths::DEFAULT_FUNCTION
+    @file_width   = args.fetch :file_width,   DEFAULT_FILENAME_WIDTH
+    @line_width   = args.fetch :line_width,   DEFAULT_LINENUM_WIDTH
+    @method_width = args.fetch :method_width, DEFAULT_FUNCTION_WIDTH
     @trim         = args.fetch :trim,         true
   end
 
@@ -34,5 +43,9 @@ class Logue::Format
     
     format = "[%#{@file_width}s:%#{@line_width}d] {%#{@method_width}s}"
     sprintf format, path, lineno, func
+  end
+
+  def format_string
+    "[%#{@file_width}s:%#{@line_width}d] {%#{@method_width}s}"
   end
 end

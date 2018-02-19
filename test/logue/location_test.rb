@@ -1,12 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'logue/line'
-require 'logue/location_format'
 require 'logue/location'
+require 'logue/location_format'
 require 'test/unit'
-require 'paramesan'
 require 'logue/io'
+require 'paramesan'
 
 class TestFrame
   attr_reader :absolute_path
@@ -21,9 +20,8 @@ class TestFrame
   end
 end
 
-class LineTest < Test::Unit::TestCase
+class LocationTest < Test::Unit::TestCase
   include Paramesan
-  include IOCapture
   
   class << self
     def frame path, label, lineno
@@ -39,30 +37,12 @@ class LineTest < Test::Unit::TestCase
     end
   end
   
-  # def test_write
-  #   out, err = capture_io do
-  #     wr = Logue::Line.new Logue::Format.new
-  #     wr.write self.class.stack, 3
-  #   end
-  #   refute_empty out
-  #   lines = out.lines
-  #   assert_equal 3, lines.size
-  #   assert_empty err
-  # end
-
   param_test [
-    [ "[/path/a/b/c              :   3] {labc                } mabc", stack.first, nil, "mabc" ],
-    [ "[/path/a/b/c              :   3] {cdef#labc           } mabc", stack.first, "cdef", "mabc" ]
-  ].each do |exp, frame, cls, msg|
+    [ "[/path/a/b/c              :   3] {labc                }", stack.first, nil ],
+    [ "[/path/a/b/c              :   3] {cdef#labc           }", stack.first, "cdef" ]
+  ].each do |exp, frame, cls|
     loc = Logue::Location.new frame.absolute_path, frame.lineno, cls, frame.label
-    line = Logue::Line.new loc, msg
-    result = line.format Logue::LocationFormat.new
+    result = loc.format Logue::LocationFormat.new
     assert_equal exp, result
-  end
-
-  def test_dump_collection
-    # ary = %w{ abc def ghi }
-
-    #~~~ now write the collection, and test it ...
   end
 end

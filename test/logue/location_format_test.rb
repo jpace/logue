@@ -2,9 +2,9 @@
 # -*- ruby -*-
 
 require 'test/unit'
-require 'logue/format'
+require 'logue/location_format'
 
-class Logue::FormatTestCase < Test::Unit::TestCase
+class Logue::LocationFormatTestCase < Test::Unit::TestCase
   # use as:
   # msg "path", path, "lineno", lineno, "cls", cls, "func", func
   def message(*fields)
@@ -14,22 +14,22 @@ class Logue::FormatTestCase < Test::Unit::TestCase
   end
 
   def assert_instance_variable expected, obj, name
-    val = obj.instance_eval name
-    assert_equal expected, val, "name: #{name}; expected: #{expected}; result: #{val}"
-    val
+    obj.instance_eval(name).tap do |val|
+      assert_equal expected, val, "name: #{name}; expected: #{expected}; result: #{val}"
+    end
   end
 
   def test_default_values
-    fmt = Logue::Format.new
-    assert_instance_variable Logue::FormatWidths::DEFAULT_FILENAME, fmt, "@file_width"
-    assert_instance_variable Logue::FormatWidths::DEFAULT_LINENUM,  fmt, "@line_width"
-    assert_instance_variable Logue::FormatWidths::DEFAULT_FUNCTION, fmt, "@method_width"
-    assert_instance_variable true, fmt, "@trim"
+    fmt = Logue::LocationFormat.new
+    assert_equal Logue::LocationFormat::DEFAULT_FILENAME_WIDTH, fmt.file_width
+    assert_equal Logue::LocationFormat::DEFAULT_LINENUM_WIDTH,  fmt.line_width
+    assert_equal Logue::LocationFormat::DEFAULT_FUNCTION_WIDTH, fmt.method_width
+    assert_equal true, fmt.trim
   end
 
   def assert_format expected, path, lineno, cls, func
-    amsg = message "path", path, "lineno", lineno, "cls", cls, "func", func
-    fmt = Logue::Format.new
+    amsg   = message "path", path, "lineno", lineno, "cls", cls, "func", func
+    fmt    = Logue::LocationFormat.new
     result = fmt.format path, lineno, cls, func
     assert_equal expected, result, amsg
   end
@@ -44,7 +44,7 @@ class Logue::FormatTestCase < Test::Unit::TestCase
   end
 
   def test_init
-    fmt = Logue::Format.new line_width: 7, file_width: 8, method_width: 11, trim: false
+    fmt = Logue::LocationFormat.new line_width: 7, file_width: 8, method_width: 11, trim: false
     assert_instance_variable 7,     fmt, "@line_width"
     assert_instance_variable 8,     fmt, "@file_width"
     assert_instance_variable 11,    fmt, "@method_width"
@@ -52,9 +52,16 @@ class Logue::FormatTestCase < Test::Unit::TestCase
   end
 
   def test_copy
-    fmt  = Logue::Format.new line_width: 2
+    fmt  = Logue::LocationFormat.new line_width: 2
     copy = fmt.copy method_width: 123
     assert_instance_variable 2,   copy, "@line_width"
     assert_instance_variable 123, copy, "@method_width"
+  end
+
+  def test_format_string
+    exp = "[%-25s:%4d] {%-20s}"
+    fmt = Logue::LocationFormat.new
+    result = fmt.format_string
+    assert_equal exp, result
   end
 end

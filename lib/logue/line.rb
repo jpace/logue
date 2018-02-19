@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'logue/format'
+require 'logue/location_format'
 
 module Logue
 end
@@ -15,9 +15,8 @@ class Logue::Line
     @msg = msg
   end
 
-  def write format, out = $stdout
+  def format format
     logmsg = @location.format format
-    logmsg += " " + @msg
-    out.puts logmsg
+    logmsg + " " + @msg
   end
 end
