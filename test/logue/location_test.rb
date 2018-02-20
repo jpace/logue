@@ -11,7 +11,6 @@ class TestFrame
   attr_reader :absolute_path
   attr_reader :lineno
   attr_reader :label
-  # attr_reader :base_label
 
   def initialize args
     @absolute_path = args[:absolute_path]
