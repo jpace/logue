@@ -1,23 +1,11 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
 require 'logue/location_format'
+require 'test_helper'
 
 class Logue::LocationFormatTestCase < Test::Unit::TestCase
-  # use as:
-  # msg "path", path, "lineno", lineno, "cls", cls, "func", func
-  def message(*fields)
-    fields.each_slice(2).collect do |field, value|
-      "#{field}: #{value}"
-    end.join "; "
-  end
-
-  def assert_instance_variable expected, obj, name
-    obj.instance_eval(name).tap do |val|
-      assert_equal expected, val, "name: #{name}; expected: #{expected}; result: #{val}"
-    end
-  end
+  include Messager
 
   def test_default_values
     fmt = Logue::LocationFormat.new
@@ -45,22 +33,22 @@ class Logue::LocationFormatTestCase < Test::Unit::TestCase
 
   def test_init
     fmt = Logue::LocationFormat.new line_width: 7, file_width: 8, method_width: 11, trim: false
-    assert_instance_variable 7,     fmt, "@line_width"
-    assert_instance_variable 8,     fmt, "@file_width"
-    assert_instance_variable 11,    fmt, "@method_width"
-    assert_instance_variable false, fmt, "@trim"
+    assert_equal fmt.line_width,   7
+    assert_equal fmt.file_width,   8
+    assert_equal fmt.method_width, 11
+    assert_equal fmt.trim,         false
   end
 
   def test_copy
     fmt  = Logue::LocationFormat.new line_width: 2
     copy = fmt.copy method_width: 123
-    assert_instance_variable 2,   copy, "@line_width"
-    assert_instance_variable 123, copy, "@method_width"
+    assert_equal copy.line_width,   2
+    assert_equal copy.method_width, 123
   end
 
   def test_format_string
-    exp = "[%-25s:%4d] {%-20s}"
-    fmt = Logue::LocationFormat.new
+    exp    = "[%-25s:%4d] {%-20s}"
+    fmt    = Logue::LocationFormat.new
     result = fmt.format_string
     assert_equal exp, result
   end

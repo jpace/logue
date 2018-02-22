@@ -36,16 +36,16 @@ class Logue::LocationFormat
       func = cls.to_s + "#" + func
     end
     
-    if @trim
+    if trim
       path = Logue::PathUtil.trim_right path, @file_width
       func = Logue::PathUtil.trim_left  func, @method_width
     end
     
-    format = "[%#{@file_width}s:%#{@line_width}d] {%#{@method_width}s}"
+    format = "[%#{file_width}s:%#{line_width}d] {%#{method_width}s}"
     sprintf format, path, lineno, func
   end
 
   def format_string
-    "[%#{@file_width}s:%#{@line_width}d] {%#{@method_width}s}"
+    "[%#{file_width}s:%#{line_width}d] {%#{method_width}s}"
   end
 end

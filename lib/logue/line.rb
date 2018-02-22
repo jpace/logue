@@ -15,8 +15,8 @@ class Logue::Line
     @msg = msg
   end
 
-  def format format
-    logmsg = @location.format format
+  def format locformat
+    logmsg = @location.format locformat
     logmsg + " " + @msg
   end
 end

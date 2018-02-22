@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/frame'
-require 'test/unit'
+require 'test_helper'
 require 'paramesan'
 
 module Logue
