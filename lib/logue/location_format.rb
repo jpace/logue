@@ -3,49 +3,45 @@
 
 require 'logue/pathutil'
 
-class Logue::FormatWidths
+class Logue::LocationFormatWidths
   DEFAULT_FILENAME = -25
-  DEFAULT_LINENUM  = 4
+  DEFAULT_LINE  = 4
   DEFAULT_FUNCTION = -20
 end    
 
 class Logue::LocationFormat
-  DEFAULT_FILENAME_WIDTH = -25
-  DEFAULT_LINENUM_WIDTH  = 4
-  DEFAULT_FUNCTION_WIDTH = -20
-
-  attr_accessor :file_width
-  attr_accessor :line_width
-  attr_accessor :method_width
+  attr_accessor :file
+  attr_accessor :line
+  attr_accessor :function
   attr_accessor :trim
   
   def initialize args = Hash.new
-    @file_width   = args.fetch :file_width,   DEFAULT_FILENAME_WIDTH
-    @line_width   = args.fetch :line_width,   DEFAULT_LINENUM_WIDTH
-    @method_width = args.fetch :method_width, DEFAULT_FUNCTION_WIDTH
-    @trim         = args.fetch :trim,         true
+    @file     = args.fetch :file,     Logue::LocationFormatWidths::DEFAULT_FILENAME
+    @line     = args.fetch :line,     Logue::LocationFormatWidths::DEFAULT_LINE
+    @function = args.fetch :function, Logue::LocationFormatWidths::DEFAULT_FUNCTION
+    @trim     = args.fetch :trim,     true
   end
 
   def copy args
-    values = { file_width: @file_width, line_width: @line_width, method_width: @method_width, trim: @trim }
+    values = { file: @file, line: @line, function: @function, trim: @trim }
     self.class.new values.merge(args)
   end
   
-  def format path, lineno, cls, func
+  def format path, line, cls, func
     if cls
       func = cls.to_s + "#" + func
     end
     
     if trim
-      path = Logue::PathUtil.trim_right path, @file_width
-      func = Logue::PathUtil.trim_left  func, @method_width
+      path = Logue::PathUtil.trim_right path, @file
+      func = Logue::PathUtil.trim_left  func, @function
     end
     
-    format = "[%#{file_width}s:%#{line_width}d] {%#{method_width}s}"
-    sprintf format, path, lineno, func
+    format = "[%#{file}s:%#{@line}d] {%#{function}s}"
+    sprintf format, path, line, func
   end
 
   def format_string
-    "[%#{file_width}s:%#{line_width}d] {%#{method_width}s}"
+    "[%#{file}s:%#{line}d] {%#{function}s}"
   end
 end

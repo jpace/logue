@@ -130,7 +130,7 @@ class LogTestCase < Test::Unit::TestCase
     expected << "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(-35, Logue::LocationFormat::DEFAULT_LINENUM_WIDTH, Logue::LocationFormat::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(-35, Logue::LocationFormatWidths::DEFAULT_LINE, Logue::LocationFormatWidths::DEFAULT_FUNCTION)
     end
   end
 
@@ -139,7 +139,7 @@ class LogTestCase < Test::Unit::TestCase
     expected << "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME_WIDTH, -10, Logue::LocationFormat::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(Logue::LocationFormatWidths::DEFAULT_FILENAME, -10, Logue::LocationFormatWidths::DEFAULT_FUNCTION)
     end
   end
 
@@ -148,7 +148,7 @@ class LogTestCase < Test::Unit::TestCase
     expected << "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME_WIDTH, Logue::LocationFormat::DEFAULT_LINENUM_WIDTH, 35)
+      Log.set_widths(Logue::LocationFormatWidths::DEFAULT_FILENAME, Logue::LocationFormatWidths::DEFAULT_LINE, 35)
     end
   end
 
@@ -157,7 +157,7 @@ class LogTestCase < Test::Unit::TestCase
     expected << "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n"
 
     run_format_test expected do
-      Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME_WIDTH, "08", Logue::LocationFormat::DEFAULT_FUNCTION_WIDTH)
+      Log.set_widths(Logue::LocationFormatWidths::DEFAULT_FILENAME, "08", Logue::LocationFormatWidths::DEFAULT_FUNCTION)
     end
   end
 

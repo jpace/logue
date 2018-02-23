@@ -81,7 +81,8 @@ class Logue::Logger
   end
 
   def set_default_widths
-    set_widths Logue::FormatWidths::DEFAULT_FILENAME, Logue::FormatWidths::DEFAULT_LINENUM, Logue::FormatWidths::DEFAULT_FUNCTION
+    wcls = Logue::LocationFormatWidths
+    set_widths Logue::LocationFormatWidths::DEFAULT_FILENAME, Logue::LocationFormatWidths::DEFAULT_LINE, Logue::LocationFormatWidths::DEFAULT_FUNCTION
   end
 
   def verbose
@@ -191,15 +192,13 @@ class Logue::Logger
       func = cname + "#" + func
     end
     
-    if ignored_files[file] || (cname && ignored_classes[cname]) || ignored_methods[func]
-    # skip this one.
-    else
+    unless ignored_files[file] || (cname && ignored_classes[cname]) || ignored_methods[func]
       print_formatted(file, line, func, msg, lvl, &blk)
     end
   end
 
   def print_formatted file, line, func, msg, lvl, &blk
-    fmt = Logue::LocationFormat.new file_width: @file_width, line_width: @line_width, method_width: @function_width, trim: @trim
+    fmt = Logue::LocationFormat.new file: @file_width, line: @line_width, function: @function_width, trim: @trim
     location = fmt.format file, line, nil, func
     print location, msg, lvl, &blk
   end
