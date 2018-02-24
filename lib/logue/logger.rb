@@ -10,6 +10,7 @@
 #
 
 require 'rainbow/x11_color_names'
+require 'rainbow/color'
 require 'pathname'
 require 'logue/severity'
 require 'logue/location_format'
@@ -31,9 +32,6 @@ module Logue
 end
 
 class Logue::Logger
-  $LOGGING_LEVEL = nil
-
-  attr_accessor :quiet
   attr_accessor :output
   attr_accessor :colorize_line
   attr_accessor :level
@@ -44,7 +42,7 @@ class Logue::Logger
   include Logue::Log::Severity
 
   def initialize
-    set_defaults
+    reset
   end
   
   def verbose= v
@@ -58,15 +56,14 @@ class Logue::Logger
              end
   end
 
-  def set_defaults
-    $LOGGING_LEVEL   = @level = FATAL
+  def reset
+    @level           = FATAL
     @ignored_files   = Hash.new
     @ignored_methods = Hash.new
     @ignored_classes = Hash.new
     @output          = $stdout
     @colors          = Array.new
     @colorize_line   = false
-    @quiet           = false
     @format          = Logue::LocationFormat.new
   end
 
@@ -89,8 +86,8 @@ class Logue::Logger
 
   # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
   # (e.g., "00317") the line_width argument must be a string, not an integer.
-  def set_widths file_width, line_width, function_width
-    @format = Logue::LocationFormat.new file: file_width, line: line_width, function: function_width
+  def set_widths file, line, function
+    @format = Logue::LocationFormat.new file: file, line: line, function: function
   end
 
   def ignore_file fname

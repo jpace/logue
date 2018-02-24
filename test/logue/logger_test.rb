@@ -8,10 +8,8 @@ class LoggerTest < Test::Unit::TestCase
   def test_default
     logger = Logue::Logger.new
 
-    assert_equal Logue::Log::Severity::FATAL, $LOGGING_LEVEL
     assert_equal Logue::Log::Severity::FATAL, logger.level
 
-    assert_equal false,                       logger.quiet
     assert_equal $stdout,                     logger.output
     assert_equal false,                       logger.colorize_line
 

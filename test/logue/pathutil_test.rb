@@ -12,6 +12,8 @@ class Logue::PathUtilTestCase < Test::Unit::TestCase
     ["abcd",    4 ],
     ["abc",     3 ],
     ["abcdef", 10 ],
+    ["abcdef",  6 ],
+    ["abcde",   5 ],
     ["abcd",   -4 ],
     ["abc",    -3 ],
   ].each do |exp, len|
