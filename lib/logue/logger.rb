@@ -14,6 +14,7 @@ require 'pathname'
 require 'logue/severity'
 require 'logue/location_format'
 require 'logue/pathutil'
+require 'logue/frame'
 
 #
 # == Logger
@@ -39,12 +40,8 @@ class Logue::Logger
   attr_accessor :ignored_files
   attr_accessor :ignored_methods
   attr_accessor :ignored_classes
-  
-  attr_reader :trim
 
   include Logue::Log::Severity
-
-  FRAME_RE = Regexp.new('(.*):(\d+)(?::in \`(.*)\')?')
 
   def initialize
     set_defaults
@@ -70,38 +67,30 @@ class Logue::Logger
     @colors          = Array.new
     @colorize_line   = false
     @quiet           = false
-    @trim            = true
-
-    @format = Logue::LocationFormat.new
-
-    set_default_widths
+    @format          = Logue::LocationFormat.new
   end
 
   def trim= what
   end
 
   def set_default_widths
-    wcls = Logue::LocationFormatWidths
-    set_widths Logue::LocationFormatWidths::DEFAULT_FILENAME, Logue::LocationFormatWidths::DEFAULT_LINE, Logue::LocationFormatWidths::DEFAULT_FUNCTION
+    @format = Logue::LocationFormat.new
   end
 
   def verbose
     level <= DEBUG
   end
 
-  # Assigns output to a file with the given name. Returns the file; client
-  # is responsible for closing it.
+  # Assigns output to a file with the given name. Returns the file; the client is responsible for
+  # closing it.
   def outfile= f
     @output = f.kind_of?(IO) ? f : File.new(f, "w")
   end
 
-  # Creates a printf format for the given widths, for aligning output. To lead
-  # lines with zeros (e.g., "00317") the line_width argument must be a string,
-  # not an integer.
-  def set_widths file_width, line_width, func_width
-    @file_width = file_width
-    @line_width = line_width
-    @function_width = func_width
+  # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
+  # (e.g., "00317") the line_width argument must be a string, not an integer.
+  def set_widths file_width, line_width, function_width
+    @format = Logue::LocationFormat.new file: file_width, line: line_width, function: function_width
   end
 
   def ignore_file fname
@@ -179,27 +168,16 @@ class Logue::Logger
   end
 
   def print_stack_frame frame, cname, msg, lvl, &blk
-    md = FRAME_RE.match frame
-    file, line, func = md[1], md[2], (md[3] || "")
-    # file.sub!(/.*\//, "")
-
-    # Ruby 1.9 expands the file name, but 1.8 doesn't:
-    pn = Pathname.new(file).expand_path
+    frm  = Logue::Frame.new entry: frame
+    func = cname ? cname + "#" + frm.function : frm.function
     
-    file = pn.to_s
-
-    if cname
-      func = cname + "#" + func
-    end
-    
-    unless ignored_files[file] || (cname && ignored_classes[cname]) || ignored_methods[func]
-      print_formatted(file, line, func, msg, lvl, &blk)
+    unless ignored_files[frm.path] || (cname && ignored_classes[cname]) || ignored_methods[func]
+      print_formatted(frm.path, frm.line, func, msg, lvl, &blk)
     end
   end
 
   def print_formatted file, line, func, msg, lvl, &blk
-    fmt = Logue::LocationFormat.new file: @file_width, line: @line_width, function: @function_width, trim: @trim
-    location = fmt.format file, line, nil, func
+    location = @format.format file, line, nil, func
     print location, msg, lvl, &blk
   end
   
@@ -244,7 +222,8 @@ class Logue::Logger
   end
 
   def respond_to? meth
-    validcolors = Rainbow::X11ColorNames::NAMES
+    # validcolors = Rainbow::X11ColorNames::NAMES
+    validcolors = Rainbow::Color::Named::NAMES
     validcolors.include?(meth) || super
   end
 

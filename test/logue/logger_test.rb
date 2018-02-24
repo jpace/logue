@@ -18,7 +18,6 @@ class LoggerTest < Test::Unit::TestCase
     assert_equal Hash.new,                    logger.ignored_files
     assert_equal Hash.new,                    logger.ignored_methods
     assert_equal Hash.new,                    logger.ignored_classes
-    assert_equal true,                        logger.trim
 
     assert_equal false,                       logger.verbose
   end
