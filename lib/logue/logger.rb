@@ -38,6 +38,8 @@ class Logue::Logger
   attr_accessor :ignored_files
   attr_accessor :ignored_methods
   attr_accessor :ignored_classes
+  
+  attr_accessor :format
 
   include Logue::Log::Severity
 
@@ -70,6 +72,10 @@ class Logue::Logger
   def trim= what
   end
 
+  def verbose
+    level <= DEBUG
+  end
+  
   def set_default_widths
     @format = Logue::LocationFormat.new
   end
