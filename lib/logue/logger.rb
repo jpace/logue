@@ -84,6 +84,10 @@ class Logue::Logger
     level <= DEBUG
   end
 
+  def quiet
+    level >= WARN
+  end
+
   # Assigns output to a file with the given name. Returns the file; the client is responsible for
   # closing it.
   def outfile= f
