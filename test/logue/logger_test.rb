@@ -43,13 +43,39 @@ class LoggerTest < Test::Unit::TestCase
   param_test [
     [ 1, 2, 3, 1, 2, 3 ],
   ].each do |expfile, expline, expfunction, file, line, function|
-    logger = Logue::Logger.new
-    format = Logue::LocationFormat.new file: file, line: line, function: function
+    logger        = Logue::Logger.new
+    format        = Logue::LocationFormat.new file: file, line: line, function: function
     logger.format = format
-    result = logger.format
+    result        = logger.format
 
     assert_equal expfile, result.file
     assert_equal expline, result.line
     assert_equal expfunction, result.function
+  end
+
+  def test_trim
+    logger = Logue::Logger.new
+    logger.trim = false
+  end
+
+  param_test [
+    [ Logue::Log::Severity::WARN,  true ],  
+    [ Logue::Log::Severity::DEBUG, false ], 
+  ].each do |exp, quiet|
+    logger = Logue::Logger.new
+    logger.quiet = quiet
+    assert_equal exp, logger.level
+  end
+
+  param_test [
+    [ true,  Logue::Log::Severity::ERROR ], 
+    [ true,  Logue::Log::Severity::WARN ],  
+    [ false, Logue::Log::Severity::INFO ],  
+    [ true,  Logue::Log::Severity::WARN ],  
+    [ false, Logue::Log::Severity::DEBUG ], 
+  ].each do |exp, level|
+    logger = Logue::Logger.new
+    logger.level = level
+    assert_equal exp, logger.quiet
   end
 end
