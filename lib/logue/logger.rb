@@ -84,7 +84,7 @@ module Logue
     end
 
     def quiet
-      level >= WARN
+      @level >= WARN
     end
 
     def quiet= b

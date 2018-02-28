@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 #
-# = severity.rb
+# = level.rb
 #
 # Logging Module
 #
@@ -9,14 +9,13 @@
 # Documentation:: Author
 #
 
+require 'logue/level'
+
 module Logue
   class Log
+    # legacy module that is replaced by Logue::Level
     module Severity
-      DEBUG = 0
-      INFO  = 1
-      WARN  = 2
-      ERROR = 3
-      FATAL = 4
+      include Logue::Level
     end
   end
 end
