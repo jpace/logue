@@ -5,25 +5,27 @@ require 'logue/colorlog'
 require 'test/unit'
 require 'paramesan'
 
-class ColorLogTest < Test::Unit::TestCase
+class Logue::ColorLogTest < Test::Unit::TestCase
   include Paramesan
 
   param_test [
     [ true,  :blue ],          
     [ false, :no_such_color ], 
   ].each do |exp, name|
-    logger = Logue::ColorLog.new
+    logger = self.class.create_logger
     assert_equal exp, logger.respond_to?(name)
   end
   
   def test_add_color_method
-    logger = Logue::ColorLog.new
+    logger = self.class.create_logger
     logger.add_color_method :blue, 666
     assert_not_nil logger.method(:blue)
   end
 
   def self.create_logger
-    Logue::ColorLog.new.tap do |logger|
+    Object.new.tap do |logger|
+      logger.extend Logue::ColorLog
+      
       class << logger
         def called_with
           @called_with

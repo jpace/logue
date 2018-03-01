@@ -12,10 +12,11 @@
 require 'rainbow/x11_color_names'
 require 'rainbow/color'
 require 'pathname'
-require 'logue/severity'
+require 'logue/level'
 require 'logue/location_format'
 require 'logue/pathutil'
 require 'logue/frame'
+require 'logue/colorlog'
 
 #
 # == Logger
@@ -37,6 +38,7 @@ module Logue
   
   class Logger
     include LegacyLogger
+    include ColorLog
     
     attr_accessor :output
     attr_accessor :colorize_line
@@ -47,7 +49,7 @@ module Logue
     
     attr_accessor :format
 
-    include Logue::Log::Severity
+    include Logue::Level
 
     def initialize
       reset
@@ -217,32 +219,6 @@ module Logue
 
     def set_color lvl, color
       @colors[lvl] = color
-    end
-
-    def method_missing meth, *args, &blk
-      # validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors = Rainbow::Color::Named::NAMES
-      # only handling foregrounds, not backgrounds
-      if code = validcolors[meth]
-        add_color_method meth.to_s, code + 30
-        send meth, *args, &blk
-      else
-        super
-      end
-    end
-
-    def respond_to? meth
-      # validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors = Rainbow::Color::Named::NAMES
-      validcolors.include?(meth) || super
-    end
-
-    def add_color_method color, code
-      instmeth = Array.new
-      instmeth << "def #{color}(msg = \"\", lvl = DEBUG, depth = 1, cname = nil, &blk)"
-      instmeth << "  log(\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
-      instmeth << "end"
-      instance_eval instmeth.join("\n")
     end
   end
 end

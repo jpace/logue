@@ -24,7 +24,7 @@ require 'logue/level'
 # 
 
 module Logue
-  class ColorLog
+  module ColorLog
     def method_missing meth, *args, &blk
       # validcolors = Rainbow::X11ColorNames::NAMES
       validcolors = Rainbow::Color::Named::NAMES

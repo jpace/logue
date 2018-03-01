@@ -5,33 +5,38 @@ require 'logue/logger'
 require 'test/unit'
 require 'paramesan'
 
-class LoggerTest < Test::Unit::TestCase
+class Logue::LoggerTest < Test::Unit::TestCase
   include Paramesan
+
+  def self.create_logger
+    Logue::Logger.new
+  end
   
   def test_default
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
 
-    assert_equal Logue::Log::Severity::FATAL, logger.level
+    assert_equal Logue::Level::FATAL, logger.level
 
-    assert_equal $stdout,                     logger.output
-    assert_equal false,                       logger.colorize_line
+    assert_equal $stdout,             logger.output
+    assert_equal false,               logger.colorize_line
 
-    assert_equal Hash.new,                    logger.ignored_files
-    assert_equal Hash.new,                    logger.ignored_methods
-    assert_equal Hash.new,                    logger.ignored_classes
+    assert_equal Hash.new,            logger.ignored_files
+    assert_equal Hash.new,            logger.ignored_methods
+    assert_equal Hash.new,            logger.ignored_classes
 
-    assert_equal false,                       logger.verbose
+    assert_equal false,               logger.verbose
   end
 
   def test_respond_to
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
     assert_equal true, logger.respond_to?(:blue)
+    assert_equal false, logger.respond_to?(:no_such_color)
   end
 
   param_test [
     [ 1, 2, 3, 1, 2, 3 ],
   ].each do |expfile, expline, expfunction, *args|
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
     logger.set_widths(*args)
     format = logger.format
 
@@ -43,7 +48,7 @@ class LoggerTest < Test::Unit::TestCase
   param_test [
     [ 1, 2, 3, 1, 2, 3 ],
   ].each do |expfile, expline, expfunction, file, line, function|
-    logger        = Logue::Logger.new
+    logger        = self.class.create_logger
     format        = Logue::LocationFormat.new file: file, line: line, function: function
     logger.format = format
     result        = logger.format
@@ -54,27 +59,27 @@ class LoggerTest < Test::Unit::TestCase
   end
 
   def test_trim
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
     logger.trim = false
   end
 
   param_test [
-    [ Logue::Log::Severity::WARN,  true ],  
-    [ Logue::Log::Severity::DEBUG, false ], 
+    [ Logue::Level::WARN,  true ],  
+    [ Logue::Level::DEBUG, false ], 
   ].each do |exp, quiet|
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
     logger.quiet = quiet
     assert_equal exp, logger.level
   end
 
   param_test [
-    [ true,  Logue::Log::Severity::ERROR ], 
-    [ true,  Logue::Log::Severity::WARN ],  
-    [ false, Logue::Log::Severity::INFO ],  
-    [ true,  Logue::Log::Severity::WARN ],  
-    [ false, Logue::Log::Severity::DEBUG ], 
+    [ true,  Logue::Level::ERROR ], 
+    [ true,  Logue::Level::WARN ],  
+    [ false, Logue::Level::INFO ],  
+    [ true,  Logue::Level::WARN ],  
+    [ false, Logue::Level::DEBUG ], 
   ].each do |exp, level|
-    logger = Logue::Logger.new
+    logger = self.class.create_logger
     logger.level = level
     assert_equal exp, logger.quiet
   end
