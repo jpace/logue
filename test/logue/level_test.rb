@@ -10,11 +10,11 @@ module Logue
     include Paramesan
 
     param_test [
-      [ 0, Logue::Level::DEBUG ], 
-      [ 1, Logue::Level::INFO ],  
-      [ 2, Logue::Level::WARN ],  
-      [ 3, Logue::Level::ERROR ], 
-      [ 4, Logue::Level::FATAL ], 
+      [ 0, Level::DEBUG ], 
+      [ 1, Level::INFO ],  
+      [ 2, Level::WARN ],  
+      [ 3, Level::ERROR ], 
+      [ 4, Level::FATAL ], 
     ].each do |exp, level|
       assert_equal exp, level
     end

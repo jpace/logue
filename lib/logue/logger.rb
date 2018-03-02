@@ -66,6 +66,10 @@ module Logue
                end
     end
 
+    def verbose
+      @level <= DEBUG
+    end
+
     def reset
       @level           = FATAL
       @ignored_files   = Hash.new
@@ -75,10 +79,6 @@ module Logue
       @colors          = Array.new
       @colorize_line   = false
       @format          = Logue::LocationFormat.new
-    end
-
-    def verbose
-      level <= DEBUG
     end
     
     def set_default_widths
