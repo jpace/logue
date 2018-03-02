@@ -10,7 +10,7 @@
 #
 
 require 'logue/logger'
-require 'logue/severity'
+require 'logue/level'
 require 'logue/colors'
 
 #
@@ -54,7 +54,7 @@ module Logue
   class Log
     $LOGGING_LEVEL = nil
 
-    include Log::Severity
+    include Level
 
     # by default, class methods delegate to a single app-wide log.
 

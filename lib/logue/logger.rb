@@ -49,7 +49,7 @@ module Logue
     
     attr_accessor :format
 
-    include Logue::Level
+    include Level
 
     def initialize
       reset
@@ -78,11 +78,11 @@ module Logue
       @output          = $stdout
       @colors          = Array.new
       @colorize_line   = false
-      @format          = Logue::LocationFormat.new
+      @format          = LocationFormat.new
     end
     
     def set_default_widths
-      @format = Logue::LocationFormat.new
+      @format = LocationFormat.new
     end
 
     def quiet
@@ -102,7 +102,7 @@ module Logue
     # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
     # (e.g., "00317") the line_width argument must be a string, not an integer.
     def set_widths file, line, function
-      @format = Logue::LocationFormat.new file: file, line: line, function: function
+      @format = LocationFormat.new file: file, line: line, function: function
     end
 
     def ignore_file fname
@@ -180,7 +180,7 @@ module Logue
     end
 
     def print_stack_frame frame, cname, msg, lvl, &blk
-      frm  = Logue::Frame.new entry: frame
+      frm  = Frame.new entry: frame
       func = cname ? cname + "#" + frm.function : frm.function
       
       unless ignored_files[frm.path] || (cname && ignored_classes[cname]) || ignored_methods[func]
