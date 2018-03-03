@@ -5,9 +5,32 @@ require 'logue/pathutil'
 
 module Logue
   class LocationFormatWidths
+    include Comparable
+    
     DEFAULT_FILENAME = -25
     DEFAULT_LINE  = 4
     DEFAULT_FUNCTION = -20
+
+    attr_reader :filename
+    attr_reader :line
+    attr_reader :function
+
+    def initialize filename: DEFAULT_FILENAME, line: DEFAULT_LINE, function: DEFAULT_FUNCTION
+      @filename = filename
+      @line = line
+      @function = function
+    end
+
+    def <=> other
+      cmp = @filename <=> other.filename
+      if cmp == 0
+        cmp = @line <=> other.line
+        if cmp == 0
+          cmp = @function <=> other.function
+        end
+      end
+      cmp
+    end
   end    
 
   class LocationFormat

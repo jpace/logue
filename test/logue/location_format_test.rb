@@ -5,6 +5,23 @@ require 'logue/location_format'
 require 'test_helper'
 
 module Logue
+  class LocationFormatWidthsTestCase < Test::Unit::TestCase
+    include Messager
+
+    def test_default_values
+      widths = LocationFormatWidths.new
+      assert_equal LocationFormatWidths::DEFAULT_FILENAME, widths.filename
+      assert_equal LocationFormatWidths::DEFAULT_LINE,     widths.line
+      assert_equal LocationFormatWidths::DEFAULT_FUNCTION, widths.function
+    end
+
+    def test_equal
+      x = LocationFormatWidths.new
+      y = LocationFormatWidths.new filename: 3
+      assert_false x == y
+    end
+  end
+  
   class LocationFormatTestCase < Test::Unit::TestCase
     include Messager
 
