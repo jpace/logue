@@ -17,6 +17,7 @@ require 'logue/location_format'
 require 'logue/pathutil'
 require 'logue/frame'
 require 'logue/colorlog'
+require 'logue/writer'
 
 #
 # == Logger
@@ -193,28 +194,9 @@ module Logue
       print location, msg, lvl, &blk
     end
     
-    def print hdr, msg, lvl, &blk
-      if blk
-        x = blk.call
-        if x.kind_of? String
-          msg = x
-        else
-          return
-        end
-      end
-
-      msg = msg.to_s.chomp
-
-      if lvlcol = @colors[lvl]
-        if colorize_line
-          line = hdr + " " + msg
-          @output.puts line.color(lvlcol)
-        else
-          @output.puts hdr + " " + msg.color(lvlcol)
-        end
-      else
-        @output.puts hdr + " " + msg
-      end      
+    def print location, msg, lvl, &blk
+      writer = Writer.new output: @output, colors: @colors, colorize_line: @colorize_line
+      writer.print location, msg, level, &blk
     end
 
     def set_color lvl, color
