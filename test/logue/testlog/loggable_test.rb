@@ -14,6 +14,7 @@ class LoggableTestCase < Test::Unit::TestCase
     Logue::Log.verbose = true
     io = StringIO.new
     Logue::Log.output = io
+    Logue::Log.set_default_widths
 
     expected = Array.new
     expected << "[.../lgbl_testee.rb       :  10] {LgblTestee#crystal  } hello!\n"
