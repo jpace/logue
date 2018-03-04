@@ -8,17 +8,17 @@ module Logue
     attr_reader :path
     attr_reader :lineno
     attr_reader :cls
-    attr_reader :function
+    attr_reader :method
     
-    def initialize path, lineno, cls, function
-      @path = path
+    def initialize path, lineno, cls, method
+      @path   = path
       @lineno = lineno
-      @cls = cls
-      @function = function
+      @cls    = cls
+      @method = method
     end
 
     def format locformat
-      locformat.format @path, @lineno, @cls, @function
+      locformat.format @path, @lineno, @cls, @method
     end
   end
 end

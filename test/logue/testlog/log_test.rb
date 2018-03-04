@@ -124,8 +124,8 @@ module Logue
       end
     end
 
-    def widths file: LocationFormat::DEFAULT_FILENAME, line: LocationFormat::DEFAULT_LINE, function: LocationFormat::DEFAULT_FUNCTION
-      Log.set_widths file, line, function
+    def widths file: LocationFormat::DEFAULT_FILENAME, line: LocationFormat::DEFAULT_LINE, method: LocationFormat::DEFAULT_METHOD
+      Log.set_widths file, line, method
     end
 
     param_test [
@@ -143,7 +143,7 @@ module Logue
       expected << "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
 
       run_format_test expected do
-        Log.set_widths(-35, Logue::LocationFormat::DEFAULT_LINE, Logue::LocationFormat::DEFAULT_FUNCTION)
+        Log.set_widths(-35, Logue::LocationFormat::DEFAULT_LINE, Logue::LocationFormat::DEFAULT_METHOD)
       end
     end
 
@@ -152,11 +152,11 @@ module Logue
       expected << "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n"
 
       run_format_test expected do
-        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, -10, Logue::LocationFormat::DEFAULT_FUNCTION)
+        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, -10, Logue::LocationFormat::DEFAULT_METHOD)
       end
     end
 
-    def test_format_flush_function_right
+    def test_format_flush_method_right
       expected = Array.new
       expected << "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n"
 
@@ -170,7 +170,7 @@ module Logue
       expected << "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n"
 
       run_format_test expected do
-        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, "08", Logue::LocationFormat::DEFAULT_FUNCTION)
+        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, "08", Logue::LocationFormat::DEFAULT_METHOD)
       end
     end
 

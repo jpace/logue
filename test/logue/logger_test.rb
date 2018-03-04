@@ -18,45 +18,45 @@ module Logue
 
       assert_equal Level::FATAL, logger.level
 
-      assert_equal $stdout,             logger.output
-      assert_equal false,               logger.colorize_line
+      assert_equal $stdout,      logger.output
+      assert_equal false,        logger.colorize_line
 
-      assert_equal Hash.new,            logger.ignored_files
-      assert_equal Hash.new,            logger.ignored_methods
-      assert_equal Hash.new,            logger.ignored_classes
+      assert_equal Hash.new,     logger.ignored_files
+      assert_equal Hash.new,     logger.ignored_methods
+      assert_equal Hash.new,     logger.ignored_classes
 
-      assert_equal false,               logger.verbose
+      assert_equal false,        logger.verbose
     end
 
     def test_respond_to
       logger = self.class.create_logger
-      assert_equal true, logger.respond_to?(:blue)
+      assert_equal true,  logger.respond_to?(:blue)
       assert_equal false, logger.respond_to?(:no_such_color)
     end
 
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
-    ].each do |expfile, expline, expfunction, *args|
+    ].each do |expfile, expline, expmethod, *args|
       logger = self.class.create_logger
       logger.set_widths(*args)
       format = logger.format
 
-      assert_equal expfile, format.file
-      assert_equal expline, format.line
-      assert_equal expfunction, format.function
+      assert_equal expfile,   format.file
+      assert_equal expline,   format.line
+      assert_equal expmethod, format.method
     end
 
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
-    ].each do |expfile, expline, expfunction, file, line, function|
+    ].each do |expfile, expline, expmethod, file, line, method|
       logger        = self.class.create_logger
-      format        = LocationFormat.new file: file, line: line, function: function
+      format        = LocationFormat.new file: file, line: line, method: method
       logger.format = format
       result        = logger.format
 
-      assert_equal expfile, result.file
-      assert_equal expline, result.line
-      assert_equal expfunction, result.function
+      assert_equal expfile,   result.file
+      assert_equal expline,   result.line
+      assert_equal expmethod, result.method
     end
 
     def test_trim

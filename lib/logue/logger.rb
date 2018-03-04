@@ -102,8 +102,8 @@ module Logue
 
     # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
     # (e.g., "00317") the line_width argument must be a string, not an integer.
-    def set_widths file, line, function
-      @format = LocationFormat.new file: file, line: line, function: function
+    def set_widths file, line, method
+      @format = LocationFormat.new file: file, line: line, method: method
     end
 
     def ignore_file fname
@@ -182,7 +182,7 @@ module Logue
 
     def print_stack_frame frame, cname, msg, lvl, &blk
       frm  = Frame.new entry: frame
-      func = cname ? cname + "#" + frm.function : frm.function
+      func = cname ? cname + "#" + frm.method : frm.method
       
       unless ignored_files[frm.path] || (cname && ignored_classes[cname]) || ignored_methods[func]
         print_formatted(frm.path, frm.line, func, msg, lvl, &blk)
