@@ -46,6 +46,8 @@ module Logue
     end
 
     def <=> other
+      fields = [ :ignored_files, :ignored_methods, :ignored_classes ]
+      
       cmp = ignored_files <=> other.ignored_files
       if cmp == 0
         cmp = ignored_classes <=> other.ignored_classes
