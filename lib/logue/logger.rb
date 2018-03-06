@@ -96,12 +96,12 @@ module Logue
     end
 
     def reset
-      @level           = FATAL
-      @filter = Filter.new
-      @output          = $stdout
-      @colors          = Array.new
-      @colorize_line   = false
-      @format          = LocationFormat.new
+      @level         = FATAL
+      @filter        = Filter.new
+      @output        = $stdout
+      @colors        = Array.new
+      @colorize_line = false
+      @format        = LocationFormat.new
     end
     
     def set_default_widths
@@ -123,33 +123,9 @@ module Logue
     end
 
     # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
-    # (e.g., "00317") the line_width argument must be a string, not an integer.
+    # (e.g., "00317") the line argument must be a string, with leading zeros, not an integer.
     def set_widths file, line, method
       @format = LocationFormat.new file: file, line: line, method: method
-    end
-
-    def ignore_file fname
-      @filter.ignore_file fname
-    end
-    
-    def ignore_method methname
-      @filter.ignore_method methname
-    end
-    
-    def ignore_class classname
-      @filter.ignore_class classname
-    end
-
-    def log_file fname
-      @filter.log_file fname
-    end
-    
-    def log_method methname
-      @filter.log_method methname
-    end
-    
-    def log_class classname
-      @filter.log_class classname
     end
 
     def debug msg = "", depth = 1, cname = nil, &blk
