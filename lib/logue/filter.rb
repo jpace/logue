@@ -45,16 +45,16 @@ module Logue
       !@ignored_files.include?(file) && !@ignored_classes.include?(cls) && !@ignored_methods.include?(meth)
     end
 
+    def compare_fields
+       [ :ignored_files, :ignored_methods, :ignored_classes ]
+    end
+
     def <=> other
-      fields = [ :ignored_files, :ignored_methods, :ignored_classes ]
-      
-      cmp = ignored_files <=> other.ignored_files
-      if cmp == 0
-        cmp = ignored_classes <=> other.ignored_classes
-        if cmp == 0
-          cmp = ignored_methods <=> other.ignored_methods
-        end
+      compare_fields.each do |field|
+        cmp = send(field) <=> other.send(field)
+        return cmp if cmp.nonzero?
       end
+      0
     end
   end
 end
