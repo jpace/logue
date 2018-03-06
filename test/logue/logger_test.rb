@@ -21,9 +21,7 @@ module Logue
       assert_equal $stdout,      logger.output
       assert_equal false,        logger.colorize_line
 
-      assert_equal Hash.new,     logger.ignored_files
-      assert_equal Hash.new,     logger.ignored_methods
-      assert_equal Hash.new,     logger.ignored_classes
+      assert_equal Filter.new,   logger.filter
 
       assert_equal false,        logger.verbose
     end

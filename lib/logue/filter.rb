@@ -5,6 +5,8 @@ require 'pathname'
 
 module Logue
   class Filter
+    include Comparable
+    
     attr_reader :ignored_files
     attr_reader :ignored_methods
     attr_reader :ignored_classes
@@ -37,6 +39,20 @@ module Logue
 
     def log_method meth
       @ignored_methods.delete meth
-    end      
+    end
+
+    def log? file, cls, meth
+      !@ignored_files.include?(file) && !@ignored_classes.include?(cls) && !@ignored_methods.include?(meth)
+    end
+
+    def <=> other
+      cmp = ignored_files <=> other.ignored_files
+      if cmp == 0
+        cmp = ignored_classes <=> other.ignored_classes
+        if cmp == 0
+          cmp = ignored_methods <=> other.ignored_methods
+        end
+      end
+    end
   end
 end

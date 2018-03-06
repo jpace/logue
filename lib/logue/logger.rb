@@ -18,6 +18,7 @@ require 'logue/pathutil'
 require 'logue/frame'
 require 'logue/colorlog'
 require 'logue/writer'
+require 'logue/filter'
 
 #
 # == Logger
@@ -35,6 +36,30 @@ module Logue
     def trim= what
       $stderr.puts "Logger#trim is deprecated, and ignored"
     end
+
+    def ignore_file fname
+      filter.ignore_file fname
+    end
+    
+    def ignore_method methname
+      filter.ignore_method methname
+    end
+    
+    def ignore_class classname
+      filter.ignore_class classname
+    end
+
+    def log_file fname
+      filter.log_file fname
+    end
+    
+    def log_method methname
+      filter.log_method methname
+    end
+    
+    def log_class classname
+      filter.log_class classname
+    end
   end
   
   class Logger
@@ -44,9 +69,8 @@ module Logue
     attr_accessor :output
     attr_accessor :colorize_line
     attr_accessor :level
-    attr_accessor :ignored_files
-    attr_accessor :ignored_methods
-    attr_accessor :ignored_classes
+    
+    attr_reader :filter
     
     attr_accessor :format
 
@@ -73,9 +97,7 @@ module Logue
 
     def reset
       @level           = FATAL
-      @ignored_files   = Hash.new
-      @ignored_methods = Hash.new
-      @ignored_classes = Hash.new
+      @filter = Filter.new
       @output          = $stdout
       @colors          = Array.new
       @colorize_line   = false
@@ -107,27 +129,27 @@ module Logue
     end
 
     def ignore_file fname
-      ignored_files[fname] = true
+      @filter.ignore_file fname
     end
     
     def ignore_method methname
-      ignored_methods[methname] = true
+      @filter.ignore_method methname
     end
     
     def ignore_class classname
-      ignored_classes[classname] = true
+      @filter.ignore_class classname
     end
 
     def log_file fname
-      ignored_files.delete fname
+      @filter.log_file fname
     end
     
     def log_method methname
-      ignored_methods.delete methname
+      @filter.log_method methname
     end
     
     def log_class classname
-      ignored_classes.delete classname
+      @filter.log_class classname
     end
 
     def debug msg = "", depth = 1, cname = nil, &blk
@@ -184,8 +206,8 @@ module Logue
       frm  = Frame.new entry: frame
       func = cname ? cname + "#" + frm.method : frm.method
       
-      unless ignored_files[frm.path] || (cname && ignored_classes[cname]) || ignored_methods[func]
-        print_formatted(frm.path, frm.line, func, msg, lvl, &blk)
+      if @filter.log? frm.path, cname, func
+        print_formatted frm.path, frm.line, func, msg, lvl, &blk
       end
     end
 
