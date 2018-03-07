@@ -40,11 +40,10 @@ module Logue
     attr_accessor :output
     attr_accessor :colorize_line
     attr_accessor :level
+    attr_accessor :format
     
     attr_reader :filter
     
-    attr_accessor :format
-
     include Level
 
     def initialize

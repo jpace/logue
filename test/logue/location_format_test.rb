@@ -18,8 +18,7 @@ module Logue
 
     def assert_format expected, path, line, cls, func
       amsg   = message "path", path, "line", line, "cls", cls, "func", func
-      fmt    = LocationFormat.new
-      result = fmt.format path, line, cls, func
+      result = LocationFormat.new.format path, line, cls, func
       assert_equal expected, result, amsg
     end
 
@@ -40,6 +39,11 @@ module Logue
       assert_equal fmt.trim,   false
     end
 
+    def test_leading_zeros
+      fmt = LocationFormat.new file: "08"
+      assert_equal fmt.file, "08"
+    end
+
     def test_copy
       fmt  = LocationFormat.new line: 2
       copy = fmt.copy method: 123
@@ -49,8 +53,7 @@ module Logue
 
     def test_format_string
       exp    = "[%-25s:%4d] {%-20s}"
-      fmt    = LocationFormat.new
-      result = fmt.format_string
+      result = LocationFormat.new.format_string
       assert_equal exp, result
     end
   end
