@@ -13,16 +13,13 @@ module Logue
       Logger.new
     end
     
-    def test_default
+    def test_init
       logger = self.class.create_logger
 
       assert_equal Level::FATAL, logger.level
-
       assert_equal $stdout,      logger.output
       assert_equal false,        logger.colorize_line
-
       assert_equal Filter.new,   logger.filter
-
       assert_equal false,        logger.verbose
     end
 
@@ -56,12 +53,7 @@ module Logue
       assert_equal expline,   result.line
       assert_equal expmethod, result.method
     end
-
-    def test_trim
-      logger = self.class.create_logger
-      logger.trim = false
-    end
-
+    
     param_test [
       [ Level::WARN,  true ],  
       [ Level::DEBUG, false ], 
