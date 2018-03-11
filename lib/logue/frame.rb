@@ -11,17 +11,18 @@ module Logue
     attr_reader :line
     attr_reader :method
 
-    def initialize args
-      if entry = args[:entry]
+    def initialize entry: nil, path: nil, line: nil, method: nil
+      # entry if called from "caller(x)" elements, path/line/method if called from
+      # "caller_location(x)" elements.
+      if entry
         md = FRAME_RE.match entry
-        # Ruby 1.9 expands the file name, but 1.8 doesn't:
-        @path   = Pathname.new(md[1]).expand_path
+        @path   = md[1]
         @line   = md[2].to_i
         @method = md[3] || ""
       else
-        @path   = Pathname.new(args[:path])
-        @line   = args[:line]
-        @method = args[:method]
+        @path   = path
+        @line   = line
+        @method = method
       end
     end
 
