@@ -29,5 +29,9 @@ module Logue
     def to_s
       [ :path, :line, :method ].collect { |field| "#{field}: " + send(field).to_s }.join ", "
     end
+
+    def formatted format, cname
+      format.format @path, @line, cname, @method
+    end
   end
 end

@@ -121,41 +121,37 @@ module Logue
 
     # Logs the given message.
     def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
-      if lvl >= level
-        stack = Stack.new
-        print_stack_frame stack.filtered.first, cname, msg, lvl, &blk
-      end
+      log_frames cname, msg, lvl, 0, &blk
     end
 
     # Shows the current stack.
     def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+      log_frames cname, msg, lvl, -1, &blk
+    end
+
+    def log_frames cname, msg, lvl, num, &blk
       if lvl >= level
         stack = Stack.new
-        stack.filtered.each do |frame|
-          print_stack_frame frame, cname, msg, lvl, &blk
+        stack.filtered[0 .. num].each do |frame|
+          log_frame frame, cname, msg, lvl, &blk
           cname = nil
           msg   = ""
         end
       end
-    end
+    end    
 
-    def print_stack_frame frame, cname, msg, lvl, &blk
-      func = cname ? cname + "#" + frame.method : frame.method
-      if @filter.log? frame.path, cname, func
-        print_formatted frame.path, frame.line, func, msg, lvl, &blk
+    def log_frame frame, cname, msg, lvl, &blk
+      if @filter.log? frame.path, cname, frame.method
+        print_formatted frame, cname, msg, lvl, &blk
       end
     end
 
-    def print_formatted file, line, func, msg, lvl, &blk
-      location = @format.format file, line, nil, func
-      print location, msg, lvl, &blk
-    end
-    
-    def print location, msg, lvl, &blk
+    def print_formatted frame, cname, msg, lvl, &blk
+      location = frame.formatted @format, cname
       writer = Writer.new output: @output, colors: @colors, colorize_line: @colorize_line
       writer.print location, msg, level, &blk
     end
-
+    
     def set_color lvl, color
       @colors[lvl] = color
     end
