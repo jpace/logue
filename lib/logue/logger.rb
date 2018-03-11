@@ -20,6 +20,7 @@ require 'logue/colorlog'
 require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
+require 'logue/stack'
 
 #
 # == Logger
@@ -121,39 +122,27 @@ module Logue
     # Logs the given message.
     def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        frame = nil
-
-        stk = caller 0
-        stk.reverse.each_with_index do |frm, idx|
-          if frm.index(%r{logue/log.*:\d+:in\b})
-            break
-          else
-            frame = frm
-          end
-        end
-
-        print_stack_frame frame, cname, msg, lvl, &blk
+        stack = Stack.new depth: 0
+        print_stack_frame stack.filtered.first, cname, msg, lvl, &blk
       end
     end
 
     # Shows the current stack.
     def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        stk = caller depth
-        stk.each do |frame|
+        stack = Stack.new depth: depth + 1
+        stack.filtered.each do |frame|
           print_stack_frame frame, cname, msg, lvl, &blk
           cname = nil
-          msg = ""
+          msg   = ""
         end
       end
     end
 
     def print_stack_frame frame, cname, msg, lvl, &blk
-      frm  = Frame.new entry: frame
-      func = cname ? cname + "#" + frm.method : frm.method
-      
-      if @filter.log? frm.path, cname, func
-        print_formatted frm.path, frm.line, func, msg, lvl, &blk
+      func = cname ? cname + "#" + frame.method : frame.method
+      if @filter.log? frame.path, cname, func
+        print_formatted frame.path, frame.line, func, msg, lvl, &blk
       end
     end
 
