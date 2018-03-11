@@ -15,14 +15,18 @@ module Logue
       if entry = args[:entry]
         md = FRAME_RE.match entry
         # Ruby 1.9 expands the file name, but 1.8 doesn't:
-        @path   = Pathname.new(md[1]).expand_path.to_s
+        @path   = Pathname.new(md[1]).expand_path
         @line   = md[2].to_i
         @method = md[3] || ""
       else
-        @path   = args[:path]
+        @path   = Pathname.new(args[:path])
         @line   = args[:line]
         @method = args[:method]
       end
+    end
+
+    def to_s
+      [ :path, :line, :method ].collect { |field| "#{field}: " + send(field).to_s }.join ", "
     end
   end
 end

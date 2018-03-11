@@ -10,9 +10,9 @@ module Logue
 
     def test_default_values
       fmt = LocationFormat.new
-      assert_equal LocationFormat::DEFAULT_FILENAME, fmt.file
-      assert_equal LocationFormat::DEFAULT_LINE,     fmt.line
-      assert_equal LocationFormat::DEFAULT_METHOD,   fmt.method
+      assert_equal LocationFormat::Defaults::FILENAME, fmt.file
+      assert_equal LocationFormat::Defaults::LINE,     fmt.line
+      assert_equal LocationFormat::Defaults::METHOD,   fmt.method
       assert_equal true,                             fmt.trim
     end
 

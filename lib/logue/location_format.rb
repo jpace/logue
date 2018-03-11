@@ -5,16 +5,18 @@ require 'logue/pathutil'
 
 module Logue
   class LocationFormat
-    DEFAULT_FILENAME = -25
-    DEFAULT_LINE     = 4
-    DEFAULT_METHOD   = -20
+    module Defaults
+      FILENAME = -25
+      LINE     =   4
+      METHOD   = -20
+    end
     
     attr_accessor :file
     attr_accessor :line
     attr_accessor :method
     attr_accessor :trim
     
-    def initialize  file: DEFAULT_FILENAME, line: DEFAULT_LINE, method: DEFAULT_METHOD, trim: true
+    def initialize  file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD, trim: true
       @file   = file
       @line   = line
       @method = method
@@ -32,8 +34,8 @@ module Logue
       end
       
       if trim
-        path = PathUtil.trim_right path, @file
-        func = PathUtil.trim_left  func, @method
+        path = PathUtil.trim_right path.to_s, @file
+        func = PathUtil.trim_left  func,      @method
       end
       
       sprintf format_string, path, line, func

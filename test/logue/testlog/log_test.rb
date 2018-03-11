@@ -9,8 +9,6 @@ require 'test/unit'
 require 'stringio'
 require 'paramesan'
 
-include Logue
-
 module Logue
   class LogTestCase < Test::Unit::TestCase
     include Loggable
@@ -115,63 +113,22 @@ module Logue
       end
     end
 
-    def test_format_default
-      expected = Array.new
-      expected << "[.../testlog/logtestee.rb :  10] {format_test         } tamrof\n"
-
-      run_format_test expected do
-        Log.set_default_widths
-      end
-    end
-
-    def widths file: LocationFormat::DEFAULT_FILENAME, line: LocationFormat::DEFAULT_LINE, method: LocationFormat::DEFAULT_METHOD
+    def widths file: LocationFormat::Defaults::FILENAME, line: LocationFormat::Defaults::LINE, method: LocationFormat::Defaults::METHOD
       Log.set_widths file, line, method
     end
 
     param_test [
-      [ "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n", { file: -35 } ]
+      [ "[.../testlog/logtestee.rb :  10] {format_test         } tamrof\n",                { } ],            
+      [ "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n",      { file: -35 } ],  
+      [ "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n",          { line: -10 } ],  
+      [ "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n", { method: 35 } ], 
+      [ "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n",            { line: "08" } ]
     ].each do |expline, widthargs|
       Log.set_default_widths
       run_format_test Array[expline] do
         widths widthargs
       end
       Log.set_default_widths
-    end
-
-    def test_format_flush_filename_left
-      expected = Array.new
-      expected << "[.../test/logue/testlog/logtestee.rb:  10] {format_test         } tamrof\n"
-
-      run_format_test expected do
-        Log.set_widths(-35, Logue::LocationFormat::DEFAULT_LINE, Logue::LocationFormat::DEFAULT_METHOD)
-      end
-    end
-
-    def test_format_flush_linenum_left
-      expected = Array.new
-      expected << "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n"
-
-      run_format_test expected do
-        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, -10, Logue::LocationFormat::DEFAULT_METHOD)
-      end
-    end
-
-    def test_format_flush_method_right
-      expected = Array.new
-      expected << "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n"
-
-      run_format_test expected do
-        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, Logue::LocationFormat::DEFAULT_LINE, 35)
-      end
-    end
-
-    def test_format_pad_linenum_zeros
-      expected = Array.new
-      expected << "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n"
-
-      run_format_test expected do
-        Log.set_widths(Logue::LocationFormat::DEFAULT_FILENAME, "08", Logue::LocationFormat::DEFAULT_METHOD)
-      end
     end
 
     def test_respond_to_color
