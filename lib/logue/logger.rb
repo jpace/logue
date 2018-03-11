@@ -38,17 +38,16 @@ module Logue
     include LegacyLogger
     include ColorLog
     
-    attr_accessor :output
-    attr_accessor :colorize_line
     attr_accessor :level
     attr_accessor :format
     
-    attr_reader :filter
+    attr_accessor :filter
+    attr_accessor :writer
     
     include Level
 
-    def initialize
-      reset
+    def initialize format: LocationFormat.new, level: FATAL, filter: Filter.new, writer: Writer.new
+      reset format: format, level: level, filter: filter, writer: writer
     end
     
     def verbose= v
@@ -66,19 +65,13 @@ module Logue
       @level <= DEBUG
     end
 
-    def reset
-      @level         = FATAL
-      @filter        = Filter.new
-      @output        = $stdout
-      @colors        = Array.new
-      @colorize_line = false
-      @format        = LocationFormat.new
+    def reset format: LocationFormat.new, level: FATAL, filter: Filter.new, writer: Writer.new
+      @level  = level
+      @filter = filter
+      @format = format
+      @writer = writer
     end
     
-    def set_default_widths
-      @format = LocationFormat.new
-    end
-
     def quiet
       @level >= WARN
     end
@@ -90,7 +83,8 @@ module Logue
     # Assigns output to a file with the given name. Returns the file; the client is responsible for
     # closing it.
     def outfile= f
-      @output = f.kind_of?(IO) ? f : File.new(f, "w")
+      io = f.kind_of?(IO) ? f : File.new(f, "w")
+      @writer.output = io
     end
 
     # Creates a printf format for the given widths, for aligning output. To lead lines with zeros
@@ -148,12 +142,7 @@ module Logue
 
     def print_formatted frame, cname, msg, lvl, &blk
       location = frame.formatted @format, cname
-      writer = Writer.new output: @output, colors: @colors, colorize_line: @colorize_line
-      writer.print location, msg, level, &blk
-    end
-    
-    def set_color lvl, color
-      @colors[lvl] = color
+      @writer.print location, msg, level, &blk
     end
   end
 end

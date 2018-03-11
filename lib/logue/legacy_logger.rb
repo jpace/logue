@@ -10,6 +10,7 @@
 #
 
 require 'logue/filter'
+require 'logue/location_format'
 
 module Logue
   module LegacyLogger
@@ -39,6 +40,30 @@ module Logue
     
     def log_class classname
       filter.log_class classname
+    end
+
+    def output
+      writer.output
+    end
+
+    def output= obj
+      writer.output = obj
+    end
+
+    def colorize_line
+      writer.colorize_line
+    end
+
+    def colorize_line= b
+      writer.colorize_line = b
+    end
+
+    def set_default_widths
+      self.format = LocationFormat.new
+    end
+    
+    def set_color lvl, color
+      writer.colors[lvl] = color
     end
   end
 end
