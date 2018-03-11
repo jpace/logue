@@ -122,7 +122,7 @@ module Logue
     # Logs the given message.
     def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        stack = Stack.new depth: 0
+        stack = Stack.new
         print_stack_frame stack.filtered.first, cname, msg, lvl, &blk
       end
     end
@@ -130,7 +130,7 @@ module Logue
     # Shows the current stack.
     def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
       if lvl >= level
-        stack = Stack.new depth: depth + 1
+        stack = Stack.new
         stack.filtered.each do |frame|
           print_stack_frame frame, cname, msg, lvl, &blk
           cname = nil
