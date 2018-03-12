@@ -115,8 +115,8 @@ module Logue
 
     def self.add_color_method color, code
       instmeth = Array.new
-      instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk"
-      instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, depth + 1, cname, &blk)"
+      instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, cname = nil, &blk"
+      instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
       instmeth << "end"
       
       # an instance, but on the class object, not the log instance:
@@ -128,45 +128,45 @@ module Logue
       logger.set_widths file_width, line_width, func_width
     end
     
-    def self.debug msg = "", depth = 1, cname = nil, &blk
-      logger.debug msg, depth + 1, cname, &blk
+    def self.debug msg = "", cname = nil, &blk
+      logger.debug msg, cname, &blk
     end
 
-    def self.info msg = "", depth = 1, cname = nil, &blk
-      logger.info msg, depth + 1, cname, &blk
+    def self.info msg = "", cname = nil, &blk
+      logger.info msg, cname, &blk
     end
 
-    def self.fatal msg = "", depth = 1, cname = nil, &blk
-      logger.fatal msg, depth + 1, cname, &blk
+    def self.fatal msg = "", cname = nil, &blk
+      logger.fatal msg, cname, &blk
     end
 
-    def self.log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
-      logger.log msg, lvl, depth + 1, cname, &blk
+    def self.log msg = "", lvl = DEBUG, cname = nil, &blk
+      logger.log msg, lvl, cname, &blk
     end
 
-    def self.stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
-      logger.stack msg, lvl, depth + 1, cname, &blk
+    def self.stack msg = "", lvl = DEBUG, cname = nil, &blk
+      logger.stack msg, lvl, cname, &blk
     end
 
-    def self.warn msg = "", depth = 1, cname = nil, &blk
+    def self.warn msg = "", cname = nil, &blk
       if verbose
-        logger.log msg, WARN, depth + 1, cname, &blk
+        logger.log msg, WARN, cname, &blk
       else
         $stderr.puts "WARNING: " + msg
       end
     end
 
-    def self.error msg = "", depth = 1, cname = nil, &blk
+    def self.error msg = "", cname = nil, &blk
       if verbose
-        logger.log msg, ERROR, depth + 1, cname, &blk
+        logger.log msg, ERROR, cname, &blk
       else
         $stderr.puts "ERROR: " + msg
       end
     end
 
-    def self.write msg, depth = 1, cname = nil, &blk
+    def self.write msg, cname = nil, &blk
       if verbose
-        stack msg, Log::WARN, depth + 1, cname, &blk
+        stack msg, Log::WARN, cname, &blk
       elsif quiet
         # nothing
       else

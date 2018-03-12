@@ -41,36 +41,36 @@ require 'logue/colors'
 module Logue
   module Loggable
     # Logs the given message, including the class whence invoked.
-    def log msg = "", lvl = Log::DEBUG, depth = 1, &blk
-      delegate_log_class.log msg, lvl, depth + 1, self.class.to_s, &blk
+    def log msg = "", lvl = Log::DEBUG, &blk
+      delegate_log_class.log msg, lvl, self.class.to_s, &blk
     end
 
-    def debug msg = "", depth = 1, &blk
-      delegate_log_class.debug msg, depth + 1, self.class.to_s, &blk
+    def debug msg = "", &blk
+      delegate_log_class.debug msg, self.class.to_s, &blk
     end
 
-    def info msg = "", depth = 1, &blk
-      delegate_log_class.info msg, depth + 1, self.class.to_s, &blk
+    def info msg = "", &blk
+      delegate_log_class.info msg, self.class.to_s, &blk
     end
 
-    def warn msg = "", depth = 1, &blk
-      delegate_log_class.warn msg, depth + 1, self.class.to_s, &blk
+    def warn msg = "", &blk
+      delegate_log_class.warn msg, self.class.to_s, &blk
     end
 
-    def error msg = "", depth = 1, &blk
-      delegate_log_class.error msg, depth + 1, self.class.to_s, &blk
+    def error msg = "", &blk
+      delegate_log_class.error msg, self.class.to_s, &blk
     end
 
-    def fatal msg = "", depth = 1, &blk
-      delegate_log_class.fatal msg, depth + 1, self.class.to_s, &blk
+    def fatal msg = "", &blk
+      delegate_log_class.fatal msg, self.class.to_s, &blk
     end
 
-    def stack msg = "", lvl = Log::DEBUG, depth = 1, &blk
-      delegate_log_class.stack msg, lvl, depth + 1, self.class.to_s, &blk
+    def stack msg = "", lvl = Log::DEBUG, &blk
+      delegate_log_class.stack msg, lvl, self.class.to_s, &blk
     end
 
-    def write msg = "", depth = 1, &blk
-      delegate_log_class.write msg, depth + 1, self.class.to_s, &blk
+    def write msg = "", &blk
+      delegate_log_class.write msg, self.class.to_s, &blk
     end
 
     def method_missing meth, *args, &blk
@@ -89,8 +89,8 @@ module Logue
 
     def add_color_method color, code
       meth = Array.new
-      meth << "def #{color}(msg = \"\", lvl = Log::DEBUG, depth = 1, cname = nil, &blk)"
-      meth << "  Log.#{color} msg, lvl, depth + 1, self.class.to_s, &blk"
+      meth << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
+      meth << "  Log.#{color} msg, lvl, self.class.to_s, &blk"
       meth << "end"
       self.class.module_eval meth.join("\n")
     end

@@ -31,7 +31,8 @@ module Logue
     end
 
     param_test [
-      [ true,  :blue ],          
+      [ true,  :blue ],
+      [ true,  :red ],
       [ false, :no_such_color ], 
     ].each do |exp, name|
       logger = self.class.create_logger
@@ -45,11 +46,11 @@ module Logue
     end
 
     param_test [
-      [ [ "\e[34mabc\e[0m", Level::DEBUG, 2, nil ], :blue, "abc" ],
-      [ [ "\e[34mdef\e[0m", Level::DEBUG, 2, nil ], :blue, "def" ],
-      [ [ "\e[34mabc\e[0m", Level::INFO,  2, nil ], :blue, "abc", Level::INFO ],
-      [ [ "\e[34mabc\e[0m", Level::DEBUG, 4, nil ], :blue, "abc", Level::DEBUG, 3 ],
-      [ [ "\e[34mabc\e[0m", Level::DEBUG, 2, "clsxyz" ], :blue, "abc", Level::DEBUG, 1, "clsxyz" ],
+      [ [ "\e[34mabc\e[0m", Level::DEBUG, nil ], :blue, "abc" ],
+      [ [ "\e[34mdef\e[0m", Level::DEBUG, nil ], :blue, "def" ],
+      [ [ "\e[34mabc\e[0m", Level::INFO,  nil ], :blue, "abc", Level::INFO ],
+      [ [ "\e[34mabc\e[0m", Level::DEBUG, nil ], :blue, "abc", Level::DEBUG ],
+      [ [ "\e[34mabc\e[0m", Level::DEBUG, "clsxyz" ], :blue, "abc", Level::DEBUG, "clsxyz" ],
     ].each do |exp, methname, *args|
       logger = self.class.create_logger
       logger.send methname, *args
@@ -58,7 +59,7 @@ module Logue
     end
 
     param_test [
-      [ [ "\e[34mabc\e[0m", Level::DEBUG, 2, nil ], :blue, Proc.new { }, "abc" ],
+      [ [ "\e[34mabc\e[0m", Level::DEBUG, nil ], :blue, Proc.new { }, "abc" ],
     ].each do |exp, methname, blk, *args|
       logger = self.class.create_logger
       logger.send methname, *args, &blk

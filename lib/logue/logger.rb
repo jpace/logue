@@ -11,7 +11,6 @@
 
 require 'rainbow/x11_color_names'
 require 'rainbow/color'
-require 'pathname'
 require 'logue/level'
 require 'logue/location_format'
 require 'logue/pathutil'
@@ -93,33 +92,33 @@ module Logue
       @format = LocationFormat.new file: file, line: line, method: method
     end
 
-    def debug msg = "", depth = 1, cname = nil, &blk
-      log msg, DEBUG, depth + 1, cname, &blk
+    def debug msg = "", cname = nil, &blk
+      log msg, DEBUG, cname, &blk
     end
 
-    def info msg = "", depth = 1, cname = nil, &blk
-      log msg, INFO, depth + 1, cname, &blk
+    def info msg = "", cname = nil, &blk
+      log msg, INFO, cname, &blk
     end
 
-    def warn msg = "", depth = 1, cname = nil, &blk
-      log msg, WARN, depth + 1, cname, &blk
+    def warn msg = "", cname = nil, &blk
+      log msg, WARN, cname, &blk
     end
 
-    def error msg = "", depth = 1, cname = nil, &blk
-      log msg, ERROR, depth + 1, cname, &blk
+    def error msg = "", cname = nil, &blk
+      log msg, ERROR, cname, &blk
     end
 
-    def fatal msg = "", depth = 1, cname = nil, &blk
-      log msg, FATAL, depth + 1, cname, &blk
+    def fatal msg = "", cname = nil, &blk
+      log msg, FATAL, cname, &blk
     end
 
     # Logs the given message.
-    def log msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+    def log msg = "", lvl = DEBUG, cname = nil, &blk
       log_frames cname, msg, lvl, 0, &blk
     end
 
     # Shows the current stack.
-    def stack msg = "", lvl = DEBUG, depth = 1, cname = nil, &blk
+    def stack msg = "", lvl = DEBUG, cname = nil, &blk
       log_frames cname, msg, lvl, -1, &blk
     end
 
