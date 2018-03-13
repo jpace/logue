@@ -2,15 +2,15 @@ require 'stringio'
 require 'test/unit'
 
 class TestFrame
-  attr_reader :absolute_path
+  attr_reader :path
   attr_reader :lineno
   attr_reader :label
   # attr_reader :base_label
 
   def initialize args
-    @absolute_path = args[:absolute_path]
-    @lineno        = args[:lineno]
-    @label         = args[:label]
+    @path   = args[:path]
+    @lineno = args[:lineno]
+    @label  = args[:label]
   end
 end
 

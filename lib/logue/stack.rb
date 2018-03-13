@@ -1,7 +1,6 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'pathname'
 require 'logue/frame'
 
 module Logue

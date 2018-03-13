@@ -9,12 +9,7 @@
 # Documentation:: Author
 #
 
-require 'rainbow/x11_color_names'
-require 'rainbow/color'
 require 'logue/level'
-require 'logue/location_format'
-require 'logue/pathutil'
-require 'logue/frame'
 require 'logue/colorlog'
 require 'logue/writer'
 require 'logue/filter'
@@ -39,13 +34,12 @@ module Logue
     
     attr_accessor :level
     attr_accessor :format
-    
     attr_accessor :filter
     attr_accessor :writer
     
     include Level
 
-    def initialize format: LocationFormat.new, level: FATAL, filter: Filter.new, writer: Writer.new
+    def initialize format: LocationFormat.new, level: WARN, filter: Filter.new, writer: Writer.new
       reset format: format, level: level, filter: filter, writer: writer
     end
     

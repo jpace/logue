@@ -1,9 +1,8 @@
 logue
 =====
 
-A Ruby gem for generating logging and debugging output. Logging statements
-include the file, line, class and method from which the logging method was
-called.
+A Ruby gem for generating logging and debugging output. Logging statements include the file, line,
+class and method from which the logging method was called.
 
 ## EXAMPLES
 

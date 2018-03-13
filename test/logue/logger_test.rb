@@ -16,11 +16,11 @@ module Logue
     def test_init
       logger = self.class.create_logger
 
-      assert_equal Level::FATAL, logger.level
-      assert_equal $stdout,      logger.output
-      assert_equal false,        logger.colorize_line
-      assert_equal Filter.new,   logger.filter
-      assert_equal false,        logger.verbose
+      assert_equal Level::WARN, logger.level
+      assert_equal $stdout,     logger.output
+      assert_equal false,       logger.colorize_line
+      assert_equal Filter.new,  logger.filter
+      assert_equal false,       logger.verbose
     end
 
     def test_respond_to
@@ -31,6 +31,7 @@ module Logue
 
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
+      [ 4, 5, 6, 4, 5, 6 ],
     ].each do |expfile, expline, expmethod, *args|
       logger = self.class.create_logger
       logger.set_widths(*args)
@@ -43,6 +44,7 @@ module Logue
 
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
+      [ 4, 5, 6, 4, 5, 6 ],
     ].each do |expfile, expline, expmethod, file, line, method|
       logger        = self.class.create_logger
       format        = LocationFormat.new file: file, line: line, method: method
