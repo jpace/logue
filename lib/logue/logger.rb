@@ -15,6 +15,7 @@ require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
 require 'logue/stack'
+require 'logue/line'
 
 #
 # == Logger
@@ -129,13 +130,15 @@ module Logue
 
     def log_frame frame, cname, msg, lvl, &blk
       if @filter.log? frame.path, cname, frame.method
-        print_formatted frame, cname, msg, lvl, &blk
+        print_frame frame, cname, msg, lvl, &blk
       end
     end
 
-    def print_formatted frame, cname, msg, lvl, &blk
-      location = frame.formatted @format, cname
-      @writer.print location, msg, level, &blk
+    def print_frame frame, cname, msg, lvl, &blk
+      loc = Location.new frame.path, frame.line, cname, frame.method
+      line = Line.new loc, msg, &blk
+      lstr = line.format @format
+      @writer.print_line lstr, level
     end
   end
 end

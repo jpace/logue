@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/log'
-require 'test/unit'
-require 'paramesan'
+require 'test_helper'
 
 module Logue
   class LogTest < Test::Unit::TestCase

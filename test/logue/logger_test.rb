@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/logger'
-require 'test/unit'
-require 'paramesan'
+require 'test_helper'
 
 module Logue
   class LoggerTest < Test::Unit::TestCase
@@ -25,6 +24,7 @@ module Logue
 
     def test_respond_to
       logger = self.class.create_logger
+      
       assert_equal true,  logger.respond_to?(:blue)
       assert_equal false, logger.respond_to?(:no_such_color)
     end
@@ -61,6 +61,7 @@ module Logue
       [ Level::DEBUG, false ], 
     ].each do |exp, quiet|
       logger = self.class.create_logger
+      
       logger.quiet = quiet
       assert_equal exp, logger.level
     end

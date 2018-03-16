@@ -4,10 +4,8 @@
 require 'logue/loggable'
 require 'logue/testlog/logtestee'
 require 'logue/location_format'
-require 'pathname'
-require 'test/unit'
+require 'test_helper'
 require 'stringio'
-require 'paramesan'
 
 module Logue
   class LogTestCase < Test::Unit::TestCase

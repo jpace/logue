@@ -1,32 +1,27 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 
-require 'test/unit'
 require 'logue/loggable'
+require 'test_helper'
 
 module Logue
   class LoggableTest < Test::Unit::TestCase
-    def test_respond_to_colors
+    include Paramesan
+
+    param_test [
+      :black,
+      :red,
+      :green,
+      :yellow,
+      :blue,
+      :magenta,
+      :cyan,
+      :white,
+      :default
+    ] do |color|
       obj = Object.new
       obj.extend Loggable
-
-      # from rainbow/color:
-      
-      colors = [
-        :black,
-        :red,
-        :green,
-        :yellow,
-        :blue,
-        :magenta,
-        :cyan,
-        :white,
-        :default
-      ]
-      
-      colors.each do |color|
-        assert_respond_to obj, color, "color: #{color}"
-      end
+      assert_respond_to obj, color, "color: #{color}"
     end
 
     # poor man's mock

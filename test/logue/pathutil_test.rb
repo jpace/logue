@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/pathutil'
-require 'test/unit'
-require 'paramesan'
+require 'test_helper'
 
 module Logue
   class PathUtilTestCase < Test::Unit::TestCase

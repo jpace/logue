@@ -1,18 +1,5 @@
-require 'stringio'
 require 'test/unit'
-
-class TestFrame
-  attr_reader :path
-  attr_reader :lineno
-  attr_reader :label
-  # attr_reader :base_label
-
-  def initialize args
-    @path   = args[:path]
-    @lineno = args[:lineno]
-    @label  = args[:label]
-  end
-end
+require 'paramesan'
 
 module Messager
   def message(*fields)

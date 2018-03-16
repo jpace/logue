@@ -3,9 +3,8 @@
 
 require 'logue/writer'
 require 'logue/level'
-require 'test/unit'
+require 'test_helper'
 require 'stringio'
-require 'paramesan'
 
 module Logue
   class WriterTest < Test::Unit::TestCase

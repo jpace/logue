@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/colorlog'
-require 'test/unit'
-require 'paramesan'
+require 'test_helper'
 
 module Logue
   class ColorLogTest < Test::Unit::TestCase

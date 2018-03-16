@@ -2,8 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/stack'
-require 'test/unit'
-require 'pathname'
+require 'test_helper'
 
 module Logue
   class StackTest < Test::Unit::TestCase

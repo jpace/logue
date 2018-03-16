@@ -4,7 +4,7 @@
 require 'logue/legacy_logger'
 require 'logue/writer'
 require 'logue/filter'
-require 'test/unit'
+require 'test_helper'
 require 'pathname'
 
 module Logue

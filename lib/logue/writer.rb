@@ -28,6 +28,11 @@ module Logue
       @output.puts line
     end
 
+    def print_line lstr, lvl
+      str = lvlcol = @colors[lvl] ? lstr.color(lvlcol) : lstr
+      @output.puts str
+    end
+
     def line location, msg, lvl
       if lvlcol = @colors[lvl]
         if @colorize_line

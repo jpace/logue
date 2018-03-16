@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/colors'
-require 'test/unit'
+require 'test_helper'
 
 class ColorsTest < Test::Unit::TestCase
   def test_valid_colors
