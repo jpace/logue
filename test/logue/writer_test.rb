@@ -19,10 +19,10 @@ module Logue
       strio.close
     end
 
-    def test_print_line
+    def test_print
       strio = StringIO.new
       writer = Writer.new output: strio
-      writer.print_line "hdrabc msgdef\n", Level::DEBUG
+      writer.print "hdrabc msgdef\n", Level::DEBUG
       strio.close
       assert_equal "hdrabc msgdef\n", strio.string
     end

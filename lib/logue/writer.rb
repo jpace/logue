@@ -13,7 +13,7 @@ module Logue
       @colorize_line = colorize_line
     end
 
-    def print_line lstr, lvl
+    def print lstr, lvl
       str = lvlcol = @colors[lvl] ? lstr.color(lvlcol) : lstr
       @output.puts str
     end

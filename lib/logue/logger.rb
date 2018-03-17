@@ -135,10 +135,10 @@ module Logue
     end
 
     def print_frame frame, cname, msg, lvl, &blk
-      loc = Location.new frame.path, frame.line, cname, frame.method
+      loc  = Location.new frame.path, frame.line, cname, frame.method
       line = Line.new loc, msg, &blk
       lstr = line.format @format
-      @writer.print_line lstr, level
+      @writer.print lstr, level
     end
   end
 end
