@@ -13,7 +13,16 @@ module Logue
     def test_init
       strio = StringIO.new
       writer = Writer.new output: strio
-      writer.print "hdrabc", "msgdef", Level::DEBUG
+      assert_equal strio,     writer.output
+      assert_equal Array.new, writer.colors
+      assert_equal false,     writer.colorize_line
+      strio.close
+    end
+
+    def test_print_line
+      strio = StringIO.new
+      writer = Writer.new output: strio
+      writer.print_line "hdrabc msgdef\n", Level::DEBUG
       strio.close
       assert_equal "hdrabc msgdef\n", strio.string
     end

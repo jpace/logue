@@ -13,21 +13,6 @@ module Logue
       @colorize_line = colorize_line
     end
 
-    def print location, msg, lvl, &blk
-      if blk
-        x = blk.call
-        if x.kind_of? String
-          msg = x
-        else
-          return
-        end
-      end
-
-      msg = msg.to_s.chomp
-      line = line location, msg, lvl
-      @output.puts line
-    end
-
     def print_line lstr, lvl
       str = lvlcol = @colors[lvl] ? lstr.color(lvlcol) : lstr
       @output.puts str
