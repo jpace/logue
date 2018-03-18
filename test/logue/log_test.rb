@@ -11,7 +11,6 @@ module Logue
     param_test [
       [ :verbose,       false,        true ],        
       [ :level,         Level::FATAL, Level::INFO ], 
-      [ :output,        "abc",        "def" ],       
       [ :colorize_line, false,        true ],        
     ].each do |methname, *values|
       wrmeth = (methname.to_s + "=").to_sym
@@ -41,6 +40,14 @@ module Logue
       values.each do |value|
         Log.send methname, *value
       end
-    end  
+    end
+
+    def test_red
+      Log.red "mabc", Level::WARN, "cdef"
+    end
+
+    def test_yellow
+      Log.yellow "mabc", Level::WARN, "cdef"
+    end
   end
 end

@@ -14,6 +14,7 @@ require 'logue/colorlog'
 require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
+require 'logue/location'
 require 'logue/stack'
 require 'logue/line'
 

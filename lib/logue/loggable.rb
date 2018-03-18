@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 #
-# = log.rb
+# = loggable.rb
 #
 # Logging Module
 #
@@ -75,8 +75,8 @@ module Logue
 
     def method_missing meth, *args, &blk
       # only handling foregrounds, not backgrounds
-      if code = Colors::valid_colors[meth]
-        add_color_method meth.to_s, code + 30
+      if Colors::valid_colors[meth]
+        add_color_method meth.to_s
         send meth, *args, &blk
       else
         super
@@ -87,12 +87,13 @@ module Logue
       Colors::valid_colors.include?(meth) || super
     end
 
-    def add_color_method color, code
-      meth = Array.new
-      meth << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
-      meth << "  Log.#{color} msg, lvl, self.class.to_s, &blk"
-      meth << "end"
-      self.class.module_eval meth.join("\n")
+    def add_color_method color
+      meth = Array.new.tap do |a|
+        a << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
+        a << "  Log.send :#{color}, msg, lvl, self.class.to_s, &blk"
+        a << "end"
+      end
+      instance_eval meth.join("\n")
     end
 
     def delegate_log_class

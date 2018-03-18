@@ -114,13 +114,15 @@ module Logue
     end
 
     def self.add_color_method color, code
-      instmeth = Array.new
-      instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, cname = nil, &blk"
-      instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
-      instmeth << "end"
+      $stderr.puts "(log) color: #{color}"
+      meth = Array.new.tap do |a|
+        a << "def #{color} msg = '', lvl = Log::DEBUG, cname = nil, &blk"
+        a << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
+        a << "end"
+      end
       
       # an instance, but on the class object, not the log instance:
-      self.instance_eval instmeth.join("\n")
+      self.instance_eval meth.join("\n")
     end
 
     # Creates a printf format for the given widths, for aligning output.
