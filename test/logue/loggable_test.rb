@@ -6,17 +6,15 @@ require 'test_helper'
 
 module Logue
   # poor man's mock
-  class TestLogDelegate
-    class << self
-      attr_accessor :invoked
-      
-      def method_missing meth, *args, &blk
-        @invoked = { name: meth, args: args }
-      end
+  class TestLogger
+    attr_accessor :invoked
+    
+    def method_missing meth, *args, &blk
+      @invoked = { name: meth, args: args }
+    end
 
-      def respond_to? meth, include_all = false
-        true
-      end
+    def respond_to? meth, include_all = false
+      true
     end
   end
   
@@ -53,14 +51,11 @@ module Logue
     ] do |methname|
       obj = Object.new
       obj.extend Loggable
+      logger = obj.logger = TestLogger.new
 
-      def obj.delegate_log_class
-        TestLogDelegate
-      end
-
-      TestLogDelegate.invoked = nil
+      logger.invoked = nil
       obj.send methname, "abc"
-      invoked = TestLogDelegate.invoked      
+      invoked = logger.invoked
       assert_equal methname, invoked[:name]
     end
   end

@@ -11,6 +11,7 @@
 
 require 'logue/log'
 require 'logue/colors'
+require 'logue/logger'
 
 #
 # == Loggable
@@ -40,37 +41,45 @@ require 'logue/colors'
 
 module Logue
   module Loggable
+    def logger
+      @@logger ||= Logger.new
+    end
+
+    def logger= logger
+      @@logger = logger
+    end
+
     # Logs the given message, including the class whence invoked.
     def log msg = "", lvl = Log::DEBUG, &blk
-      delegate_log_class.log msg, lvl, self.class.to_s, &blk
+      logger.log msg, lvl, self.class.to_s, &blk
     end
 
     def debug msg = "", &blk
-      delegate_log_class.debug msg, self.class.to_s, &blk
+      logger.debug msg, self.class.to_s, &blk
     end
 
     def info msg = "", &blk
-      delegate_log_class.info msg, self.class.to_s, &blk
+      logger.info msg, self.class.to_s, &blk
     end
 
     def warn msg = "", &blk
-      delegate_log_class.warn msg, self.class.to_s, &blk
+      logger.warn msg, self.class.to_s, &blk
     end
 
     def error msg = "", &blk
-      delegate_log_class.error msg, self.class.to_s, &blk
+      logger.error msg, self.class.to_s, &blk
     end
 
     def fatal msg = "", &blk
-      delegate_log_class.fatal msg, self.class.to_s, &blk
+      logger.fatal msg, self.class.to_s, &blk
     end
 
     def stack msg = "", lvl = Log::DEBUG, &blk
-      delegate_log_class.stack msg, lvl, self.class.to_s, &blk
+      logger.stack msg, lvl, self.class.to_s, &blk
     end
 
     def write msg = "", &blk
-      delegate_log_class.write msg, self.class.to_s, &blk
+      logger.write msg, self.class.to_s, &blk
     end
 
     def method_missing meth, *args, &blk
@@ -90,14 +99,10 @@ module Logue
     def add_color_method color
       meth = Array.new.tap do |a|
         a << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
-        a << "  Log.send :#{color}, msg, lvl, self.class.to_s, &blk"
+        a << "  logger.send :#{color}, msg, lvl, self.class.to_s, &blk"
         a << "end"
       end
       instance_eval meth.join("\n")
-    end
-
-    def delegate_log_class
-      Log
     end
   end
 end

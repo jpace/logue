@@ -58,12 +58,12 @@ module Logue
 
     # by default, class methods delegate to a single app-wide log.
 
-    @@log = Logger.new
+    @@logger = Logger.new
 
     # Returns the logger of the log. A class method delegating to an instance
     # method ... not so good. But temporary.
     def self.logger
-      @@log
+      @@logger
     end
 
     def self.accessors methname
@@ -114,7 +114,6 @@ module Logue
     end
 
     def self.add_color_method color, code
-      $stderr.puts "(log) color: #{color}"
       meth = Array.new.tap do |a|
         a << "def #{color} msg = '', lvl = Log::DEBUG, cname = nil, &blk"
         a << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
@@ -133,7 +132,7 @@ module Logue
     def self.debug msg = "", cname = nil, &blk
       logger.debug msg, cname, &blk
     end
-
+    
     def self.info msg = "", cname = nil, &blk
       logger.info msg, cname, &blk
     end
