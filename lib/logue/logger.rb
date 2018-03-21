@@ -122,21 +122,21 @@ module Logue
       if lvl >= level
         stack = Stack.new
         stack.filtered[0 .. num].each do |frame|
-          log_frame frame, cname, msg, lvl, &blk
+          log_frame frame, msg, classname: cname, level: lvl, &blk
           cname = nil
           msg   = ""
         end
       end
     end    
 
-    def log_frame frame, cname, msg, lvl, &blk
-      if @filter.log? frame.path, cname, frame.method
-        print_frame frame, cname, msg, lvl, &blk
+    def log_frame frame, msg, classname: nil, level: nil, &blk
+      if @filter.log? frame.path, classname, frame.method
+        print_frame frame, msg, classname: classname, level: level, &blk
       end
     end
 
-    def print_frame frame, cname, msg, lvl, &blk
-      loc  = Location.new frame.path, frame.line, cname, frame.method
+    def print_frame frame, msg, classname: nil, level: nil, &blk
+      loc  = Location.new frame.path, frame.line, classname, frame.method
       line = Line.new loc, msg, &blk
       lstr = line.format @format
       @writer.print lstr, level
