@@ -109,22 +109,22 @@ module Logue
     end
 
     # Logs the given message.
-    def log msg = "", lvl = DEBUG, cname = nil, &blk
-      log_frames cname, msg, lvl, 0, &blk
+    def log msg = "", lvl = DEBUG, cname, &blk
+      log_frames msg, classname: cname, level: lvl, nframes: 0, &blk
     end
 
     # Shows the current stack.
     def stack msg = "", lvl = DEBUG, cname = nil, &blk
-      log_frames cname, msg, lvl, -1, &blk
+      log_frames msg, classname: cname, level: lvl, nframes: -1, &blk
     end
 
-    def log_frames cname, msg, lvl, num, &blk
-      if lvl >= level
+    def log_frames msg, classname: nil, level: nil, nframes: -1, &blk
+      if level >= @level
         stack = Stack.new
-        stack.filtered[0 .. num].each do |frame|
-          log_frame frame, msg, classname: cname, level: lvl, &blk
-          cname = nil
-          msg   = ""
+        stack.filtered[0 .. nframes].each do |frame|
+          log_frame frame, msg, classname: classname, level: level, &blk
+          classname = nil
+          msg = ""
         end
       end
     end    
