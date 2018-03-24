@@ -44,8 +44,8 @@ module Logue
 
     def add_color_method color, code
       meth = Array.new.tap do |a|
-        a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, cname = nil, &blk)'
-        a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", lvl, cname, &blk)'
+        a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, classname: nil, &blk)'
+        a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", lvl, classname: classname, &blk)'
         a << 'end'
       end
       instance_eval meth.join "\n"

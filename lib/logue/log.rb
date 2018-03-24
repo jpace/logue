@@ -94,6 +94,14 @@ module Logue
           :set_widths,
         ]
         ary.concat read_methods
+        logging_methods = [
+          :debug,
+          :fatal,
+          :info,
+          :log,
+          :stack,
+        ]
+        ary.concat logging_methods
       end
       @@logger_delegated.include? meth
     end
@@ -116,7 +124,7 @@ module Logue
     def self.add_color_method color, code
       meth = Array.new.tap do |a|
         a << "def #{color} msg = '', lvl = Log::DEBUG, cname = nil, &blk"
-        a << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
+        a << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, classname: cname, &blk)"
         a << "end"
       end
       
@@ -124,50 +132,25 @@ module Logue
       self.instance_eval meth.join("\n")
     end
 
-    # Creates a printf format for the given widths, for aligning output.
-    def self.set_widths file_width, line_width, func_width
-      logger.set_widths file_width, line_width, func_width
-    end
-    
-    def self.debug msg = "", cname = nil, &blk
-      logger.debug msg, cname, &blk
-    end
-    
-    def self.info msg = "", cname = nil, &blk
-      logger.info msg, cname, &blk
-    end
-
-    def self.fatal msg = "", cname = nil, &blk
-      logger.fatal msg, cname, &blk
-    end
-
-    def self.log msg = "", lvl = DEBUG, cname = nil, &blk
-      logger.log msg, lvl, cname, &blk
-    end
-
-    def self.stack msg = "", lvl = DEBUG, cname = nil, &blk
-      logger.stack msg, lvl, cname, &blk
-    end
-
-    def self.warn msg = "", cname = nil, &blk
+    def self.warn msg = "", classname: nil, &blk
       if verbose
-        logger.log msg, WARN, cname, &blk
+        logger.log msg, WARN, classname: classname, &blk
       else
         $stderr.puts "WARNING: " + msg
       end
     end
 
-    def self.error msg = "", cname = nil, &blk
+    def self.error msg = "", classname: nil, &blk
       if verbose
-        logger.log msg, ERROR, cname, &blk
+        logger.log msg, ERROR, classname: classname, &blk
       else
         $stderr.puts "ERROR: " + msg
       end
     end
 
-    def self.write msg, cname = nil, &blk
+    def self.write msg, classname: nil, &blk
       if verbose
-        stack msg, Log::WARN, cname, &blk
+        stack msg, Log::WARN, classname: classname, &blk
       elsif quiet
         # nothing
       else

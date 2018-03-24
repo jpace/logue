@@ -43,11 +43,11 @@ module Logue
     end
 
     def test_red
-      Log.red "mabc", Level::WARN, "cdef"
+      Log.red "mabc", Level::WARN, classname: "cdef"
     end
 
     def test_yellow
-      Log.yellow "mabc", Level::WARN, "cdef"
+      Log.yellow "mabc", Level::WARN, classname: "cdef"
     end
   end
 end

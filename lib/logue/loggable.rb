@@ -51,35 +51,35 @@ module Logue
 
     # Logs the given message, including the class whence invoked.
     def log msg = "", lvl = Log::DEBUG, &blk
-      logger.log msg, lvl, self.class.to_s, &blk
+      logger.log msg, lvl, classname: self.class.to_s, &blk
     end
 
     def debug msg = "", &blk
-      logger.debug msg, self.class.to_s, &blk
+      logger.debug msg, classname: self.class.to_s, &blk
     end
 
     def info msg = "", &blk
-      logger.info msg, self.class.to_s, &blk
+      logger.info msg, classname: self.class.to_s, &blk
     end
 
     def warn msg = "", &blk
-      logger.warn msg, self.class.to_s, &blk
+      logger.warn msg, classname: self.class.to_s, &blk
     end
 
     def error msg = "", &blk
-      logger.error msg, self.class.to_s, &blk
+      logger.error msg, classname: self.class.to_s, &blk
     end
 
     def fatal msg = "", &blk
-      logger.fatal msg, self.class.to_s, &blk
+      logger.fatal msg, classname: self.class.to_s, &blk
     end
 
     def stack msg = "", lvl = Log::DEBUG, &blk
-      logger.stack msg, lvl, self.class.to_s, &blk
+      logger.stack msg, lvl, classname: self.class.to_s, &blk
     end
 
     def write msg = "", &blk
-      logger.write msg, self.class.to_s, &blk
+      logger.write msg, classname: self.class.to_s, &blk
     end
 
     def method_missing meth, *args, &blk
@@ -99,7 +99,7 @@ module Logue
     def add_color_method color
       meth = Array.new.tap do |a|
         a << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
-        a << "  logger.send :#{color}, msg, lvl, self.class.to_s, &blk"
+        a << "  logger.send :#{color}, msg, lvl, classname: self.class.to_s, &blk"
         a << "end"
       end
       instance_eval meth.join("\n")

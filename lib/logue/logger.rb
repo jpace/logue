@@ -88,34 +88,34 @@ module Logue
       @format = LocationFormat.new file: file, line: line, method: method
     end
 
-    def debug msg = "", cname = nil, &blk
-      log msg, DEBUG, cname, &blk
+    def debug msg = "", classname: nil, &blk
+      log msg, DEBUG, classname: classname, &blk
     end
 
-    def info msg = "", cname = nil, &blk
-      log msg, INFO, cname, &blk
+    def info msg = "", classname: nil, &blk
+      log msg, INFO, classname: classname, &blk
     end
 
-    def warn msg = "", cname = nil, &blk
-      log msg, WARN, cname, &blk
+    def warn msg = "", classname: nil, &blk
+      log msg, WARN, classname: classname, &blk
     end
 
-    def error msg = "", cname = nil, &blk
-      log msg, ERROR, cname, &blk
+    def error msg = "", classname: nil, &blk
+      log msg, ERROR, classname: classname, &blk
     end
 
-    def fatal msg = "", cname = nil, &blk
-      log msg, FATAL, cname, &blk
+    def fatal msg = "", classname: nil, &blk
+      log msg, FATAL, classname: classname, &blk
     end
 
     # Logs the given message.
-    def log msg = "", lvl = DEBUG, cname, &blk
-      log_frames msg, classname: cname, level: lvl, nframes: 0, &blk
+    def log msg = "", lvl = DEBUG, classname: nil, &blk
+      log_frames msg, classname: classname, level: lvl, nframes: 0, &blk
     end
 
     # Shows the current stack.
-    def stack msg = "", lvl = DEBUG, cname = nil, &blk
-      log_frames msg, classname: cname, level: lvl, nframes: -1, &blk
+    def stack msg = "", lvl = DEBUG, classname: nil, &blk
+      log_frames msg, classname: classname, level: lvl, nframes: -1, &blk
     end
 
     def log_frames msg, classname: nil, level: nil, nframes: -1, &blk
