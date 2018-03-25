@@ -51,7 +51,7 @@ module Logue
 
     # Logs the given message, including the class whence invoked.
     def log msg = "", lvl = Log::DEBUG, &blk
-      logger.log msg, lvl, classname: self.class.to_s, &blk
+      logger.log msg, level: lvl, classname: self.class.to_s, &blk
     end
 
     def debug msg = "", &blk
@@ -75,7 +75,7 @@ module Logue
     end
 
     def stack msg = "", lvl = Log::DEBUG, &blk
-      logger.stack msg, lvl, classname: self.class.to_s, &blk
+      logger.stack msg, level: lvl, classname: self.class.to_s, &blk
     end
 
     def write msg = "", &blk

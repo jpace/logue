@@ -39,16 +39,29 @@ module Logue
       obj.send color
     end
 
-    param_test [
-      :log,
-      :debug,
-      :info,
-      :warn,
-      :error,
-      :fatal,
-      :stack,
-      :write,
-    ] do |methname|
+    def self.build_method_delegation_params
+      without_level = [
+        :debug,
+        :info,
+        :warn,
+        :error,
+        :fatal,
+        :write,
+      ].collect do |methname|
+        [ [ "abc", classname: "Object" ], methname ]
+      end
+
+      with_level = [
+        :log,
+        :stack,
+      ].collect do |methname|
+        [ [ "abc", classname: "Object", level: Log::DEBUG ], methname ]
+      end
+
+      without_level + with_level
+    end
+
+    param_test build_method_delegation_params do |exp, methname|
       obj = Object.new
       obj.extend Loggable
       logger = obj.logger = TestLogger.new
@@ -57,6 +70,7 @@ module Logue
       obj.send methname, "abc"
       invoked = logger.invoked
       assert_equal methname, invoked[:name]
+      assert_equal exp, invoked[:args]
     end
   end
 end

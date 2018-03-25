@@ -133,9 +133,17 @@ module Logue
       assert expre.match(str)
     end
 
-    def self.build_log_write_args
+    def self.build_log_write_params
       re = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc'
-      Array.new.tap do |a|
+      obj = "o2"
+      
+      params = Array.new.tap do |a|
+        a << [ true,  re, :warn,  "mabc", obj, classname: "cdef" ]
+        a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
+        a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]
+
         a << [ true,  re, :warn,  "mabc", classname: "cdef" ]
         a << [ true,  re, :fatal, "mabc", classname: "cdef" ]
         a << [ true,  re, :error, "mabc", classname: "cdef" ]
@@ -144,7 +152,7 @@ module Logue
       end
     end
 
-    param_test build_log_write_args do |exp, re, methname, *args|
+    param_test build_log_write_params do |exp, re, methname, *args|
       output = StringIO.new
       writer = Writer.new output: output
       logger = Logger.new writer: writer
