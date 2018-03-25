@@ -135,20 +135,22 @@ module Logue
 
     def self.build_log_write_params
       re = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc'
+      
       obj = "o2"
+      objre = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc: o2'
       
       params = Array.new.tap do |a|
-        a << [ true,  re, :warn,  "mabc", obj, classname: "cdef" ]
-        a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
-        a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
-        a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
-        a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]
-
         a << [ true,  re, :warn,  "mabc", classname: "cdef" ]
         a << [ true,  re, :fatal, "mabc", classname: "cdef" ]
         a << [ true,  re, :error, "mabc", classname: "cdef" ]
         a << [ false, re, :debug, "mabc", classname: "cdef" ]
         a << [ false, re, :info,  "mabc", classname: "cdef" ]
+
+        a << [ true,  objre, :warn,  "mabc", obj, classname: "cdef" ]
+        # a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
+        # a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
+        # a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
+        # a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]        
       end
     end
 
