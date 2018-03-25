@@ -20,7 +20,8 @@ class MyClass
   end
 end
 
-MyClass.new.mymethod "bar"
+obj = MyClass.new
+obj.mymethod "bar"
 ```
 
 Produces:

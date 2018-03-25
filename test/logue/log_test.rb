@@ -49,5 +49,58 @@ module Logue
     def test_yellow
       Log.yellow "mabc", Level::WARN, classname: "cdef"
     end
+
+    def self.delegated_methods
+      [
+        :colorize_line,
+        :format,
+        :level,
+        :outfile,
+        :output,
+        :quiet,
+        :verbose,
+        :ignore_class,
+        :ignore_file,
+        :ignore_method,
+        :log_class,
+        :log_file,
+        :log_method,
+        :set_color,
+        :set_default_widths,
+        :set_widths,
+        :debug,
+        :fatal,
+        :info,
+        :log,
+        :stack,
+        :write,
+        :warn,
+        :error,
+      ]
+    end
+
+    def self.build_includes_method_params
+      ary = delegated_methods.inject(Array.new) do |a, m|
+        a << [ true, m ]
+      end
+      ary << [ false, :abc ]
+      ary << [ false, :xyz ]
+    end
+
+    param_test build_includes_method_params do |exp, methname|
+      assert_equal exp, Log.methods.include?(methname)
+    end    
+
+    def self.build_respond_to_params
+      ary = delegated_methods.inject(Array.new) do |a, m|
+        a << [ true, m ]
+      end
+      ary << [ false, :abc ]
+      ary << [ false, :xyz ]
+    end
+
+    param_test build_respond_to_params do |exp, methname|
+      assert_equal exp, Log.respond_to?(methname)
+    end    
   end
 end
