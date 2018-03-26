@@ -16,10 +16,8 @@ require 'logue/colors'
 #
 # == Log
 #
-# Very minimal logging output. If verbose is set, this displays the method and
-# line number whence called. It can be a mixin to a class, which displays the
-# class and method from where it called. If not in a class, it displays only the
-# method.
+# Log is the logger for anywhere within a program, writing to a single logger.
+# See Loggable and Logger for more precise behavior.
 # 
 # Remember: all kids love log.
 #
@@ -52,18 +50,15 @@ require 'logue/colors'
 
 module Logue
   class Log
-    $LOGGING_LEVEL = nil
-
     include Level
 
     # by default, class methods delegate to a single app-wide log.
 
-    @@log = Logger.new
+    @logger = Logger.new
 
-    # Returns the logger of the log. A class method delegating to an instance
-    # method ... not so good. But temporary.
+    # Returns the app-wide logger of the log.
     def self.logger
-      @@log
+      @logger
     end
 
     def self.accessors methname
@@ -71,7 +66,7 @@ module Logue
     end
     
     def self.logger_delegated? meth
-      @@logger_delegated ||= Array.new.tap do |ary|
+      @logger_delegated ||= Array.new.tap do |ary|
         acc_methods = [
           :colorize_line,
           :format,
@@ -94,15 +89,40 @@ module Logue
           :set_widths,
         ]
         ary.concat read_methods
+        logging_methods = [
+          :debug,
+          :error,
+          :fatal,
+          :info,
+          :log,
+          :stack,
+          :warn,
+          :write,
+        ]
+        ary.concat logging_methods
       end
-      @@logger_delegated.include? meth
+      @logger_delegated.include? meth
+    end
+
+    def self.methods all = true
+      super + @logger_delegated + colors
+    end
+
+    def self.has_color? color
+      colors.include? color
+    end
+
+    def self.colors
+      # only handling foregrounds, not backgrounds
+      Colors::valid_colors.keys
+    end
+
+    def self.delegated? meth
+      logger_delegated?(meth) || has_color?(meth)
     end
     
     def self.method_missing meth, *args, &blk
-      if logger_delegated? meth
-        logger.send meth, *args, &blk
-      elsif Colors::valid_colors[meth]
-        # only handling foregrounds, not backgrounds
+      if delegated? meth
         logger.send meth, *args, &blk
       else
         super
@@ -110,68 +130,7 @@ module Logue
     end
 
     def self.respond_to? meth
-      logger_delegated?(meth) || Colors::valid_colors.include?(meth) || super
-    end
-
-    def self.add_color_method color, code
-      instmeth = Array.new
-      instmeth << "def #{color} msg = \"\", lvl = Log::DEBUG, cname = nil, &blk"
-      instmeth << "  logger.#{color} (\"\\e[#{code}m\#{msg\}\\e[0m\", lvl, cname, &blk)"
-      instmeth << "end"
-      
-      # an instance, but on the class object, not the log instance:
-      self.instance_eval instmeth.join("\n")
-    end
-
-    # Creates a printf format for the given widths, for aligning output.
-    def self.set_widths file_width, line_width, func_width
-      logger.set_widths file_width, line_width, func_width
-    end
-    
-    def self.debug msg = "", cname = nil, &blk
-      logger.debug msg, cname, &blk
-    end
-
-    def self.info msg = "", cname = nil, &blk
-      logger.info msg, cname, &blk
-    end
-
-    def self.fatal msg = "", cname = nil, &blk
-      logger.fatal msg, cname, &blk
-    end
-
-    def self.log msg = "", lvl = DEBUG, cname = nil, &blk
-      logger.log msg, lvl, cname, &blk
-    end
-
-    def self.stack msg = "", lvl = DEBUG, cname = nil, &blk
-      logger.stack msg, lvl, cname, &blk
-    end
-
-    def self.warn msg = "", cname = nil, &blk
-      if verbose
-        logger.log msg, WARN, cname, &blk
-      else
-        $stderr.puts "WARNING: " + msg
-      end
-    end
-
-    def self.error msg = "", cname = nil, &blk
-      if verbose
-        logger.log msg, ERROR, cname, &blk
-      else
-        $stderr.puts "ERROR: " + msg
-      end
-    end
-
-    def self.write msg, cname = nil, &blk
-      if verbose
-        stack msg, Log::WARN, cname, &blk
-      elsif quiet
-        # nothing
-      else
-        $stderr.puts msg
-      end
+      methods.include? meth
     end
   end
 end

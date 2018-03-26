@@ -8,6 +8,10 @@ require 'stringio'
 class LogAbyss
   include Logue::Loggable
 
+  def logger
+    Logue::Log.logger
+  end
+
   def squeal
     log "hello from the abyss"
     stack "turtles all the way down"
@@ -16,6 +20,10 @@ end
 
 class LogDepths
   include Logue::Loggable
+
+  def logger
+    Logue::Log.logger
+  end
 
   def speak
     log "hello from the depths"
@@ -26,6 +34,10 @@ end
 
 class LogInner
   include Logue::Loggable
+
+  def logger
+    Logue::Log.logger
+  end
 
   def screech
     ldi = LogDepths.new
@@ -47,12 +59,12 @@ module Logue
       }
 
       expected_output = [
-        "[log_stack_test.rb:  32] {LogInner#screech                        } hello from the innerds",
-        "[log_stack_test.rb:  21] {LogDepths#speak                         } hello from the depths",
-        "[log_stack_test.rb:  12] {LogAbyss#squeal                         } hello from the abyss",
-        "[log_stack_test.rb:  13] {LogAbyss#squeal                         } turtles all the way down",
-        "[log_stack_test.rb:  23] {speak                                   } ",
-        "[log_stack_test.rb:  33] {screech                                 } ",
+        "[log_stack_test.rb:  44] {LogInner#screech                        } hello from the innerds",
+        "[log_stack_test.rb:  29] {LogDepths#speak                         } hello from the depths",
+        "[log_stack_test.rb:  16] {LogAbyss#squeal                         } hello from the abyss",
+        "[log_stack_test.rb:  17] {LogAbyss#squeal                         } turtles all the way down",
+        "[log_stack_test.rb:  31] {speak                                   } ",
+        "[log_stack_test.rb:  45] {screech                                 } ",
       ]
 
       do_run_test block, *expected_output

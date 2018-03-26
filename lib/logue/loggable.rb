@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 #
-# = log.rb
+# = loggable.rb
 #
 # Logging Module
 #
@@ -11,6 +11,7 @@
 
 require 'logue/log'
 require 'logue/colors'
+require 'logue/logger'
 
 #
 # == Loggable
@@ -40,43 +41,51 @@ require 'logue/colors'
 
 module Logue
   module Loggable
+    def logger
+      @@logger ||= Logger.new
+    end
+
+    def logger= logger
+      @@logger = logger
+    end
+
     # Logs the given message, including the class whence invoked.
     def log msg = "", lvl = Log::DEBUG, &blk
-      delegate_log_class.log msg, lvl, self.class.to_s, &blk
+      logger.log msg, level: lvl, classname: self.class.to_s, &blk
     end
 
     def debug msg = "", &blk
-      delegate_log_class.debug msg, self.class.to_s, &blk
+      logger.debug msg, classname: self.class.to_s, &blk
     end
 
     def info msg = "", &blk
-      delegate_log_class.info msg, self.class.to_s, &blk
+      logger.info msg, classname: self.class.to_s, &blk
     end
 
     def warn msg = "", &blk
-      delegate_log_class.warn msg, self.class.to_s, &blk
+      logger.warn msg, classname: self.class.to_s, &blk
     end
 
     def error msg = "", &blk
-      delegate_log_class.error msg, self.class.to_s, &blk
+      logger.error msg, classname: self.class.to_s, &blk
     end
 
     def fatal msg = "", &blk
-      delegate_log_class.fatal msg, self.class.to_s, &blk
+      logger.fatal msg, classname: self.class.to_s, &blk
     end
 
     def stack msg = "", lvl = Log::DEBUG, &blk
-      delegate_log_class.stack msg, lvl, self.class.to_s, &blk
+      logger.stack msg, level: lvl, classname: self.class.to_s, &blk
     end
 
     def write msg = "", &blk
-      delegate_log_class.write msg, self.class.to_s, &blk
+      logger.write msg, classname: self.class.to_s, &blk
     end
 
     def method_missing meth, *args, &blk
       # only handling foregrounds, not backgrounds
-      if code = Colors::valid_colors[meth]
-        add_color_method meth.to_s, code + 30
+      if Colors::valid_colors[meth]
+        add_color_method meth.to_s
         send meth, *args, &blk
       else
         super
@@ -87,16 +96,13 @@ module Logue
       Colors::valid_colors.include?(meth) || super
     end
 
-    def add_color_method color, code
-      meth = Array.new
-      meth << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
-      meth << "  Log.#{color} msg, lvl, self.class.to_s, &blk"
-      meth << "end"
-      self.class.module_eval meth.join("\n")
-    end
-
-    def delegate_log_class
-      Log
+    def add_color_method color
+      meth = Array.new.tap do |a|
+        a << "def #{color}(msg = \"\", lvl = Log::DEBUG, cname = nil, &blk)"
+        a << "  logger.send :#{color}, msg, lvl, classname: self.class.to_s, &blk"
+        a << "end"
+      end
+      instance_eval meth.join("\n")
     end
   end
 end

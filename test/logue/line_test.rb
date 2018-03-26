@@ -18,8 +18,8 @@ module Logue
     end
 
     param_test [
-      [ "[/path/a/b/c              :   3] {labc                } mabc", example_frame, nil, "mabc" ],
-      [ "[/path/a/b/c              :   3] {cdef#labc           } mabc", example_frame, "cdef", "mabc" ]
+      [ "[/path/a/b/c              :   3] {labc                } mabc", example_frame, nil,    "mabc" ], 
+      [ "[/path/a/b/c              :   3] {cdef#labc           } mabc", example_frame, "cdef", "mabc" ], 
     ].each do |exp, frame, cls, msg|
       loc    = Location.new frame.path, frame.line, cls, frame.method
       line   = Line.new loc, msg

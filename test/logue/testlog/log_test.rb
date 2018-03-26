@@ -121,7 +121,7 @@ module Logue
       [ "[.../testlog/logtestee.rb :10        ] {format_test         } tamrof\n",          { line: -10 } ],  
       [ "[.../testlog/logtestee.rb :  10] {                        format_test} tamrof\n", { method: 35 } ], 
       [ "[.../testlog/logtestee.rb :00000010] {format_test         } tamrof\n",            { line: "08" } ]
-    ].each do |expline, widthargs|
+    ] do |expline, widthargs|
       Log.set_default_widths
       run_format_test Array[expline] do
         widths widthargs

@@ -14,6 +14,7 @@ require 'logue/colorlog'
 require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
+require 'logue/location'
 require 'logue/stack'
 require 'logue/line'
 
@@ -87,56 +88,57 @@ module Logue
       @format = LocationFormat.new file: file, line: line, method: method
     end
 
-    def debug msg = "", cname = nil, &blk
-      log msg, DEBUG, cname, &blk
+    def debug msg = "", obj = nil, classname: nil, &blk
+      log msg, obj, level: DEBUG, classname: classname, &blk
     end
 
-    def info msg = "", cname = nil, &blk
-      log msg, INFO, cname, &blk
+    def info msg = "", obj = nil, classname: nil, &blk
+      log msg, obj, level: INFO, classname: classname, &blk
     end
 
-    def warn msg = "", cname = nil, &blk
-      log msg, WARN, cname, &blk
+    def warn msg = "", obj = nil, classname: nil, &blk
+      log msg, obj, level: WARN, classname: classname, &blk
     end
 
-    def error msg = "", cname = nil, &blk
-      log msg, ERROR, cname, &blk
+    def error msg = "", obj = nil, classname: nil, &blk
+      log msg, obj, level: ERROR, classname: classname, &blk
     end
 
-    def fatal msg = "", cname = nil, &blk
-      log msg, FATAL, cname, &blk
+    def fatal msg = "", obj = nil, classname: nil, &blk
+      log msg, obj, level: FATAL, classname: classname, &blk
     end
 
     # Logs the given message.
-    def log msg = "", lvl = DEBUG, cname = nil, &blk
-      log_frames cname, msg, lvl, 0, &blk
+    def log msg = "", obj = nil, level: DEBUG, classname: nil, &blk
+      log_frames msg, obj, classname: classname, level: level, nframes: 0, &blk
     end
 
     # Shows the current stack.
-    def stack msg = "", lvl = DEBUG, cname = nil, &blk
-      log_frames cname, msg, lvl, -1, &blk
+    def stack msg = "", obj = nil, level: DEBUG, classname: nil, &blk
+      log_frames msg, obj, classname: classname, level: level, nframes: -1, &blk
     end
 
-    def log_frames cname, msg, lvl, num, &blk
-      if lvl >= level
+    def log_frames msg, obj = nil, classname: nil, level: nil, nframes: -1, &blk
+      if level >= @level
         stack = Stack.new
-        stack.filtered[0 .. num].each do |frame|
-          log_frame frame, cname, msg, lvl, &blk
-          cname = nil
-          msg   = ""
+        stack.filtered[0 .. nframes].each do |frame|
+          log_frame frame, msg, obj, classname: classname, level: level, &blk
+          classname = nil
+          msg = ""
+          obj = nil
         end
       end
     end    
 
-    def log_frame frame, cname, msg, lvl, &blk
-      if @filter.log? frame.path, cname, frame.method
-        print_frame frame, cname, msg, lvl, &blk
+    def log_frame frame, msg, obj, classname: nil, level: nil, &blk
+      if @filter.log? frame.path, classname, frame.method
+        print_frame frame, msg, obj, classname: classname, level: level, &blk
       end
     end
 
-    def print_frame frame, cname, msg, lvl, &blk
-      loc  = Location.new frame.path, frame.line, cname, frame.method
-      line = Line.new loc, msg, &blk
+    def print_frame frame, msg, obj, classname: nil, level: nil, &blk
+      loc  = Location.new frame.path, frame.line, classname, frame.method
+      line = Line.new loc, msg, obj, &blk
       lstr = line.format @format
       @writer.print lstr, level
     end

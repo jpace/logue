@@ -32,7 +32,7 @@ module Logue
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
       [ 4, 5, 6, 4, 5, 6 ],
-    ].each do |expfile, expline, expmethod, *args|
+    ] do |expfile, expline, expmethod, *args|
       logger = self.class.create_logger
       logger.set_widths(*args)
       format = logger.format
@@ -45,7 +45,7 @@ module Logue
     param_test [
       [ 1, 2, 3, 1, 2, 3 ],
       [ 4, 5, 6, 4, 5, 6 ],
-    ].each do |expfile, expline, expmethod, file, line, method|
+    ] do |expfile, expline, expmethod, file, line, method|
       logger        = self.class.create_logger
       format        = LocationFormat.new file: file, line: line, method: method
       logger.format = format
@@ -59,7 +59,7 @@ module Logue
     param_test [
       [ Level::WARN,  true ],  
       [ Level::DEBUG, false ], 
-    ].each do |exp, quiet|
+    ] do |exp, quiet|
       logger = self.class.create_logger
       
       logger.quiet = quiet
@@ -72,7 +72,7 @@ module Logue
       [ false, Level::INFO ],  
       [ true,  Level::WARN ],  
       [ false, Level::DEBUG ], 
-    ].each do |exp, level|
+    ] do |exp, level|
       logger = self.class.create_logger
       logger.level = level
       assert_equal exp, logger.quiet
@@ -85,7 +85,7 @@ module Logue
       [ Level::DEBUG, Level::DEBUG ], 
       [ Level::FATAL, false ],               
       [ Level::DEBUG, true ],                
-    ].each do |exp, value|
+    ] do |exp, value|
       logger = self.class.create_logger
       logger.verbose = value
       assert_equal exp, logger.level
@@ -96,7 +96,7 @@ module Logue
       [ false,  Level::WARN ],  
       [ false,  Level::INFO ],  
       [ true,   Level::DEBUG ], 
-    ].each do |exp, value|
+    ] do |exp, value|
       logger = self.class.create_logger
       logger.level = value
       assert_equal exp, logger.verbose
@@ -105,7 +105,7 @@ module Logue
     param_test [
       [ Level::WARN,  true ],  
       [ Level::DEBUG, false ], 
-    ].each do |exp, value|
+    ] do |exp, value|
       logger = self.class.create_logger
       logger.quiet = value
       assert_equal exp, logger.level
@@ -116,10 +116,52 @@ module Logue
       [ true,   Level::WARN ],  
       [ false,  Level::INFO ],  
       [ false,  Level::DEBUG ], 
-    ].each do |exp, value|
+    ] do |exp, value|
       logger = self.class.create_logger
       logger.level = value
       assert_equal exp, logger.quiet
+    end
+
+    def run_logging_test methname, expre, *args
+      puts "expre: #{expre}"
+      output = StringIO.new
+      logger = Logger.new writer: Writer.new(output: output)
+      logger.send methname, *args
+      output.flush
+      str = output.string
+      puts "str: #{str}"
+      assert expre.match(str)
+    end
+
+    def self.build_log_write_params
+      re = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc'
+      
+      obj = "o2"
+      objre = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc: o2'
+      
+      Array.new.tap do |a|
+        a << [ true,  re, :warn,  "mabc", classname: "cdef" ]
+        a << [ true,  re, :fatal, "mabc", classname: "cdef" ]
+        a << [ true,  re, :error, "mabc", classname: "cdef" ]
+        a << [ false, re, :debug, "mabc", classname: "cdef" ]
+        a << [ false, re, :info,  "mabc", classname: "cdef" ]
+
+        a << [ true,  objre, :warn,  "mabc", obj, classname: "cdef" ]
+        a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
+        a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]        
+      end
+    end
+
+    param_test build_log_write_params do |exp, re, methname, *args|
+      output = StringIO.new
+      writer = Writer.new output: output
+      logger = Logger.new writer: writer
+      logger.send methname, *args
+      output.flush
+      str = output.string
+      assert_equal exp, !!re.match(str), "str: #{str}"
     end
   end
 end
