@@ -89,33 +89,33 @@ module Logue
     end
 
     def debug msg = "", obj = nil, classname: nil, &blk
-      log msg, level: DEBUG, classname: classname, &blk
+      log msg, obj, level: DEBUG, classname: classname, &blk
     end
 
     def info msg = "", obj = nil, classname: nil, &blk
-      log msg, level: INFO, classname: classname, &blk
+      log msg, obj, level: INFO, classname: classname, &blk
     end
 
     def warn msg = "", obj = nil, classname: nil, &blk
-      log msg, level: WARN, classname: classname, &blk
+      log msg, obj, level: WARN, classname: classname, &blk
     end
 
     def error msg = "", obj = nil, classname: nil, &blk
-      log msg, level: ERROR, classname: classname, &blk
+      log msg, obj, level: ERROR, classname: classname, &blk
     end
 
     def fatal msg = "", obj = nil, classname: nil, &blk
-      log msg, level: FATAL, classname: classname, &blk
+      log msg, obj, level: FATAL, classname: classname, &blk
     end
 
     # Logs the given message.
     def log msg = "", obj = nil, level: DEBUG, classname: nil, &blk
-      log_frames msg, classname: classname, level: level, nframes: 0, &blk
+      log_frames msg, obj, classname: classname, level: level, nframes: 0, &blk
     end
 
     # Shows the current stack.
     def stack msg = "", obj = nil, level: DEBUG, classname: nil, &blk
-      log_frames msg, classname: classname, level: level, nframes: -1, &blk
+      log_frames msg, obj, classname: classname, level: level, nframes: -1, &blk
     end
 
     def log_frames msg, obj = nil, classname: nil, level: nil, nframes: -1, &blk
@@ -138,7 +138,7 @@ module Logue
 
     def print_frame frame, msg, obj, classname: nil, level: nil, &blk
       loc  = Location.new frame.path, frame.line, classname, frame.method
-      line = Line.new loc, msg, &blk
+      line = Line.new loc, msg, obj, &blk
       lstr = line.format @format
       @writer.print lstr, level
     end

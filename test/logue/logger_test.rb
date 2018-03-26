@@ -139,7 +139,7 @@ module Logue
       obj = "o2"
       objre = Regexp.new '\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc: o2'
       
-      params = Array.new.tap do |a|
+      Array.new.tap do |a|
         a << [ true,  re, :warn,  "mabc", classname: "cdef" ]
         a << [ true,  re, :fatal, "mabc", classname: "cdef" ]
         a << [ true,  re, :error, "mabc", classname: "cdef" ]
@@ -147,10 +147,10 @@ module Logue
         a << [ false, re, :info,  "mabc", classname: "cdef" ]
 
         a << [ true,  objre, :warn,  "mabc", obj, classname: "cdef" ]
-        # a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
-        # a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
-        # a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
-        # a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]        
+        a << [ true,  re, :fatal, "mabc", obj, classname: "cdef" ]
+        a << [ true,  re, :error, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :debug, "mabc", obj, classname: "cdef" ]
+        a << [ false, re, :info,  "mabc", obj, classname: "cdef" ]        
       end
     end
 
@@ -161,7 +161,7 @@ module Logue
       logger.send methname, *args
       output.flush
       str = output.string
-      assert_equal exp, !!re.match(str)
+      assert_equal exp, !!re.match(str), "str: #{str}"
     end
   end
 end
