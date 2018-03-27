@@ -55,7 +55,7 @@ module Logue
         :log,
         :stack,
       ].collect do |methname|
-        [ [ "abc", classname: "Object", level: Log::DEBUG ], methname ]
+        [ [ "abc", classname: "Object", level: Level::DEBUG ], methname ]
       end
 
       without_level + with_level

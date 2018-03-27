@@ -55,22 +55,12 @@ module Logue
       assert_equal expline,   result.line
       assert_equal expmethod, result.method
     end
-    
-    param_test [
-      [ Level::WARN,  true ],  
-      [ Level::DEBUG, false ], 
-    ] do |exp, quiet|
-      logger = self.class.create_logger
-      
-      logger.quiet = quiet
-      assert_equal exp, logger.level
-    end
 
     param_test [
+      [ true,  Level::FATAL ],  
       [ true,  Level::ERROR ], 
       [ true,  Level::WARN ],  
       [ false, Level::INFO ],  
-      [ true,  Level::WARN ],  
       [ false, Level::DEBUG ], 
     ] do |exp, level|
       logger = self.class.create_logger
@@ -83,7 +73,7 @@ module Logue
       [ Level::WARN,  Level::WARN ],  
       [ Level::INFO,  Level::INFO ],  
       [ Level::DEBUG, Level::DEBUG ], 
-      [ Level::FATAL, false ],               
+      [ Level::FATAL, false ],
       [ Level::DEBUG, true ],                
     ] do |exp, value|
       logger = self.class.create_logger
@@ -92,6 +82,7 @@ module Logue
     end
 
     param_test [
+      [ false,  Level::FATAL ], 
       [ false,  Level::ERROR ], 
       [ false,  Level::WARN ],  
       [ false,  Level::INFO ],  
@@ -109,28 +100,6 @@ module Logue
       logger = self.class.create_logger
       logger.quiet = value
       assert_equal exp, logger.level
-    end
-
-    param_test [
-      [ true,   Level::ERROR ], 
-      [ true,   Level::WARN ],  
-      [ false,  Level::INFO ],  
-      [ false,  Level::DEBUG ], 
-    ] do |exp, value|
-      logger = self.class.create_logger
-      logger.level = value
-      assert_equal exp, logger.quiet
-    end
-
-    def run_logging_test methname, expre, *args
-      puts "expre: #{expre}"
-      output = StringIO.new
-      logger = Logger.new writer: Writer.new(output: output)
-      logger.send methname, *args
-      output.flush
-      str = output.string
-      puts "str: #{str}"
-      assert expre.match(str)
     end
 
     def self.build_log_write_params

@@ -4,7 +4,6 @@
 require 'logue/frame'
 require 'logue/location_format'
 require 'test_helper'
-require 'paramesan'
 
 module Logue
   class FrameTest < Test::Unit::TestCase

@@ -38,26 +38,24 @@ module Logue
     attr_accessor :format
     attr_accessor :filter
     attr_accessor :writer
-    
-    include Level
 
-    def initialize format: LocationFormat.new, level: WARN, filter: Filter.new, writer: Writer.new
+    def initialize format: LocationFormat.new, level: Level::WARN, filter: Filter.new, writer: Writer.new
       reset format: format, level: level, filter: filter, writer: writer
     end
     
     def verbose= v
       @level = case v
                when TrueClass 
-                 DEBUG
+                 Level::DEBUG
                when FalseClass 
-                 FATAL
+                 Level::FATAL
                when Integer
                  v
                end
     end
 
     def verbose
-      @level <= DEBUG
+      @level <= Level::DEBUG
     end
 
     def reset format: LocationFormat.new, level: FATAL, filter: Filter.new, writer: Writer.new
@@ -68,11 +66,11 @@ module Logue
     end
     
     def quiet
-      @level >= WARN
+      @level >= Level::WARN
     end
 
     def quiet= b
-      @level = b ? WARN : DEBUG
+      @level = b ? Level::WARN : Level::DEBUG
     end
 
     # Assigns output to a file with the given name. Returns the file; the client is responsible for
@@ -89,32 +87,32 @@ module Logue
     end
 
     def debug msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: DEBUG, classname: classname, &blk
+      log msg, obj, level: Level::DEBUG, classname: classname, &blk
     end
 
     def info msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: INFO, classname: classname, &blk
+      log msg, obj, level: Level::INFO, classname: classname, &blk
     end
 
     def warn msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: WARN, classname: classname, &blk
+      log msg, obj, level: Level::WARN, classname: classname, &blk
     end
 
     def error msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: ERROR, classname: classname, &blk
+      log msg, obj, level: Level::ERROR, classname: classname, &blk
     end
 
     def fatal msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: FATAL, classname: classname, &blk
+      log msg, obj, level: Level::FATAL, classname: classname, &blk
     end
 
     # Logs the given message.
-    def log msg = "", obj = nil, level: DEBUG, classname: nil, &blk
+    def log msg = "", obj = nil, level: Level::DEBUG, classname: nil, &blk
       log_frames msg, obj, classname: classname, level: level, nframes: 0, &blk
     end
 
     # Shows the current stack.
-    def stack msg = "", obj = nil, level: DEBUG, classname: nil, &blk
+    def stack msg = "", obj = nil, level: Level::DEBUG, classname: nil, &blk
       log_frames msg, obj, classname: classname, level: level, nframes: -1, &blk
     end
 

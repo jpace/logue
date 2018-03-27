@@ -50,8 +50,6 @@ require 'logue/colors'
 
 module Logue
   class Log
-    include Level
-
     # by default, class methods delegate to a single app-wide log.
 
     @logger = Logger.new

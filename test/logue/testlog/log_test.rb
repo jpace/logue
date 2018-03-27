@@ -74,7 +74,7 @@ module Logue
     end
 
     def test_output_block_at_level
-      Log.level = Log::DEBUG
+      Log.level = Level::DEBUG
       
       methname = "log_block"
 
@@ -90,7 +90,7 @@ module Logue
       expected = Array.new
 
       run_log_testee_test(:log_block, expected) do
-        Log.level = Log::INFO
+        Log.level = Level::INFO
       end
     end
 

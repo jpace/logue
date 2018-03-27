@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 # -*- ruby -*-
 #
-# = severity.rb
+# = level.rb
 #
 # Logging Module
 #
@@ -10,7 +10,7 @@
 #
 
 module Logue
-  module Level
+  class Level
     DEBUG = 0
     INFO  = 1
     WARN  = 2

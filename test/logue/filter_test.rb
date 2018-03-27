@@ -3,7 +3,6 @@
 
 require 'logue/filter'
 require 'test_helper'
-require 'paramesan'
 
 module Logue
   class FilterTest < Test::Unit::TestCase
@@ -46,7 +45,7 @@ module Logue
     end
 
     def self.add_log_params ary, exp, *args
-      ary << [ exp,  "fabc", "cdef", "mghi", *args ]
+      ary << [ exp, "fabc", "cdef", "mghi", *args ]
     end
 
     def self.build_log_params
