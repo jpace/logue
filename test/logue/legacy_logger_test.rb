@@ -9,7 +9,7 @@ require 'pathname'
 
 module Logue
   class LegacyLoggerTest < Test::Unit::TestCase
-    def self.create_logger
+    def create_logger
       Object.new.tap do |obj|
         obj.extend LegacyLogger
 
@@ -26,31 +26,30 @@ module Logue
         end
       end
     end
+
+    def setup
+      @logger = create_logger
+    end
     
     def test_trim
-      logger = self.class.create_logger
-      $stderr.puts "expect output regarding deprecated #trim method:"
-      logger.trim = false
+      @logger.trim = false
     end
     
     def test_output
       file = File.new "/tmp/legacy_logger_test-abc", "w"
       begin
-        logger = self.class.create_logger
-        logger.output = file
+        @logger.output = file
       ensure
         Pathname.new(file).unlink
       end
     end
     
     def test_ignore_file
-      logger = self.class.create_logger
-      logger.ignore_file "abc"
+      @logger.ignore_file "abc"
     end
     
     def test_set_default_widths
-      logger = self.class.create_logger
-      logger.set_default_widths
+      @logger.set_default_widths
     end
   end
 end

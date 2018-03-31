@@ -26,9 +26,7 @@ require 'logue/level'
 module Logue
   module ColorLog
     def method_missing meth, *args, &blk
-      # validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors = Rainbow::Color::Named::NAMES
-      if code = validcolors[meth]
+      if code = valid_colors[meth]
         add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
@@ -37,9 +35,11 @@ module Logue
     end
 
     def respond_to? meth
-      # validcolors = Rainbow::X11ColorNames::NAMES
-      validcolors = Rainbow::Color::Named::NAMES
-      validcolors.include?(meth) || super
+      valid_colors.include?(meth) || super
+    end
+
+    def methods all = true
+      super + valid_colors.keys
     end
 
     def add_color_method color, code
@@ -49,6 +49,11 @@ module Logue
         a << 'end'
       end
       instance_eval meth.join "\n"
+    end
+
+    def valid_colors
+      # Rainbow::X11ColorNames::NAMES
+      Rainbow::Color::Named::NAMES
     end
   end
 end

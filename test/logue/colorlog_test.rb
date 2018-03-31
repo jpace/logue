@@ -33,7 +33,7 @@ module Logue
       [ true,  :blue ],
       [ true,  :red ],
       [ false, :no_such_color ], 
-    ].each do |exp, name|
+    ] do |exp, name|
       logger = self.class.create_logger
       assert_equal exp, logger.respond_to?(name)
     end
@@ -44,13 +44,20 @@ module Logue
       assert_not_nil logger.method(:blue)
     end
 
-    param_test [
-      [ [ "\e[34mabc\e[0m", level: Level::DEBUG, classname: nil ], :blue, "abc" ],
-      [ [ "\e[34mdef\e[0m", level: Level::DEBUG, classname: nil ], :blue, "def" ],
-      [ [ "\e[34mabc\e[0m", level: Level::INFO,  classname: nil ], :blue, "abc", Level::INFO ],
-      [ [ "\e[34mabc\e[0m", level: Level::DEBUG, classname: nil ], :blue, "abc", Level::DEBUG ],
-      [ [ "\e[34mabc\e[0m", level: Level::DEBUG, classname: "clsxyz" ], :blue, "abc", Level::DEBUG, classname: "clsxyz" ],
-    ].each do |exp, methname, *args|
+    def self.build_call_color_method_params
+      sabc = "\e[34mabc\e[0m"
+      sdef = "\e[34mdef\e[0m"
+      
+      Array.new.tap do |a|
+        a << [ [ sabc, level: Level::DEBUG, classname: nil ], :blue, "abc" ]
+        a << [ [ sdef, level: Level::DEBUG, classname: nil ], :blue, "def" ]
+        a << [ [ sabc, level: Level::INFO,  classname: nil ], :blue, "abc", Level::INFO ]
+        a << [ [ sabc, level: Level::DEBUG, classname: nil ], :blue, "abc", Level::DEBUG ]
+        a << [ [ sabc, level: Level::DEBUG, classname: "clsxyz" ], :blue, "abc", Level::DEBUG, classname: "clsxyz" ]
+      end
+    end
+
+    param_test build_call_color_method_params do |exp, methname, *args|
       logger = self.class.create_logger
       logger.send methname, *args
       assert_equal exp, logger.called_with
@@ -59,11 +66,19 @@ module Logue
 
     param_test [
       [ [ "\e[34mabc\e[0m", level: Level::DEBUG, classname: nil ], :blue, Proc.new { }, "abc" ],
-    ].each do |exp, methname, blk, *args|
+    ] do |exp, methname, blk, *args|
       logger = self.class.create_logger
       logger.send methname, *args, &blk
       assert_equal exp, logger.called_with
       assert_equal blk, logger.block
+    end
+
+    param_test [
+      [ true, :blue ],
+      [ false, :blau ],
+    ] do |exp, methname|
+      logger = self.class.create_logger
+      assert_equal exp, logger.methods.include?(methname)
     end
   end
 end

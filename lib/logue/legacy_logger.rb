@@ -14,8 +14,8 @@ require 'logue/location_format'
 
 module Logue
   module LegacyLogger
+    # this is deprecated and ignored:
     def trim= what
-      $stderr.puts "Logger#trim is deprecated, and ignored"
     end
 
     def ignore_file fname

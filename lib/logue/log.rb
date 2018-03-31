@@ -62,8 +62,8 @@ module Logue
     def self.accessors methname
       [ methname.to_sym, (methname.to_s + "=").to_sym ]
     end
-    
-    def self.logger_delegated? meth
+
+    def self.logger_methods
       @logger_delegated ||= Array.new.tap do |ary|
         acc_methods = [
           :colorize_line,
@@ -74,7 +74,7 @@ module Logue
           :quiet,
           :verbose,
         ]
-        ary.concat acc_methods.collect { |am| accessors(am) }.flatten!
+        ary.concat acc_methods.inject(Array.new) { |a, m| a.concat accessors(m) }
         read_methods = [
           :ignore_class,
           :ignore_file,
@@ -99,11 +99,14 @@ module Logue
         ]
         ary.concat logging_methods
       end
-      @logger_delegated.include? meth
+    end
+    
+    def self.logger_delegated? meth
+      self.logger_methods.include? meth
     end
 
     def self.methods all = true
-      super + @logger_delegated + colors
+      super + self.logger_methods + colors
     end
 
     def self.has_color? color

@@ -28,7 +28,7 @@ module Logue
     param_test colors do |color|
       obj = Object.new
       obj.extend Loggable
-      assert_respond_to obj, color, "color: #{color}"
+      assert_respond_to obj, color
     end
 
     param_test colors do |color|
