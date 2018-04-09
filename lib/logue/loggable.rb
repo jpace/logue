@@ -9,9 +9,8 @@
 # Documentation:: Author
 #
 
-require 'logue/log'
-require 'logue/colors'
 require 'logue/logger'
+require 'logue/log'
 
 #
 # == Loggable
@@ -49,60 +48,52 @@ module Logue
       @@logger = logger
     end
 
-    # Logs the given message, including the class whence invoked.
-    def log msg = "", lvl = Level::DEBUG, &blk
-      logger.log msg, level: lvl, classname: self.class.to_s, &blk
+    def respond_to_missing? *args
+      true
     end
 
-    def debug msg = "", &blk
-      logger.debug msg, classname: self.class.to_s, &blk
+    def methods all = true
+      methods_with_level + methods_without_level + super
     end
 
-    def info msg = "", &blk
-      logger.info msg, classname: self.class.to_s, &blk
+    def methods_with_level
+      [ :log, :stack ]
     end
 
-    def warn msg = "", &blk
-      logger.warn msg, classname: self.class.to_s, &blk
+    def methods_without_level
+      [ :debug, :info, :error, :fatal, :write ] + logger.valid_colors.keys
     end
 
-    def error msg = "", &blk
-      logger.error msg, classname: self.class.to_s, &blk
+    def warn msg = "", obj = nil, &blk
+      logger.warn msg, obj, classname: self.class.to_s, &blk
     end
-
-    def fatal msg = "", &blk
-      logger.fatal msg, classname: self.class.to_s, &blk
-    end
-
-    def stack msg = "", lvl = Level::DEBUG, &blk
-      logger.stack msg, level: lvl, classname: self.class.to_s, &blk
-    end
-
-    def write msg = "", &blk
-      logger.write msg, classname: self.class.to_s, &blk
-    end
-
-    def method_missing meth, *args, &blk
+    
+    def method_missing methname, *args, &blk
       # only handling foregrounds, not backgrounds
-      if Colors::valid_colors[meth]
-        add_color_method meth.to_s
-        send meth, *args, &blk
+      if methods_with_level.include? methname
+        add_delegator methname, true
+        send methname, *args, &blk
+      elsif methods_without_level.include? methname
+        add_delegator methname, false
+        send methname, *args, &blk
       else
         super
       end
     end
 
-    def respond_to? meth, include_all = false
-      Colors::valid_colors.include?(meth) || super
-    end
-
-    def add_color_method color
-      meth = Array.new.tap do |a|
-        a << "def #{color}(msg = \"\", lvl = Level::DEBUG, cname = nil, &blk)"
-        a << "  logger.send :#{color}, msg, lvl, classname: self.class.to_s, &blk"
+    def add_delegator methname, with_level
+      lines = Array.new.tap do |a|
+        if with_level
+          a << "def #{methname} msg = '', obj = nil, level = Level::DEBUG, &blk"
+          a << "  logger.send :#{methname}, msg, obj, level: level, classname: self.class.to_s, &blk"
+        else
+          a << "def #{methname} msg = '', obj = nil, &blk"
+          a << "  logger.send :#{methname}, msg, obj, classname: self.class.to_s, &blk"
+        end
         a << "end"
       end
-      instance_eval meth.join("\n")
+      
+      instance_eval lines.join("\n")
     end
   end
 end

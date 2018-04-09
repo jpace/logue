@@ -10,8 +10,6 @@
 #
 
 require 'logue/logger'
-require 'logue/level'
-require 'logue/colors'
 
 #
 # == Log
@@ -114,8 +112,7 @@ module Logue
     end
 
     def self.colors
-      # only handling foregrounds, not backgrounds
-      Colors::valid_colors.keys
+      logger.valid_colors.keys
     end
 
     def self.delegated? meth
