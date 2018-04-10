@@ -17,17 +17,22 @@ module Logue
       @block = blk
     end
 
-    def format locformat
-      logmsg = @location.format locformat
-      logmsg << " "
+    def location_string locformat
+      @location.format locformat
+    end
+
+    def message_string
       if @block
-        logmsg << @block.call.to_s
+        @block.call.to_s
       elsif @obj
-        logmsg << "#{@msg}: #{@obj}"
+        "#{@msg}: #{@obj}"
       else
-        logmsg << "#{@msg}"
+        "#{@msg}"
       end
-      logmsg
+    end
+
+    def format locformat
+      location_string(locformat) + " " + message_string
     end
   end
 end

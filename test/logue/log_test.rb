@@ -76,31 +76,36 @@ module Logue
         :write,
         :warn,
         :error,
+        :blue,
+        :yellow,
       ]
     end
 
-    def self.build_includes_method_params
-      ary = delegated_methods.inject(Array.new) do |a, m|
-        a << [ true, m ]
+    def self.build_method_params
+      Array.new.tap do |a|
+        a.concat delegated_methods.collect { |m| [ true, m ] }
+        a << [ false, :abc ]
+        a << [ false, :xyz ]
       end
-      ary << [ false, :abc ]
-      ary << [ false, :xyz ]
     end
 
-    param_test build_includes_method_params do |exp, methname|
+    param_test build_method_params do |exp, methname|
       assert_equal exp, Log.methods.include?(methname)
     end    
 
-    def self.build_respond_to_params
-      ary = delegated_methods.inject(Array.new) do |a, m|
-        a << [ true, m ]
-      end
-      ary << [ false, :abc ]
-      ary << [ false, :xyz ]
+    param_test build_method_params do |exp, methname|
+      assert_equal exp, Log.respond_to?(methname)
     end
 
-    param_test build_respond_to_params do |exp, methname|
-      assert_equal exp, Log.respond_to?(methname)
-    end    
+    param_test build_method_params do |exp, methname|
+      if exp
+        meth = Log.method methname
+        assert_not_nil meth
+      else
+        assert_raises NameError do
+          Log.method methname
+        end
+      end
+    end
   end
 end

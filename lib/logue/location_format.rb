@@ -16,7 +16,7 @@ module Logue
     attr_accessor :method
     attr_accessor :trim
     
-    def initialize  file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD, trim: true
+    def initialize file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD, trim: true
       @file   = file
       @line   = line
       @method = method

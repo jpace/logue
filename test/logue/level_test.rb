@@ -11,9 +11,11 @@ module Logue
     def self.build_compare_params
       levels =  [ Level::DEBUG, Level::INFO, Level::WARN, Level::ERROR, Level::FATAL ]
       Array.new.tap do |a|
+        a << [ false, levels.first, levels.first ]
         (1 ... levels.length).each do |n|
+          a << [ false, levels[n], levels[n] ]
           levels[n .. -1].each do |level|
-            a << [ true, levels[n - 1], level ]
+            a << [ true,  levels[n - 1], level ]
             a << [ false, level, levels[n - 1] ]
           end
         end

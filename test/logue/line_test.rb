@@ -2,29 +2,50 @@
 # -*- ruby -*-
 
 require 'logue/line'
-require 'logue/location_format'
 require 'logue/location'
+require 'logue/location_format'
 require 'test_helper'
-require 'logue/frame'
 
 module Logue
   class LineTest < Test::Unit::TestCase
     include Paramesan
+    include LocationFormat::Defaults
     
-    class << self
-      def example_frame
-        Frame.new path: "/path/a/b/c", method: "labc", line: 3
+    def self.to_location path, line, cls, meth
+      Location.new path, line, cls, meth
+    end
+
+    def self.build_line_params
+      path          = "/path/a/b/c"
+      meth          = "m3"
+      cls           = "c2"
+      line          = 3
+      exppathline   = sprintf "[%*s:%*d]", FILENAME, path, LINE, line
+      explocmeth    = sprintf "{%*s}",     METHOD,   meth
+      explocclsmeth = sprintf "{%*s}",     METHOD,   cls + "#" + meth
+      Array.new.tap do |a|
+        a << [ exppathline + " " + explocmeth,    "s1", to_location(path, line, nil,  meth), "s1" ]
+        a << [ exppathline + " " + explocclsmeth, "s1", to_location(path, line, "c2", meth), "s1" ]
+        a << [ exppathline + " " + explocmeth,    "s1", to_location(path, line, nil,  meth), "s1" ]
       end
     end
 
-    param_test [
-      [ "[/path/a/b/c              :   3] {labc                } mabc", example_frame, nil,    "mabc" ], 
-      [ "[/path/a/b/c              :   3] {cdef#labc           } mabc", example_frame, "cdef", "mabc" ], 
-    ].each do |exp, frame, cls, msg|
-      loc    = Location.new frame.path, frame.line, cls, frame.method
-      line   = Line.new loc, msg
+    param_test build_line_params do |exploc, expmsg, loc, msg, obj = nil|
+      line   = Line.new loc, msg, obj
+      result = line.location_string LocationFormat.new
+      assert_equal exploc, result
+    end
+
+    param_test build_line_params do |exploc, expmsg, loc, msg, obj = nil|
+      line   = Line.new loc, msg, obj
       result = line.format LocationFormat.new
-      assert_equal exp, result
+      assert_equal exploc + " " + expmsg, result
+    end
+
+    param_test build_line_params do |exploc, expmsg, loc, msg, obj = nil|
+      line   = Line.new loc, msg, obj
+      result = line.message_string
+      assert_equal expmsg, result
     end
   end
 end

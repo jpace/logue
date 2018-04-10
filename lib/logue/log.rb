@@ -130,5 +130,9 @@ module Logue
     def self.respond_to? meth
       methods.include? meth
     end
+
+    def self.respond_to_missing? *args
+      methods.include? args.first
+    end
   end
 end
