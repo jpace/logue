@@ -14,31 +14,18 @@ module Logue
     attr_accessor :file
     attr_accessor :line
     attr_accessor :method
-    attr_accessor :trim
     
-    def initialize file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD, trim: true
+    def initialize file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD
       @file   = file
       @line   = line
       @method = method
-      @trim   = trim
-    end
-
-    def copy args
-      values = { file: @file, line: @line, method: @method, trim: @trim }
-      self.class.new values.merge(args)
     end
     
-    def format path, line, cls, func
-      if cls
-        func = cls.to_s + "#" + func
-      end
-      
-      if trim
-        path = PathUtil.trim_right path.to_s, @file
-        func = PathUtil.trim_left  func,      @method
-      end
-      
-      sprintf format_string, path, line, func
+    def format path, line, cls, methname
+      name = cls ? cls.to_s + "#" + methname : methname
+      path = PathUtil.trim_right path.to_s, @file
+      name = PathUtil.trim_left  name,      @method
+      sprintf format_string, path, line, name
     end
 
     def format_string
