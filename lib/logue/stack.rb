@@ -17,7 +17,8 @@ module Logue
     end
 
     def filtered
-      logframe = @frames.rindex { |frm| frm.path.include? "logue/lib/logue" }
+      re = Regexp.new 'logue.*/lib/logue'
+      logframe = @frames.rindex { |frm| frm.path.index re }
       @frames[logframe + 1 .. -1]
     end
   end
