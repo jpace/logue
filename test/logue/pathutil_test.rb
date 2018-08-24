@@ -14,11 +14,11 @@ module Logue
       ["abcdef", 10 ],
       ["abcdef",  6 ],
       ["abcde",   5 ],
-      ["abcd",   -4 ],
-      ["abc",    -3 ],
-    ].each do |exp, len|
-      trimmed = PathUtil.trim_left "abcdef", len
-      assert_equal exp, trimmed
+      ["",        0 ],
+      ["",       -4 ],
+    ] do |exp, len|
+      result = PathUtil.trim_left "abcdef", len
+      assert_equal exp, result
     end
 
     param_test [
@@ -32,9 +32,10 @@ module Logue
       [ "ef.t",        4 ],
       [ "ef.t",        3 ],
       [ "ef.t",        2 ],
-    ].each do |exp, len|
-      trimmed = PathUtil.trim_right "ab/cd/ef.t", len
-      assert_equal exp, trimmed
+      [ "",           -2 ],
+    ] do |exp, len|
+      result = PathUtil.trim_right "ab/cd/ef.t", len
+      assert_equal exp, result
     end
   end
 end

@@ -27,6 +27,7 @@ module Logue
         a << [ exppathline + " " + explocmeth,    "s1", to_location(path, line, nil,  meth), "s1" ]
         a << [ exppathline + " " + explocclsmeth, "s1", to_location(path, line, "c2", meth), "s1" ]
         a << [ exppathline + " " + explocmeth,    "s1", to_location(path, line, nil,  meth), "s1" ]
+        a << [ exppathline + " " + explocmeth,    "s1: o2", to_location(path, line, nil,  meth), "s1", "o2" ]
       end
     end
 

@@ -23,8 +23,8 @@ module Logue
     
     def format path, line, cls, methname
       name = cls ? cls.to_s + "#" + methname : methname
-      path = PathUtil.trim_right path.to_s, @file
-      name = PathUtil.trim_left  name,      @method
+      path = PathUtil.trim_right path.to_s, @file.abs
+      name = PathUtil.trim_left  name,      @method.abs
       sprintf format_string, path, line, name
     end
 
