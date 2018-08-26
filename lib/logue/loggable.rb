@@ -40,60 +40,50 @@ require 'logue/log'
 
 module Logue
   module Loggable
+    class << self
+      def add_delegator with_level, methnames
+        methnames.each do |methname|
+          lines = Array.new.tap do |a|
+            if with_level
+              a << "def #{methname} msg = '', obj = nil, level = Level::DEBUG, &blk"
+              a << "  logger.send :#{methname}, msg, obj, level: level, classname: self.class.to_s, &blk"
+            else
+              a << "def #{methname} msg = '', obj = nil, &blk"
+              a << "  logger.send :#{methname}, msg, obj, classname: self.class.to_s, &blk"
+            end
+            a << "end"
+          end
+          
+          class_eval lines.join("\n")
+        end
+      end
+
+      def add_color_methods colors
+        colors.each do |color, code|
+          meth = Array.new.tap do |a|
+            a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, classname: nil, &blk)'
+            a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", level: lvl, classname: classname, &blk)'
+            a << 'end'
+          end
+          class_eval meth.join "\n"
+        end
+      end
+    end
+    
     def logger
       @@logger ||= Logger.new
     end
 
+    add_delegator true, [ :log, :stack ]
+    add_delegator false, [ :debug, :info, :error, :fatal, :write ]
+    add_color_methods Rainbow::Color::Named::NAMES
+    
     def logger= logger
       @@logger = logger
     end
 
-    def respond_to_missing? *args
-      true
-    end
-
-    def methods all = true
-      methods_with_level + methods_without_level + super
-    end
-
-    def methods_with_level
-      [ :log, :stack ]
-    end
-
-    def methods_without_level
-      [ :debug, :info, :error, :fatal, :write ] + logger.valid_colors.keys
-    end
-
     def warn msg = "", obj = nil, &blk
       logger.warn msg, obj, classname: self.class.to_s, &blk
-    end
-    
-    def method_missing methname, *args, &blk
-      # only handling foregrounds, not backgrounds
-      if methods_with_level.include? methname
-        add_delegator methname, true
-        send methname, *args, &blk
-      elsif methods_without_level.include? methname
-        add_delegator methname, false
-        send methname, *args, &blk
-      else
-        super
-      end
-    end
-
-    def add_delegator methname, with_level
-      lines = Array.new.tap do |a|
-        if with_level
-          a << "def #{methname} msg = '', obj = nil, level = Level::DEBUG, &blk"
-          a << "  logger.send :#{methname}, msg, obj, level: level, classname: self.class.to_s, &blk"
-        else
-          a << "def #{methname} msg = '', obj = nil, &blk"
-          a << "  logger.send :#{methname}, msg, obj, classname: self.class.to_s, &blk"
-        end
-        a << "end"
-      end
-      
-      instance_eval lines.join("\n")
     end
   end
 end

@@ -24,6 +24,21 @@ module Logue
       @invoked = { name: :warn, args: args }
     end
   end
+
+  class TwoSuperClasses
+    include Comparable
+    include Logue::Loggable
+
+    attr_reader :name
+
+    def initialize name
+      @name = name
+    end
+
+    def <=> other
+      @name <=> other.name
+    end
+  end
   
   class LoggableTest < Test::Unit::TestCase
     include Paramesan
@@ -110,6 +125,16 @@ module Logue
       obj = Object.new
       obj.extend Loggable
       assert obj.method methname
-    end    
+    end
+
+    def test_dual
+      x = TwoSuperClasses.new "abc"
+      y = TwoSuperClasses.new "def"
+      begin
+        assert_equal x, y
+      rescue Test::Unit::AssertionFailedError => e
+        # this is okay ... we are testing for a method missing, from :encoding invoked in assert_equal
+      end
+    end
   end
 end
