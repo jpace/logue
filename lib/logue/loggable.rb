@@ -19,20 +19,20 @@ require 'logue/log'
 # 
 # == Examples
 #
-# See the unit tests in log_test.rb
+# See the unit tests in loggable_test.rb
 #
 # == Usage
 #
 #  class YourClass
 #    include Logue::Loggable
 #
-#    def some_method(...)
+#    def some_method
 #      log "my message"
 # 
 #  That will log from the given class and method, showing the line number from
 #  which the logger was called.
 #
-#    def another_method(...)
+#    def another_method
 #      stack "my message"
 # 
 #  That will produce a stack trace from the given location.
@@ -69,21 +69,17 @@ module Logue
         end
       end
     end
-    
+
     def logger
-      @@logger ||= Logger.new
+      @logger ||= Log.logger
     end
 
     add_delegator true, [ :log, :stack ]
-    add_delegator false, [ :debug, :info, :error, :fatal, :write ]
+    add_delegator false, [ :debug, :info, :warn, :error, :fatal, :write ]
     add_color_methods Rainbow::Color::Named::NAMES
     
     def logger= logger
-      @@logger = logger
-    end
-
-    def warn msg = "", obj = nil, &blk
-      logger.warn msg, obj, classname: self.class.to_s, &blk
+      @logger = logger
     end
   end
 end
