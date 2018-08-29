@@ -5,7 +5,7 @@
 #
 # Logging Module
 #
-# Author:: Jeff Pace
+# Author:: Jeff Pace <jeugenepace@gmail.com>
 # Documentation:: Author
 #
 
@@ -27,21 +27,19 @@ require 'logue/logger'
 #
 # The most general usage is simply to call:
 #
-#  Log.log "some message"
+#  Logue::Log::info "some message"
 #
 #  That will simply log the given message.
 #
 #  class YourClass
-#    include Logue::Loggable
-#
 #    def some_method
-#      log "my message"
+#      Logue::Log::debug "my message"
 # 
 #  That will log from the given class and method, showing the line number from
 #  which the logger was called.
 #
 #    def another_method
-#      stack "my message"
+#      Logue::Log::stack "my message"
 # 
 #  That will produce a stack trace from the given location.
 # 

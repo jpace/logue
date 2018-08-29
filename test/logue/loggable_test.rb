@@ -25,21 +25,6 @@ module Logue
     end
   end
 
-  class TwoSuperClasses
-    include Comparable
-    include Logue::Loggable
-
-    attr_reader :name
-
-    def initialize name
-      @name = name
-    end
-
-    def <=> other
-      @name <=> other.name
-    end
-  end
-  
   class LoggableTest < Test::Unit::TestCase
     include Paramesan
 
@@ -87,11 +72,12 @@ module Logue
     param_test build_method_delegation_params do |exp, methname, args|
       obj = Object.new
       obj.extend Loggable
-      logger = obj.logger = TestLogger.new
-
-      logger.invoked = nil
+      lgr = obj.logger = TestLogger.new
+      assert_not_same obj.logger, Logue::Log::logger
+      
+      lgr.invoked = nil
       obj.send methname, *args
-      invoked = logger.invoked
+      invoked = lgr.invoked
       assert_not_nil invoked
       assert_equal methname, invoked[:name]
       assert_equal exp, invoked[:args]
@@ -127,14 +113,47 @@ module Logue
       assert obj.method methname
     end
 
+    class TwoSuperClasses
+      include Comparable
+      include Logue::Loggable
+
+      attr_reader :name
+
+      def initialize name
+        @name = name
+      end
+
+      def <=> other
+        @name <=> other.name
+      end
+    end
+    
     def test_dual
       x = TwoSuperClasses.new "abc"
       y = TwoSuperClasses.new "def"
       begin
         assert_equal x, y
-      rescue Test::Unit::AssertionFailedError => e
+      rescue Test::Unit::AssertionFailedError
         # this is okay ... we are testing for a method missing, from :encoding invoked in assert_equal
       end
+    end
+
+    class LG1
+      include Logue::Loggable
+    end
+
+    class LG2
+      include Logue::Loggable
+    end
+
+    def test_two_loggables
+      x = LG1.new
+      y = LG2.new
+      Logue::Log::info "hello app"
+      x.info "hello abc"
+      y.info "greetings def"
+      assert_same x.logger, y.logger
+      assert_same x.logger, Logue::Log::logger
     end
   end
 end
