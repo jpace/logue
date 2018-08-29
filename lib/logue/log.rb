@@ -34,13 +34,13 @@ require 'logue/logger'
 #  class YourClass
 #    include Logue::Loggable
 #
-#    def some_method(...)
+#    def some_method
 #      log "my message"
 # 
 #  That will log from the given class and method, showing the line number from
 #  which the logger was called.
 #
-#    def another_method(...)
+#    def another_method
 #      stack "my message"
 # 
 #  That will produce a stack trace from the given location.

@@ -43,17 +43,22 @@ module Logue
     end
 
     def add_color_method color, code
-      meth = Array.new.tap do |a|
-        a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, classname: nil, &blk)'
-        a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", level: lvl, classname: classname, &blk)'
-        a << 'end'
-      end
-      instance_eval meth.join "\n"
+      instance_eval ColorLog.color_method_source(color, code)
     end
 
     def valid_colors
       # Rainbow::X11ColorNames::NAMES
       Rainbow::Color::Named::NAMES
+    end
+
+    class << self
+      def color_method_source color, code
+        Array.new.tap do |a|
+          a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, classname: nil, &blk)'
+          a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", level: lvl, classname: classname, &blk)'
+          a << 'end'
+        end.join "\n"
+      end
     end
   end
 end
