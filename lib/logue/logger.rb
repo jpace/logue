@@ -15,6 +15,7 @@ require 'logue/filter'
 require 'logue/legacy_logger'
 require 'logue/stack'
 require 'logue/line'
+require 'logue/location'
 
 #
 # == Logger
