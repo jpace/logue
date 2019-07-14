@@ -37,42 +37,32 @@ require 'logue/colorlog'
 #      stack "my message"
 # 
 #  That will produce a stack trace from the given location.
-# 
+#
 
 module Logue
   module Loggable
-    class << self
-      def add_delegator with_level, methnames
-        methnames.each do |methname|
-          lines = Array.new.tap do |a|
-            if with_level
-              a << "def #{methname} msg = '', obj = nil, level = Level::DEBUG, &blk"
-              a << "  logger.send :#{methname}, msg, obj, level: level, classname: self.class.to_s, &blk"
-            else
-              a << "def #{methname} msg = '', obj = nil, &blk"
-              a << "  logger.send :#{methname}, msg, obj, classname: self.class.to_s, &blk"
-            end
-            a << "end"
-          end
-          
-          class_eval lines.join("\n")
-        end
-      end
-
-      def add_color_methods colors
-        colors.each do |color, code|
-          class_eval ColorLog.color_method_source(color, code)
-        end
-      end
-    end
-
     def logger
       @logger ||= Log.logger
     end
 
-    add_delegator true, [ :log, :stack ]
-    add_delegator false, [ :debug, :info, :warn, :error, :fatal, :write ]
-    add_color_methods Rainbow::Color::Named::NAMES
+    [ :stack, :log ].each do |methname|
+      define_method methname do |msg = '', obj = nil, level = Level::DEBUG, &blk|
+        logger.send methname, msg, obj, level: level, classname: self.class.to_s, &blk
+      end
+    end
+
+    [ :debug, :info, :warn, :error, :fatal, :write ].each do |methname|
+      define_method methname do |msg = '', obj = nil, &blk|
+        logger.send methname, msg, obj, classname: self.class.to_s, &blk
+      end
+    end
+
+    Rainbow::Color::Named::NAMES.each do |color, code|
+      define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
+        colmsg = "\e[#{30 + code}m#{msg}\e[0m"
+        logger.log colmsg, obj, level: level, classname: self.class.to_s, &blk
+      end        
+    end
     
     def logger= logger
       @logger = logger
