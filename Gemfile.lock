@@ -9,7 +9,7 @@ GEM
     paramesan (0.1.1)
     power_assert (1.1.1)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (13.0.1)
     test-unit (3.2.7)
       power_assert
 
@@ -21,7 +21,7 @@ DEPENDENCIES
   logue!
   paramesan (~> 0.1.1)
   rainbow (~> 3.0.0)
-  rake (~> 10.0)
+  rake (~> 13.0)
   test-unit (~> 3.1)
 
 BUNDLED WITH
