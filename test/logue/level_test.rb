@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/level'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class LevelTest < Test::Unit::TestCase
-    include Paramesan
-
+  class LevelTest < TestCase
     def self.build_compare_params
       levels =  [ Level::DEBUG, Level::INFO, Level::WARN, Level::ERROR, Level::FATAL ]
       Array.new.tap do |a|

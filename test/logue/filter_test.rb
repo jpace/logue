@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/filter'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class FilterTest < Test::Unit::TestCase
-    include Paramesan
-
+  class FilterTest < TestCase
     param_test [
       [ Array.new, Array.new, Array.new ],
       [ %w{ abc }, Array.new, Array.new, ignored_files: %w{ abc } ],

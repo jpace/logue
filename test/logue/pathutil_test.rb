@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/pathutil'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class PathUtilTestCase < Test::Unit::TestCase
-    include Paramesan
-
+  class PathUtilTestCase < TestCase
     param_test [
       ["abcd",    4 ],
       ["abc",     3 ],

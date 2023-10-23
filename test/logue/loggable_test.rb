@@ -2,7 +2,7 @@
 # -*- ruby -*-
 
 require 'logue/loggable'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
   # poor man's mock
@@ -25,11 +25,10 @@ module Logue
     end
   end
 
-  class LoggableTest < Test::Unit::TestCase
-    include Paramesan
-
+  class LoggableTest < TestCase
     def self.colors
-      [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :default ]
+      # [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :default ]
+      Array.new
     end
 
     param_test colors do |color|

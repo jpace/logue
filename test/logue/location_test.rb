@@ -3,13 +3,11 @@
 
 require 'logue/location'
 require 'logue/location_format'
-require 'test_helper'
 require 'logue/frame'
+require 'logue/tc'
 
 module Logue
-  class LocationTest < Test::Unit::TestCase
-    include Paramesan
-    
+  class LocationTest < TestCase
     def self.example_frame
       Frame.new path: "/path/a/b/c", method: "labc", line: 3      
     end

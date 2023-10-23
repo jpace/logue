@@ -19,10 +19,6 @@ module Logue
       @block = blk
     end
 
-    def location_string locformat
-      @location.format locformat
-    end
-
     def message_string
       if @block
         @block.call.to_s
@@ -38,7 +34,10 @@ module Logue
     end
 
     def format locformat
-      location_string(locformat) + " " + message_string
+      str = @location.format locformat
+      str << " "
+      str << message_string
+      str
     end
   end
 end

@@ -10,7 +10,16 @@ module Logue
     end
 
     def write output = $stdout
-      output.print @object.to_s
+      strs = lines
+      output.print strs
+    end
+
+    def lines
+      if Enumerable === @object
+        @object.to_s + " (#:#{@object.size})"
+      else
+        @object.to_s
+      end
     end
   end
 end

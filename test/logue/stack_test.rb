@@ -2,10 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/stack'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class StackTest < Test::Unit::TestCase
+  class StackTest < TestCase
     def test_init
       lnum = __LINE__
       result = Stack.new

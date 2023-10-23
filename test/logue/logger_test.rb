@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/logger'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class LoggerTest < Test::Unit::TestCase
-    include Paramesan
-
+  class LoggerTest < TestCase
     def self.create_logger writer = Writer.new
       Logger.new(writer: writer).tap do |logger|      
         def logger.invoked

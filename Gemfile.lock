@@ -1,23 +1,23 @@
 PATH
   remote: .
   specs:
-    logue (1.0.16)
+    logue (1.0.19)
 
 GEM
   remote: https://rubygems.org/
   specs:
     paramesan (0.1.1)
-    power_assert (1.1.1)
+    power_assert (2.0.3)
     rainbow (3.0.0)
     rake (10.5.0)
-    test-unit (3.2.7)
+    test-unit (3.6.1)
       power_assert
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.16)
+  bundler (>= 1.16)
   logue!
   paramesan (~> 0.1.1)
   rainbow (~> 3.0.0)
@@ -25,4 +25,4 @@ DEPENDENCIES
   test-unit (~> 3.1)
 
 BUNDLED WITH
-   1.16.1
+   2.1.4

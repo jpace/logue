@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/log'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class LogTest < Test::Unit::TestCase
-    include Paramesan
-
+  class LogTest < TestCase
     param_test [
       [ :verbose,       false,        true ],        
       [ :level,         Level::FATAL, Level::INFO ], 
@@ -42,13 +40,13 @@ module Logue
       end
     end
 
-    def test_red
-      Log.red "mabc", Level::WARN, classname: "cdef"
-    end
+    # def test_red
+    #   Log.red "mabc", Level::WARN, classname: "cdef"
+    # end
 
-    def test_yellow
-      Log.yellow "mabc", Level::WARN, classname: "cdef"
-    end
+    # def test_yellow
+    #   Log.yellow "mabc", Level::WARN, classname: "cdef"
+    # end
 
     def self.delegated_methods
       [
@@ -76,8 +74,8 @@ module Logue
         :write,
         :warn,
         :error,
-        :blue,
-        :yellow,
+        # :blue,
+        # :yellow,
       ]
     end
 

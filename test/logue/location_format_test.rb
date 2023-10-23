@@ -2,12 +2,10 @@
 # -*- ruby -*-
 
 require 'logue/location_format'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class LocationFormatTestCase < Test::Unit::TestCase
-    include Paramesan
-
+  class LocationFormatTestCase < TestCase
     param_test [
       [ 8, 7, 11, file: 8, line: 7, method: 11 ],
       [ "08", 7, 11, file: "08", line: 7, method: 11 ],

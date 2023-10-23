@@ -4,11 +4,11 @@
 require 'logue/legacy_logger'
 require 'logue/writer'
 require 'logue/filter'
-require 'test_helper'
+require 'logue/tc'
 require 'pathname'
 
 module Logue
-  class LegacyLoggerTest < Test::Unit::TestCase
+  class LegacyLoggerTest < TestCase
     def create_logger
       Object.new.tap do |obj|
         obj.extend LegacyLogger

@@ -57,7 +57,8 @@ module Logue
       end
     end
 
-    Rainbow::Color::Named::NAMES.each do |color, code|
+    colors = Rainbow::Color::Named::NAMES
+    colors.each do |color, code|
       define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
         colmsg = "\e[#{30 + code}m#{msg}\e[0m"
         logger.log colmsg, obj, level: level, classname: self.class.to_s, &blk

@@ -3,12 +3,10 @@
 
 require 'logue/frame'
 require 'logue/location_format'
-require 'test_helper'
+require 'logue/tc'
 
 module Logue
-  class FrameTest < Test::Unit::TestCase
-    include Paramesan
-
+  class FrameTest < TestCase
     param_test [
       [ "/path/a/b/c.rb", "labc", 3 ], 
       [ "/path/d/e/f.rb", "lghi", 1 ], 

@@ -3,17 +3,16 @@
 
 require 'logue/writer'
 require 'logue/level'
-require 'test_helper'
+require 'logue/tc'
 require 'stringio'
 
 module Logue
-  class WriterTest < Test::Unit::TestCase
-    include Paramesan
-
+  class WriterTest < TestCase
     def test_init
       strio = StringIO.new
       writer = Writer.new output: strio
-      assert_equal strio,     writer.output
+      # I think assert_same should compare by ID, not #equal?
+      assert_equal strio.object_id,     writer.output.object_id
       assert_equal Array.new, writer.colors
       assert_equal false,     writer.colorize_line
       strio.close
