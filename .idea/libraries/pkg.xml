@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="pkg">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.3.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.0.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.2.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.7.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.8.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-0.0.1.zip!/" />
+      <root url="jar://$PROJECT_DIR$/pkg/logue-1.0.6.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
