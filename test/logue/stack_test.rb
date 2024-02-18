@@ -9,17 +9,14 @@ module Logue
     def test_init
       lnum = __LINE__
       result = Stack.new
-
       x = result.frames[0]
-
       assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s
-      assert_equal lnum + 1,        x.line
-      assert_equal "test_init",     x.method
+      assert_equal lnum + 1, x.line
+      assert_equal "test_init", x.method
 
       y = result.frames[1]
-
-      assert_equal "testcase.rb",   Pathname.new(y.path).basename.to_s
-      assert_equal "run_test",      y.method
+      assert_equal "testcase.rb", Pathname.new(y.path).basename.to_s
+      assert_equal "run_test", y.method
     end
 
     def second
@@ -28,14 +25,13 @@ module Logue
 
       x = result.frames[0]
       assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s
-      assert_equal lnum + 1,        x.line
-      assert_equal "second",        x.method
-      
-      y = result.frames[1]
+      assert_equal lnum + 1, x.line
+      assert_equal "second", x.method
 
+      y = result.frames[1]
       assert_equal "(eval)", y.path
-      assert_equal 2,        y.line
-      assert_equal "first",  y.method
+      assert_equal 2, y.line
+      assert_equal "first", y.method
     end
 
     def test_from_eval

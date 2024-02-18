@@ -32,7 +32,7 @@ module Logue
   class Logger
     include LegacyLogger
     include ColorLog
-    
+
     attr_accessor :level
     attr_accessor :format
     attr_accessor :filter
@@ -41,14 +41,14 @@ module Logue
     def initialize format: LocationFormat.new, level: Level::WARN, filter: Filter.new, writer: Writer.new
       reset format: format, level: level, filter: filter, writer: writer
     end
-    
+
     def verbose= v
       @level = case v
-               when TrueClass 
+               when TrueClass
                  Level::DEBUG
-               when FalseClass 
+               when FalseClass
                  Level::FATAL
-               when Integer
+               else
                  v
                end
     end
@@ -58,12 +58,12 @@ module Logue
     end
 
     def reset format: LocationFormat.new, level: FATAL, filter: Filter.new, writer: Writer.new
-      @level  = level
+      @level = level
       @filter = filter
       @format = format
       @writer = writer
     end
-    
+
     def quiet
       @level >= Level::WARN
     end
@@ -122,14 +122,14 @@ module Logue
     def log_frames msg, obj = nil, classname: nil, level: nil, nframes: -1, &blk
       if level >= @level
         stack = Stack.new
-        stack.filtered[0 .. nframes].each do |frame|
+        stack.filtered[0..nframes].each do |frame|
           log_frame frame, msg, obj, classname: classname, level: level, &blk
           classname = nil
           msg = ""
           obj = nil
         end
       end
-    end    
+    end
 
     def log_frame frame, msg, obj, classname: nil, level: nil, &blk
       if @filter.log? frame.path, classname, frame.method
@@ -138,7 +138,7 @@ module Logue
     end
 
     def print_frame frame, msg, obj, classname: nil, level: nil, &blk
-      loc  = Location.new frame.path, frame.line, classname, frame.method
+      loc = Location.new frame.path, frame.line, classname, frame.method
       line = Line.new loc, msg, obj, &blk
       lstr = line.format @format
       @writer.print lstr, level

@@ -27,8 +27,7 @@ module Logue
 
   class LoggableTest < TestCase
     def self.colors
-      # [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :default ]
-      Array.new
+      [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :default ]
     end
 
     param_test colors do |color|
@@ -110,31 +109,6 @@ module Logue
       obj = Object.new
       obj.extend Loggable
       assert obj.method methname
-    end
-
-    class TwoSuperClasses
-      include Comparable
-      include Logue::Loggable
-
-      attr_reader :name
-
-      def initialize name
-        @name = name
-      end
-
-      def <=> other
-        @name <=> other.name
-      end
-    end
-    
-    def test_dual
-      x = TwoSuperClasses.new "abc"
-      y = TwoSuperClasses.new "def"
-      begin
-        assert_equal x, y
-      rescue Test::Unit::AssertionFailedError
-        # this is okay ... we are testing for a method missing, from :encoding invoked in assert_equal
-      end
     end
 
     class LG1

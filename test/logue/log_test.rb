@@ -15,7 +15,6 @@ module Logue
       logger = Log.logger
       values.each do |value|
         Log.send wrmeth, value
-        
         assert_equal value, logger.send(methname)
         assert_equal value, Log.send(methname)
       end
@@ -74,8 +73,8 @@ module Logue
         :write,
         :warn,
         :error,
-        # :blue,
-        # :yellow,
+        :blue,
+        :yellow,
       ]
     end
 
