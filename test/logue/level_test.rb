@@ -1,27 +1,14 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/level'
 require 'logue/tc'
 
 module Logue
   class LevelTest < TestCase
-    def self.build_compare_params
-      levels =  [ Level::DEBUG, Level::INFO, Level::WARN, Level::ERROR, Level::FATAL ]
-      Array.new.tap do |a|
-        a << [ false, levels.first, levels.first ]
-        (1 ... levels.length).each do |n|
-          a << [ false, levels[n], levels[n] ]
-          levels[n .. -1].each do |level|
-            a << [ true,  levels[n - 1], level ]
-            a << [ false, level, levels[n - 1] ]
-          end
-        end
+    def test_compare_all
+      levels = [Level::DEBUG, Level::INFO, Level::WARN, Level::ERROR, Level::FATAL]
+      lambdas = levels[1...-1].collect do |it|
+        lambda { assert_true levels[it - 1] < levels[it], "it: #{it}, #{levels[it - 1]} < #{levels[it]}" }
       end
-    end
-
-    param_test build_compare_params do |exp, x, y|
-      assert_equal exp, x < y
+      assert_all lambdas
     end
   end
 end

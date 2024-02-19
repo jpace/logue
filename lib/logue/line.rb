@@ -1,6 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/location_format'
 require 'logue/element'
 require 'stringio'
@@ -24,10 +21,7 @@ module Logue
         @block.call.to_s
       elsif @obj
         elmt = Element.new @obj
-        io = StringIO.new
-        elmt.write io
-        io.close
-        @msg.to_s + ": " + io.string
+        @msg.to_s + ": " + elmt.lines
       else
         @msg.to_s
       end

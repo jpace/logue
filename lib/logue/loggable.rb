@@ -11,7 +11,7 @@
 
 require 'logue/logger'
 require 'logue/log'
-require 'logue/colorlog'
+require 'logue/colorable'
 
 #
 # == Loggable
@@ -45,26 +45,18 @@ module Logue
       @logger ||= Log.logger
     end
 
-    [ :stack, :log ].each do |methname|
+    [:stack, :log].each do |methname|
       define_method methname do |msg = '', obj = nil, level = Level::DEBUG, &blk|
         logger.send methname, msg, obj, level: level, classname: self.class.to_s, &blk
       end
     end
 
-    [ :debug, :info, :warn, :error, :fatal, :write ].each do |methname|
+    [:debug, :info, :warn, :error, :fatal, :write].each do |methname|
       define_method methname do |msg = '', obj = nil, &blk|
         logger.send methname, msg, obj, classname: self.class.to_s, &blk
       end
     end
 
-    colors = Rainbow::Color::Named::NAMES
-    colors.each do |color, code|
-      define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
-        colmsg = "\e[#{30 + code}m#{msg}\e[0m"
-        logger.log colmsg, obj, level: level, classname: self.class.to_s, &blk
-      end        
-    end
-    
     def logger= logger
       @logger = logger
     end

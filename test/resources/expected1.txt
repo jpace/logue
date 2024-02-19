@@ -1,0 +1,2 @@
+[.../test/logue/exec/exec_abc.rb :    9] {ExecAbc#m_x                                  } msg1: 123.4
+[.../test/logue/exec/exec_abc.rb :   10] {ExecAbc#block in m_x                         } msg2: 24

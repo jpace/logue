@@ -1,14 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-#
-# = colorlog.rb
-#
-# Logging Module
-#
-# Author:: Jeff Pace <jeugenepace@gmail.com>
-# Documentation:: Author
-#
-
 require 'rainbow/x11_color_names'
 require 'rainbow/color'
 require 'logue/level'
@@ -24,9 +13,10 @@ require 'logue/level'
 # 
 
 module Logue
-  module ColorLog
+  module Colorable
     def method_missing meth, *args, &blk
-      if code = valid_colors[meth]
+      code = valid_colors[meth]
+      if code
         add_color_method meth.to_s, code + 30
         send meth, *args, &blk
       else
@@ -43,22 +33,28 @@ module Logue
     end
 
     def add_color_method color, code
-      instance_eval ColorLog.color_method_source(color, code)
+      eigenclass = class << self; self; end
+      # compatability issue between Logger and Loggable, re: level: argument
+      if self.kind_of? Logue::Logger
+        eigenclass.class_eval do
+          define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
+            colmsg = "\e[#{code}m#{msg}\e[0m"
+            log colmsg, obj, level: level, &blk
+          end
+        end
+      else
+        eigenclass.class_eval do
+          define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
+            colmsg = "\e[#{code}m#{msg}\e[0m"
+            log colmsg, obj, level, &blk
+          end
+        end
+      end
     end
 
     def valid_colors
       # Rainbow::X11ColorNames::NAMES
       Rainbow::Color::Named::NAMES
-    end
-
-    class << self
-      def color_method_source color, code
-        Array.new.tap do |a|
-          a << 'def ' + color.to_s + '(msg = "", lvl = Logue::Level::DEBUG, classname: nil, &blk)'
-          a << '  log("\e[' + code.to_s + 'm#{msg}\e[0m", level: lvl, classname: classname, &blk)'
-          a << 'end'
-        end.join "\n"
-      end
     end
   end
 end

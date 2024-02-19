@@ -1,6 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/stack'
 require 'logue/tc'
 
@@ -10,13 +7,14 @@ module Logue
       lnum = __LINE__
       result = Stack.new
       x = result.frames[0]
-      assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s
-      assert_equal lnum + 1, x.line
-      assert_equal "test_init", x.method
-
       y = result.frames[1]
-      assert_equal "testcase.rb", Pathname.new(y.path).basename.to_s
-      assert_equal "run_test", y.method
+      assert_all [
+                   lambda { assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s },
+                   lambda { assert_equal lnum + 1, x.line },
+                   lambda { assert_equal "test_init", x.method },
+                   lambda { assert_equal "testcase.rb", Pathname.new(y.path).basename.to_s },
+                   lambda { assert_equal "run_test", y.method },
+                 ]
     end
 
     def second
@@ -24,14 +22,15 @@ module Logue
       result = Stack.new
 
       x = result.frames[0]
-      assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s
-      assert_equal lnum + 1, x.line
-      assert_equal "second", x.method
-
       y = result.frames[1]
-      assert_equal "(eval)", y.path
-      assert_equal 2, y.line
-      assert_equal "first", y.method
+      assert_all [
+                   lambda { assert_equal "stack_test.rb", Pathname.new(x.path).basename.to_s },
+                   lambda { assert_equal lnum + 1, x.line },
+                   lambda { assert_equal "second", x.method },
+                   lambda { assert_equal "(eval)", y.path },
+                   lambda { assert_equal 2, y.line },
+                   lambda { assert_equal "first", y.method },
+                 ]
     end
 
     def test_from_eval

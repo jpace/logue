@@ -56,7 +56,7 @@ module Logue
     end
 
     def self.accessors methname
-      [ methname.to_sym, (methname.to_s + "=").to_sym ]
+      [methname.to_sym, (methname.to_s + "=").to_sym]
     end
 
     def self.logger_methods
@@ -96,7 +96,7 @@ module Logue
         ary.concat logging_methods
       end
     end
-    
+
     def self.logger_delegated? meth
       self.logger_methods.include? meth
     end
@@ -116,7 +116,7 @@ module Logue
     def self.delegated? meth
       logger_delegated?(meth) || has_color?(meth)
     end
-    
+
     def self.method_missing meth, *args, &blk
       if delegated? meth
         logger.send meth, *args, &blk
@@ -129,7 +129,7 @@ module Logue
       methods.include? meth
     end
 
-    def self.respond_to_missing? *args
+    def self.respond_to_missing? * args
       methods.include? args.first
     end
   end

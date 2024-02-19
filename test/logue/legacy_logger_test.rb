@@ -1,6 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/legacy_logger'
 require 'logue/writer'
 require 'logue/filter'

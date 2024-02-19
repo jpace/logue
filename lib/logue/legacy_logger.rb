@@ -1,14 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-#
-# = legacy_logger.rb
-#
-# Logging Module
-#
-# Author:: Jeff Pace <jeugenepace@gmail.com>
-# Documentation:: Author
-#
-
 require 'logue/filter'
 require 'logue/location_format'
 

@@ -1,6 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/writer'
 require 'logue/level'
 require 'logue/tc'
@@ -12,9 +9,11 @@ module Logue
       strio = StringIO.new
       writer = Writer.new output: strio
       # I think assert_same should compare by ID, not #equal?
-      assert_equal strio.object_id,     writer.output.object_id
-      assert_equal Array.new, writer.colors
-      assert_equal false,     writer.colorize_line
+      assert_all [
+                   lambda { assert_equal strio.object_id, writer.output.object_id },
+                   lambda { assert_equal Array.new, writer.colors },
+                   lambda { assert_equal false, writer.colorize_line },
+                 ]
       strio.close
     end
 
@@ -27,10 +26,10 @@ module Logue
     end
 
     param_test [
-      [ "abc def", "abc", "def" ],
-      [ "abc 123", "abc", "123" ],
-      [ "ghi def", "ghi", "def" ],
-    ].each do |exp, location, msg|
+                 ["abc def", "abc", "def"],
+                 ["abc 123", "abc", "123"],
+                 ["ghi def", "ghi", "def"],
+               ].each do |exp, location, msg|
       writer = Writer.new
       line = writer.line location, msg, Level::DEBUG
       assert_equal exp, line

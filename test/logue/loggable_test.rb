@@ -1,14 +1,9 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/loggable'
 require 'logue/tc'
 
 module Logue
   # poor man's mock
   class TestLogger
-    include ColorLog
-    
     attr_accessor :invoked
     
     def method_missing meth, *args, &blk
@@ -26,23 +21,6 @@ module Logue
   end
 
   class LoggableTest < TestCase
-    def self.colors
-      [ :black, :red, :green, :yellow, :blue, :magenta, :cyan, :white, :default ]
-    end
-
-    param_test colors do |color|
-      obj = Object.new
-      obj.extend Loggable
-      assert_respond_to obj, color
-    end
-
-    param_test colors do |color|
-      obj = Object.new
-      obj.extend Loggable
-      assert obj.methods.include? color
-      obj.send color
-    end
-
     def self.build_method_delegation_params
       without_level = [
         :debug,

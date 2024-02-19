@@ -1,6 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/location'
 require 'logue/location_format'
 require 'logue/frame'

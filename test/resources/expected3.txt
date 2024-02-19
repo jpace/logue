@@ -1,0 +1,2 @@
+[.../test/logue/exec/exec_abc.rb :   16] {ExecAbc#m_y                                  } [33mamarillo[0m: bob
+[.../test/logue/exec/exec_abc.rb :   17] {m_y                                          } [32mgreen2[0m: objabc

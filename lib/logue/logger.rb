@@ -9,7 +9,7 @@
 # Documentation:: Author
 #
 
-require 'logue/colorlog'
+require 'logue/colorable'
 require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
@@ -31,7 +31,7 @@ require 'logue/location'
 module Logue
   class Logger
     include LegacyLogger
-    include ColorLog
+    include Colorable
 
     attr_accessor :level
     attr_accessor :format

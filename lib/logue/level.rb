@@ -1,14 +1,3 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-#
-# = level.rb
-#
-# Logging Module
-#
-# Author:: Jeff Pace <jeugenepace@gmail.com>
-# Documentation:: Author
-#
-
 module Logue
   class Level
     DEBUG = 0

@@ -1,28 +1,27 @@
-#!/usr/bin/ruby -w
-# -*- ruby -*-
-
 require 'logue/filter'
 require 'logue/tc'
 
 module Logue
   class FilterTest < TestCase
     param_test [
-      [ Array.new, Array.new, Array.new ],
-      [ %w{ abc }, Array.new, Array.new, ignored_files: %w{ abc } ],
-      [ Array.new, %w{ abc }, Array.new, ignored_methods: %w{ abc } ],
-      [ Array.new, Array.new, %w{ abc }, ignored_classes: %w{ abc } ],
-    ] do |expfiles, expmethods, expclasses, *args|
+                 [Array.new, Array.new, Array.new],
+                 [%w{ abc }, Array.new, Array.new, ignored_files: %w{ abc }],
+                 [Array.new, %w{ abc }, Array.new, ignored_methods: %w{ abc }],
+                 [Array.new, Array.new, %w{ abc }, ignored_classes: %w{ abc }],
+               ] do |expfiles, expmethods, expclasses, *args|
       filter = Filter.new(*args)
-      assert_equal expfiles,   filter.ignored_files
-      assert_equal expmethods, filter.ignored_methods
-      assert_equal expclasses, filter.ignored_classes
+      assert_all [
+                   lambda { assert_equal expfiles, filter.ignored_files },
+                   lambda { assert_equal expmethods, filter.ignored_methods },
+                   lambda { assert_equal expclasses, filter.ignored_classes },
+                 ]
     end
 
     def self.build_ignore_params
       Array.new.tap do |a|
-        a << [ :log_file,   :ignore_file,   :ignored_files ]
-        a << [ :log_method, :ignore_method, :ignored_methods ]
-        a << [ :log_class,  :ignore_class,  :ignored_classes ]
+        a << [:log_file, :ignore_file, :ignored_files]
+        a << [:log_method, :ignore_method, :ignored_methods]
+        a << [:log_class, :ignore_class, :ignored_classes]
       end
     end
 
@@ -43,20 +42,20 @@ module Logue
     end
 
     def self.add_log_params ary, exp, *args
-      ary << [ exp, "fabc", "cdef", "mghi", *args ]
+      ary << [exp, "fabc", "cdef", "mghi", *args]
     end
 
     def self.build_log_params
       Array.new.tap do |a|
         add_log_params a, true
         add_log_params a, false, ignored_files: %w{ fabc }
-        add_log_params a, true,  ignored_files: %w{ fxyz }
+        add_log_params a, true, ignored_files: %w{ fxyz }
         add_log_params a, false, ignored_classes: %w{ cdef }
-        add_log_params a, true,  ignored_classes: %w{ cxyz }
+        add_log_params a, true, ignored_classes: %w{ cxyz }
         add_log_params a, false, ignored_methods: %w{ mghi }
-        add_log_params a, true,  ignored_methods: %w{ mxyz }
+        add_log_params a, true, ignored_methods: %w{ mxyz }
       end
-    end                      
+    end
 
     param_test build_log_params do |exp, fname, cls, meth, *args|
       filter = Filter.new(*args)
@@ -68,13 +67,13 @@ module Logue
       x = %w{ x }
       y = %w{ y }
       Array.new.tap do |a|
-        a << [ true,  Filter.new ]
-        a << [ true,  Filter.new(ignored_files: x),   ignored_files: x ]
-        a << [ false, Filter.new(ignored_files: x),   ignored_files: y ]
-        a << [ true,  Filter.new(ignored_classes: x), ignored_classes: x ]
-        a << [ false, Filter.new(ignored_classes: x), ignored_classes: y ]
-        a << [ true,  Filter.new(ignored_methods: x), ignored_methods: x ]
-        a << [ false, Filter.new(ignored_methods: x), ignored_methods: y ]
+        a << [true, Filter.new]
+        a << [true, Filter.new(ignored_files: x), ignored_files: x]
+        a << [false, Filter.new(ignored_files: x), ignored_files: y]
+        a << [true, Filter.new(ignored_classes: x), ignored_classes: x]
+        a << [false, Filter.new(ignored_classes: x), ignored_classes: y]
+        a << [true, Filter.new(ignored_methods: x), ignored_methods: x]
+        a << [false, Filter.new(ignored_methods: x), ignored_methods: y]
       end
     end
 
