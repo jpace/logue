@@ -1,0 +1,1 @@
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary: ["this", "is", "a", "test"] (#:4)

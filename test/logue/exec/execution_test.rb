@@ -89,5 +89,29 @@ module Logue
 
       assert_arrays_equal expected, result
     end
+
+    def test_array
+      expected = resource_lines "expected_m_z_array.txt"
+      puts "expected:"
+      puts expected
+
+      output = StringIO.new
+
+      Logue::Log.verbose = true
+      Logue::Log.set_widths(-32, 5, -45)
+      Logue::Log.level = Logue::Level::DEBUG
+      Logue::Log.output = output
+
+      obj = ExecAbc.new
+      obj.m_z
+
+      output.close
+
+      puts "result:"
+      result = output.string.split("\n")
+      puts result
+
+      assert_arrays_equal expected, result
+    end
   end
 end

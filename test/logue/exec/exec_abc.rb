@@ -16,4 +16,9 @@ class ExecAbc
     yellow "amarillo", "bob"
     Logue::Log.green "green2", "objabc"
   end
+
+  def m_z
+    ary = %w{ this is a test }
+    info "ary", ary
+  end
 end

@@ -46,8 +46,10 @@ module Logue
     end
 
     [:stack, :log].each do |methname|
-      define_method methname do |msg = '', obj = nil, level = Level::DEBUG, &blk|
-        logger.send methname, msg, obj, level: level, classname: self.class.to_s, &blk
+      # level as positional and named arguments, for compatibility backward and with logger
+      define_method methname do |msg = '', obj = nil, lvl = nil, level: nil, &blk|
+        lvalue = level || lvl || Level::DEBUG
+        logger.send methname, msg, obj, level: lvalue, classname: self.class.to_s, &blk
       end
     end
 

@@ -34,20 +34,10 @@ module Logue
 
     def add_color_method color, code
       eigenclass = class << self; self; end
-      # compatability issue between Logger and Loggable, re: level: argument
-      if self.kind_of? Logue::Logger
-        eigenclass.class_eval do
-          define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
-            colmsg = "\e[#{code}m#{msg}\e[0m"
-            log colmsg, obj, level: level, &blk
-          end
-        end
-      else
-        eigenclass.class_eval do
-          define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
-            colmsg = "\e[#{code}m#{msg}\e[0m"
-            log colmsg, obj, level, &blk
-          end
+      eigenclass.class_eval do
+        define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
+          colmsg = "\e[#{code}m#{msg}\e[0m"
+          log colmsg, obj, level: level, &blk
         end
       end
     end

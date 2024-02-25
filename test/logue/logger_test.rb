@@ -18,7 +18,7 @@ module Logue
     end
 
     def test_init
-      logger = self.class.create_logger
+      logger = Logger.new
       assert_all [
                    lambda { assert_equal Level::WARN, logger.level },
                    lambda { assert_equal $stdout, logger.output },
@@ -29,18 +29,18 @@ module Logue
     end
 
     def test_respond_to
-      logger = self.class.create_logger
+      logger = Logger.new
       assert_all [
                    lambda { assert_equal true, logger.respond_to?(:blue) },
                    lambda { assert_equal false, logger.respond_to?(:no_such_color) },
-      ]
+                 ]
     end
 
     param_test [
                  [1, 2, 3, 1, 2, 3],
                  [4, 5, 6, 4, 5, 6],
                ] do |expfile, expline, expmethod, *args|
-      logger = self.class.create_logger
+      logger = Logger.new
       logger.set_widths(*args)
       format = logger.format
       assert_all [
@@ -70,7 +70,7 @@ module Logue
                  [Level::FATAL, false],
                  [Level::DEBUG, true],
                ] do |exp, value|
-      logger = self.class.create_logger
+      logger = Logger.new
       logger.verbose = value
       assert_equal exp, logger.level
     end
@@ -82,7 +82,7 @@ module Logue
                  [false, Level::INFO],
                  [true, Level::DEBUG],
                ] do |exp, value|
-      logger = self.class.create_logger
+      logger = Logger.new
       logger.level = value
       assert_equal exp, logger.verbose
     end
@@ -91,7 +91,7 @@ module Logue
                  [Level::WARN, true],
                  [Level::DEBUG, false],
                ] do |exp, value|
-      logger = self.class.create_logger
+      logger = Logger.new
       logger.quiet = value
       assert_equal exp, logger.level
     end

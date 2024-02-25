@@ -2,6 +2,8 @@ require 'logue/pathutil'
 require 'logue/tc'
 
 class Logue::PathUtilTestCase < Logue::TestCase
+  include Logue
+
   param_test [
                ["abcd", 4],
                ["abc", 3],
@@ -11,7 +13,7 @@ class Logue::PathUtilTestCase < Logue::TestCase
                ["", 0],
                ["", -4],
              ] do |exp, len|
-    result = Logue::PathUtil.trim_left "abcdef", len
+    result = PathUtil.trim_left "abcdef", len
     assert_equal exp, result
   end
 
@@ -28,7 +30,7 @@ class Logue::PathUtilTestCase < Logue::TestCase
                ["ef.t", 2],
                ["", -2],
              ] do |exp, len|
-    result = Logue::PathUtil.trim_right "ab/cd/ef.t", len
+    result = PathUtil.trim_right "ab/cd/ef.t", len
     assert_equal exp, result
   end
 end

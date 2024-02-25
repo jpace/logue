@@ -5,7 +5,7 @@ module Logue
   # poor man's mock
   class TestLogger
     attr_accessor :invoked
-    
+
     def method_missing meth, *args, &blk
       @invoked = { name: meth, args: args }
     end
@@ -15,7 +15,7 @@ module Logue
     end
 
     # added explicitly, since :warn is a (private) method on all objects
-    def warn *args
+    def warn * args
       @invoked = { name: :warn, args: args }
     end
   end
@@ -30,16 +30,16 @@ module Logue
         :warn,
         :write,
       ].collect do |methname|
-        [ [ "m1", nil, classname: "Object" ], methname, [ "m1" ] ]
-        [ [ "m1", "o1", classname: "Object" ], methname, [ "m1", "o1" ] ]
+        [["m1", nil, classname: "Object"], methname, ["m1"]]
+        [["m1", "o1", classname: "Object"], methname, ["m1", "o1"]]
       end
 
       with_level = [
         :log,
         :stack,
       ].collect do |methname|
-        [ [ "m1", nil, classname: "Object", level: Level::DEBUG ], methname, [ "m1" ] ]
-        [ [ "m1", "o1", classname: "Object", level: Level::DEBUG ], methname, [ "m1", "o1" ] ]
+        [["m1", nil, classname: "Object", level: Level::DEBUG], methname, ["m1"]]
+        [["m1", "o1", classname: "Object", level: Level::DEBUG], methname, ["m1", "o1"]]
       end
 
       without_level + with_level
@@ -50,7 +50,7 @@ module Logue
       obj.extend Loggable
       lgr = obj.logger = TestLogger.new
       assert_not_same obj.logger, Logue::Log::logger
-      
+
       lgr.invoked = nil
       obj.send methname, *args
       invoked = lgr.invoked
@@ -60,30 +60,30 @@ module Logue
     end
 
     param_test [
-        :debug,
-        :error,
-        :fatal,
-        :info,
-        :warn,
-        :write,
-        :log,
-        :stack,
-    ].collect do |methname|
+                 :debug,
+                 :error,
+                 :fatal,
+                 :info,
+                 :warn,
+                 :write,
+                 :log,
+                 :stack,
+               ].collect do |methname|
       obj = Object.new
       obj.extend Loggable
       assert obj.methods.include?(methname)
-    end    
+    end
 
     param_test [
-        :debug,
-        :error,
-        :fatal,
-        :info,
-        :warn,
-        :write,
-        :log,
-        :stack,
-    ].collect do |methname|
+                 :debug,
+                 :error,
+                 :fatal,
+                 :info,
+                 :warn,
+                 :write,
+                 :log,
+                 :stack,
+               ].collect do |methname|
       obj = Object.new
       obj.extend Loggable
       assert obj.method methname
