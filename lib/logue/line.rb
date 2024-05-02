@@ -1,37 +1,41 @@
-require 'logue/location_format'
 require 'logue/element'
-require 'stringio'
 
 module Logue
+  class LineFactory
+    def create msg, obj, &blk
+      if blk
+        LineBlock.new blk
+      else
+        Line.new msg, obj
+      end
+    end
+  end
+
   class Line
-    attr_reader :location
     attr_reader :msg
     attr_reader :obj
-    attr_reader :block
-    
-    def initialize location, msg, obj = nil, &blk
-      @location = location
+
+    def initialize msg, obj = nil
       @msg = msg
       @obj = obj
-      @block = blk
     end
 
     def message_string
-      if @block
-        @block.call.to_s
-      elsif @obj
-        elmt = Element.new @obj
-        @msg.to_s + ": " + elmt.lines
+      if @obj
+        @msg.to_s + ": " + @obj.to_s
       else
         @msg.to_s
       end
     end
+  end
 
-    def format locformat
-      str = @location.format locformat
-      str << " "
-      str << message_string
-      str
+  class LineBlock
+    def initialize blk
+      @blk = blk
+    end
+
+    def message_string
+      @blk.call.to_s
     end
   end
 end

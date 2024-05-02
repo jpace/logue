@@ -1,4 +1,5 @@
 require 'logue/location_format'
+require 'logue/location'
 require 'logue/tc'
 
 class Logue::LocationFormatTest < Logue::TestCase
@@ -21,11 +22,13 @@ class Logue::LocationFormatTest < Logue::TestCase
       a << ["[/srv/dir/abc.t           :   1] {block (2 levels) in }", "/srv/dir/abc.t", 1, nil, "block (2 levels) in one"]
       a << ["[/srv/dir/abc.t           :   1] {c123#m456           }", "/srv/dir/abc.t", 1, "c123", "m456"]
       a << ["[/srv/dir/abc.t           :   1] {m456                }", "/srv/dir/abc.t", 1, nil, "m456"]
+      a << ["[/srv/dir/abc.t           :   1] {m456                }", "/srv/dir/abc.t", 1, nil, "m456"]
     end
   end
 
   param_test build_format_params do |expected, path, line, cls, func|
-    result = LocationFormat.new.format path, line, cls, func
+    arg = Location.new path, line, cls, func
+    result = LocationFormat.new.format_location arg
     assert_equal expected, result
   end
 

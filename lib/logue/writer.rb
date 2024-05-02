@@ -1,3 +1,5 @@
+require 'logue/line'
+
 module Logue
   class Writer
     attr_accessor :output
@@ -11,22 +13,21 @@ module Logue
     end
 
     def print lstr, lvl
-      str = @colors[lvl] ? lstr.color(lvlcol) : lstr
+      str = @colors[lvl] ? lstr.color(lvl) : lstr
       @output.puts str
     end
 
-    def line location, msg, lvl
-      lvlcol = @colors[lvl]
-      if lvlcol
-        if @colorize_line
-          line = location + " " + msg
-          line.color lvlcol
-        else
-          location + " " + msg.color(lvlcol)
-        end
-      else
-        location + " " + msg
-      end
+    def write_msg_obj location, msg, obj, level, &blk
+      factory = LineFactory.new
+      line = factory.create msg, obj, &blk
+      linestr = line.message_string
+      lstr = location + " " + linestr
+      print lstr, level
+    end
+
+    def write location, str, level
+      lstr = location + " " + str
+      print lstr, level
     end
   end
 end

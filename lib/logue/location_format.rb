@@ -25,6 +25,10 @@ module Logue
       sprintf format_string, path, line, name
     end
 
+    def format_location location
+      format location.path, location.line, location.cls, location.method
+    end
+
     def format_string
       "[%#{@file}s:%#{@line}d] {%#{@method}s}"
     end

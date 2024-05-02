@@ -21,4 +21,8 @@ class ExecAbc
     ary = %w{ this is a test }
     info "ary", ary
   end
+
+  def m_w arg
+    info { "arg is: #{arg}" }
+  end
 end

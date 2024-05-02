@@ -42,7 +42,7 @@ require 'logue/colorable'
 module Logue
   module Loggable
     def logger
-      @logger ||= Log.logger
+      @logger || Log.logger
     end
 
     [:stack, :log].each do |methname|

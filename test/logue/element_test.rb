@@ -1,27 +1,26 @@
 require 'logue/element'
 require 'logue/tc'
-require 'stringio'
 
 module Logue
   class ElementTest < TestCase
     def test_init
       obj = "xyz"
-      lo = Element.new obj
+      lo = Element.new obj, nil
       assert_same obj, lo.object
     end
 
     def test_lines_scalar
       arg = "xyz"
-      obj = Element.new arg
+      obj = Element.new arg, nil
       result = obj.lines
       assert_equal 'xyz', result
     end
 
     def test_lines_enumerable
       ary = %w{ this is a test }
-      obj = Element.new ary
+      obj = Element.new ary, nil
       result = obj.lines
-      assert_equal '["this", "is", "a", "test"] (#:4)', result
+      assert_equal '["this", "is", "a", "test"]', result
     end
   end
 end

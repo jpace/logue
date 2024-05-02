@@ -25,6 +25,25 @@ module Logue
       end
     end
 
+    def assert_lines expected, actual
+      if String === actual
+        actual = actual.split("\n")
+      end
+      lambdas = Array.new
+      lambdas << lambda { assert_equal expected.size, actual.size }
+      num = [ expected.size, actual.size ].max
+      (0...num).each do |idx|
+        exp = expected[idx]
+        act = actual[idx]
+        if Regexp === exp
+          lambdas << lambda { assert_match exp, act, "index: #{idx}" }
+        else
+          lambdas << lambda { assert_equal exp, act, "index: #{idx}" }
+        end
+      end
+      assert_all lambdas
+    end
+
     def resource_file name
       pn = Pathname.new __FILE__
       PathnameUtil.upto(pn, "test") + "resources/#{name}"

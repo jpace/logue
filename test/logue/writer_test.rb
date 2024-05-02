@@ -1,10 +1,16 @@
+require 'logue/location'
 require 'logue/writer'
 require 'logue/level'
+require 'logue/frame'
 require 'logue/tc'
 require 'stringio'
 
 module Logue
   class WriterTest < TestCase
+    def self.example_frame
+      Frame.new path: "/path/a/b/c", method: "labc", line: 3
+    end
+
     def test_init
       strio = StringIO.new
       writer = Writer.new output: strio
@@ -25,14 +31,30 @@ module Logue
       assert_equal "hdrabc msgdef\n", strio.string
     end
 
-    param_test [
-                 ["abc def", "abc", "def"],
-                 ["abc 123", "abc", "123"],
-                 ["ghi def", "ghi", "def"],
-               ].each do |exp, location, msg|
-      writer = Writer.new
-      line = writer.line location, msg, Level::DEBUG
-      assert_equal exp, line
+    def test_write
+      expected = "[/path/a/b/c              :   3] {abc#labc            } 123\n"
+      strio = StringIO.new
+      writer = Writer.new output: strio
+      frame = self.class.example_frame
+      location = Location.new frame.path, frame.line, "abc", frame.method
+      locfmt = LocationFormat.new
+      locstr = locfmt.format_location location
+      writer.write locstr, "123", Level::DEBUG
+      strio.close
+      assert_equal expected, strio.string
+    end
+
+    def test_write_msg_obj
+      expected = "[/path/a/b/c              :   3] {abc#labc            } m1: obj2\n"
+      strio = StringIO.new
+      writer = Writer.new output: strio
+      frame = self.class.example_frame
+      location = Location.new frame.path, frame.line, "abc", frame.method
+      locfmt = LocationFormat.new
+      locstr = locfmt.format_location location
+      writer.write_msg_obj locstr, "m1", "obj2", Level::DEBUG
+      strio.close
+      assert_equal expected, strio.string
     end
   end
 end

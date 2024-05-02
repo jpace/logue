@@ -1,4 +1,5 @@
 require 'logue/logger'
+require 'stringio'
 require 'logue/tc'
 
 module Logue

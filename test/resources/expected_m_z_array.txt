@@ -1,1 +1,5 @@
-[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary: ["this", "is", "a", "test"] (#:4)
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary.#: 4
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary[0]: this
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary[1]: is
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary[2]: a
+[.../test/logue/exec/exec_abc.rb :   22] {ExecAbc#m_z                                  } ary[3]: test

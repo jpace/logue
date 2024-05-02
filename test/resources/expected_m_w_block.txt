@@ -1,0 +1,1 @@
+[.../test/logue/exec/exec_abc.rb :   26] {ExecAbc#m_w                                  } arg is: xyz

@@ -1,16 +1,30 @@
 require 'logue/logger'
 require 'logue/exec/exec_abc'
+require 'logue/writer2'
 require 'logue/tc'
+require 'stringio'
 
 module Logue
   class ExecutionTest < TestCase
-    def assert_arrays_equal expected, result
-      lambdas = Array.new
-      lambdas << lambda { assert_equal expected.length, result.length }
-      (0...[expected.length, result.length].max).each do |lnum|
-        lambdas << lambda { assert_equal expected[lnum], result[lnum], "line: #{lnum}" }
+    def run_exec_test level, writer = nil, &blk
+      output = StringIO.new
+      Logue::Log.verbose = true
+      Logue::Log.set_widths(-32, 5, -45)
+      Logue::Log.level = level
+      # need to replace the logger before changing the output
+      if writer
+        Logue::Log.logger.writer = writer
       end
-      assert_all lambdas
+      Logue::Log.output = output
+
+      blk.call
+      output.close
+      result = output.string.split("\n")
+
+      puts "result:"
+      puts result
+
+      result
     end
 
     def test_info
@@ -18,23 +32,12 @@ module Logue
       puts "expected:"
       puts expected
 
-      output = StringIO.new
+      result = run_exec_test(Logue::Level::INFO, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_x
+      end
 
-      Logue::Log.verbose = true
-      Logue::Log.set_widths(-32, 5, -45)
-      Logue::Log.level = Logue::Level::INFO
-      Logue::Log.output = output
-
-      obj = ExecAbc.new
-      obj.m_x
-
-      output.close
-
-      puts "result:"
-      result = output.string.split("\n")
-      puts result
-
-      assert_arrays_equal expected, result
+      assert_lines expected, result
     end
 
     def test_debug_colors
@@ -42,28 +45,12 @@ module Logue
       puts "expected:"
       puts expected
 
-      output = StringIO.new
-
-      Logue::Log.verbose = true
-      Logue::Log.set_widths(-32, 5, -45)
-      Logue::Log.level = Logue::Level::DEBUG
-      Logue::Log.output = output
-
-      obj = ExecAbc.new
-      obj.m_x
-
-      output.close
-
-      puts "result:"
-      result = output.string.split("\n")
-      puts result
-
-      lambdas = Array.new
-      lambdas << lambda { assert_equal expected.length, result.length }
-      (0...[expected.length, result.length].max).each do |lnum|
-        lambdas << lambda { assert_equal expected[lnum], result[lnum], "line: #{lnum}" }
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_x
       end
-      assert_all lambdas
+
+      assert_lines expected, result
     end
 
     def test_color_log
@@ -71,23 +58,12 @@ module Logue
       puts "expected:"
       puts expected
 
-      output = StringIO.new
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_y
+      end
 
-      Logue::Log.verbose = true
-      Logue::Log.set_widths(-32, 5, -45)
-      Logue::Log.level = Logue::Level::DEBUG
-      Logue::Log.output = output
-
-      obj = ExecAbc.new
-      obj.m_y
-
-      output.close
-
-      puts "result:"
-      result = output.string.split("\n")
-      puts result
-
-      assert_arrays_equal expected, result
+      assert_lines expected, result
     end
 
     def test_array
@@ -95,23 +71,38 @@ module Logue
       puts "expected:"
       puts expected
 
-      output = StringIO.new
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer2.new) do
+        obj = ExecAbc.new
+        obj.m_z
+      end
 
-      Logue::Log.verbose = true
-      Logue::Log.set_widths(-32, 5, -45)
-      Logue::Log.level = Logue::Level::DEBUG
-      Logue::Log.output = output
+      assert_lines expected, result
+    end
 
-      obj = ExecAbc.new
-      obj.m_z
+    def test_block
+      expected = resource_lines "expected_m_w_block.txt"
+      puts "expected:"
+      puts expected
 
-      output.close
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_w "xyz"
+      end
 
-      puts "result:"
-      result = output.string.split("\n")
-      puts result
+      assert_lines expected, result
+    end
 
-      assert_arrays_equal expected, result
+    def test_array_legacy
+      expected = resource_lines "expected_m_z_array_legacy.txt"
+      puts "expected:"
+      puts expected
+
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_z
+      end
+
+      assert_lines expected, result
     end
   end
 end

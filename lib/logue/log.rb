@@ -10,6 +10,7 @@
 #
 
 require 'logue/logger'
+require 'logue/writer'
 
 #
 # == Log
@@ -46,13 +47,25 @@ require 'logue/logger'
 
 module Logue
   class Log
-    # by default, class methods delegate to a single app-wide log.
+    def self.reset
+      @logger = Logger.new writer: Writer.new
+    end
 
-    @logger = Logger.new
+    reset
+
+    # by default, class methods delegate to a single app-wide log.
 
     # Returns the app-wide logger of the log.
     def self.logger
       @logger
+    end
+
+    def self.logger= logger
+      @logger = logger
+    end
+
+    def self.write_it msg = ""
+      puts "(Log) #{msg} - logger: #{@logger.object_id} #{@logger.writer.class}"
     end
 
     def self.accessors methname
