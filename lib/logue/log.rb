@@ -64,74 +64,16 @@ module Logue
       @logger = logger
     end
 
-    def self.write_it msg = ""
-      puts "(Log) #{msg} - logger: #{@logger.object_id} #{@logger.writer.class}"
-    end
-
-    def self.accessors methname
-      [methname.to_sym, (methname.to_s + "=").to_sym]
-    end
-
-    def self.logger_methods
-      @logger_delegated ||= Array.new.tap do |ary|
-        acc_methods = [
-          :colorize_line,
-          :format,
-          :level,
-          :outfile,
-          :output,
-          :quiet,
-          :verbose,
-        ]
-        ary.concat acc_methods.inject(Array.new) { |a, m| a.concat accessors(m) }
-        read_methods = [
-          :ignore_class,
-          :ignore_file,
-          :ignore_method,
-          :log_class,
-          :log_file,
-          :log_method,
-          :set_color,
-          :set_default_widths,
-          :set_widths,
-        ]
-        ary.concat read_methods
-        logging_methods = [
-          :debug,
-          :error,
-          :fatal,
-          :info,
-          :log,
-          :stack,
-          :warn,
-          :write,
-        ]
-        ary.concat logging_methods
-      end
-    end
-
-    def self.logger_delegated? meth
-      self.logger_methods.include? meth
-    end
-
     def self.methods all = true
-      super + self.logger_methods + colors
-    end
-
-    def self.has_color? color
-      colors.include? color
+      super + logger.methods + colors
     end
 
     def self.colors
       logger.valid_colors.keys
     end
 
-    def self.delegated? meth
-      logger_delegated?(meth) || has_color?(meth)
-    end
-
     def self.method_missing meth, *args, &blk
-      if delegated? meth
+      if logger.respond_to? meth
         logger.send meth, *args, &blk
       else
         super

@@ -1,4 +1,4 @@
-require 'logue/pathutil'
+require 'logue/format/pathutil'
 require 'logue/tc'
 
 class Logue::PathUtilTestCase < Logue::TestCase

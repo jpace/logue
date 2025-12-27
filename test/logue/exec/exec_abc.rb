@@ -17,12 +17,16 @@ class ExecAbc
     Logue::Log.green "green2", "objabc"
   end
 
-  def m_z
+  def m_writes_array
     ary = %w{ this is a test }
     info "ary", ary
   end
 
-  def m_w arg
+  def m_writes_msg_block arg
+    info("mabc") { "arg is: #{arg}" }
+  end
+
+  def m_writes_block arg
     info { "arg is: #{arg}" }
   end
 end

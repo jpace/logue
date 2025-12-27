@@ -1,4 +1,4 @@
-require 'logue/pathutil'
+require 'logue/format/pathutil'
 
 module Logue
   class LocationFormat

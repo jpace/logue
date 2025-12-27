@@ -44,7 +44,7 @@ module Logue
         :colorize_line,
         :format,
         :level,
-        :outfile,
+        :outfile=,
         :output,
         :quiet,
         :verbose,
@@ -80,8 +80,8 @@ module Logue
 
     param_test build_method_params do |exp, methname|
       assert_all [
-                   lambda { assert_equal exp, Log.methods.include?(methname) },
-                   lambda { assert_equal exp, Log.respond_to?(methname) },
+                   lambda { assert_equal exp, Log.methods.include?(methname), "methname: #{methname}" },
+                   lambda { assert_equal exp, Log.respond_to?(methname), "methname: #{methname}" },
                  ]
     end
   end

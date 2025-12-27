@@ -12,10 +12,7 @@ module Logue
       writer = ElementWriter.new strio, locstr
       blk.call writer
       strio.close
-      result = strio.string
-      puts "result:"
-      puts result
-      result
+      strio.string
     end
 
     def test_write_scalar

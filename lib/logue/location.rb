@@ -1,4 +1,4 @@
-require 'logue/location_format'
+require 'logue/format/location_format'
 
 module Logue
   class Location

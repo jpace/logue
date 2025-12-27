@@ -1,5 +1,4 @@
 require 'logue/frame'
-require 'logue/location_format'
 require 'logue/tc'
 
 module Logue

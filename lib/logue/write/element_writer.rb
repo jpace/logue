@@ -36,5 +36,10 @@ module Logue
       element = BlockElement.new self, &blk
       element.write_element msg, current
     end
+
+    def write_block current = Array.new, &blk
+      element = BlockElement.new self, &blk
+      element.write_element msg, current
+    end
   end
 end

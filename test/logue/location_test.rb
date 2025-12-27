@@ -1,5 +1,5 @@
 require 'logue/location'
-require 'logue/location_format'
+require 'logue/format/location_format'
 require 'logue/frame'
 require 'logue/tc'
 

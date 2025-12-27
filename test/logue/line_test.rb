@@ -1,6 +1,5 @@
 require 'logue/line'
 require 'logue/location'
-require 'logue/location_format'
 require 'logue/tc'
 
 class Logue::LineTest < Logue::TestCase
