@@ -1,6 +1,7 @@
 require 'rainbow/x11_color_names'
 require 'rainbow/color'
 require 'logue/level'
+require 'logue/dynamic'
 
 #
 # == ColorLog
@@ -14,6 +15,8 @@ require 'logue/level'
 
 module Logue
   module Colorable
+    include Dynamic
+
     def method_missing meth, *args, &blk
       code = valid_colors[meth]
       if code
@@ -30,16 +33,6 @@ module Logue
 
     def methods all = true
       super + valid_colors.keys
-    end
-
-    def add_color_method color, code
-      eigenclass = class << self; self; end
-      eigenclass.class_eval do
-        define_method color do |msg = '', obj = nil, level = Level::DEBUG, &blk|
-          colmsg = "\e[#{code}m#{msg}\e[0m"
-          log colmsg, obj, level: level, &blk
-        end
-      end
     end
 
     def valid_colors

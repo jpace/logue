@@ -47,6 +47,8 @@ require 'logue/writer'
 
 module Logue
   class Log
+    extend Dynamic
+
     def self.reset
       @logger = Logger.new writer: Writer.new
     end
@@ -74,18 +76,28 @@ module Logue
 
     def self.method_missing meth, *args, &blk
       if logger.respond_to? meth
-        logger.send meth, *args, &blk
+        if blk
+          add_class_method meth do |*args1, &blk1|
+            @logger.send meth, *args1, blk1
+          end
+          @logger.send meth, *args, &blk
+        else
+          add_class_method meth do |*args1|
+            @logger.send meth, *args1
+          end
+          @logger.send meth, *args
+        end
       else
         super
       end
     end
 
     def self.respond_to? meth
-      methods.include? meth
+      super || methods.include?(meth)
     end
 
     def self.respond_to_missing? * args
-      methods.include? args.first
+      super || methods.include?(args.first)
     end
   end
 end

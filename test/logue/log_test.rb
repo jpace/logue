@@ -12,8 +12,10 @@ module Logue
       logger = Log.logger
       values.each do |value|
         Log.send wrmeth, value
-        assert_equal value, logger.send(methname)
-        assert_equal value, Log.send(methname)
+        result1 = logger.send methname
+        result2 = Log.send methname
+        assert_equal value, result1, "methname: #{methname}"
+        assert_equal value, result2, "methname: #{methname}"
       end
     end
 

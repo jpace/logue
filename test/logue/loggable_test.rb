@@ -1,8 +1,6 @@
 require 'logue/loggable'
 require 'logue/tc'
 
-$VERBOSE = true
-
 module Logue
   # poor man's mock
   class TestLogger
