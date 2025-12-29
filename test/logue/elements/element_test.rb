@@ -1,4 +1,4 @@
-require 'logue/element'
+require 'logue/elements/element'
 require 'logue/tc'
 
 module Logue

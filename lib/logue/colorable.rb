@@ -1,7 +1,7 @@
 require 'rainbow/x11_color_names'
 require 'rainbow/color'
 require 'logue/level'
-require 'logue/dynamic'
+require 'logue/core/dynamic'
 
 #
 # == ColorLog

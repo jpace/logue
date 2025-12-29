@@ -1,5 +1,5 @@
 require 'logue/writer'
-require 'logue/element'
+require 'logue/elements/element'
 
 module Logue
   class ElementWriter
@@ -17,7 +17,7 @@ module Logue
       if obj && current.include?(obj.object_id)
         write_msg_obj msg, obj.object_id.to_s + " (recursed)"
       elsif String === obj
-        write "#{msg}: #{obj}"
+        write_1 msg, obj
       elsif obj.nil? || obj == :none
         write msg.to_s
       else
@@ -27,17 +27,20 @@ module Logue
           newlist << obj.object_id
           element.write_element msg, newlist
         else
-          write "#{msg}: #{obj}"
+          write_1 msg, obj
         end
       end
     end
 
-    def write_msg_block msg, current = Array.new, &blk
-      element = BlockElement.new self, &blk
-      element.write_element msg, current
+    def write_1 msg, obj
+      if msg == ObjectUtil::NONE
+        write "#{obj}"
+      else
+        write "#{msg}: #{obj}"
+      end
     end
 
-    def write_block current = Array.new, &blk
+    def write_msg_block msg, current = Array.new, &blk
       element = BlockElement.new self, &blk
       element.write_element msg, current
     end

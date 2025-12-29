@@ -12,6 +12,7 @@
 require 'logue/logger'
 require 'logue/log'
 require 'logue/colorable'
+require 'logue/core/object_util'
 
 #
 # == Loggable
@@ -47,14 +48,14 @@ module Logue
 
     [:stack, :log].each do |methname|
       # level as positional and named arguments, for compatibility backward and with logger
-      define_method methname do |msg = '', obj = nil, lvl = nil, level: nil, &blk|
+      define_method methname do |msg = ObjectUtil::NONE, obj = nil, lvl = nil, level: nil, &blk|
         lvalue = level || lvl || Level::DEBUG
         logger.send methname, msg, obj, level: lvalue, classname: self.class.to_s, &blk
       end
     end
 
     [:debug, :info, :warn, :error, :fatal, :write].each do |methname|
-      define_method methname do |msg = '', obj = nil, &blk|
+      define_method methname do |msg = ObjectUtil::NONE, obj = nil, &blk|
         logger.send methname, msg, obj, classname: self.class.to_s, &blk
       end
     end

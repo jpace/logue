@@ -11,12 +11,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="bundler (v2.1.4, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="paramesan (v0.1.1, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="power_assert (v2.0.3, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.0.0, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rake (v10.5.0, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="test-unit (v3.6.1, RVM: ruby-2.4.10 [global]) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v2.1.4, RVM: ruby-2.4.10) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="paramesan (v0.1.1, RVM: ruby-2.4.10) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="power_assert (v3.0.1, RVM: ruby-2.4.10) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rainbow (v3.0.0, RVM: ruby-2.4.10) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v13.0.6, RVM: ruby-2.4.10) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="test-unit (v3.6.1, RVM: ruby-2.4.10) [gem]" level="application" />
   </component>
   <component name="RModuleSettingsStorage">
     <LOAD_PATH number="2" string0="$MODULE_DIR$" string1="$MODULE_DIR$/test" />

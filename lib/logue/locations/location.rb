@@ -8,9 +8,9 @@ module Logue
     attr_reader :method
     
     def initialize path, line, cls, method
-      @path   = path
-      @line   = line
-      @cls    = cls
+      @path = path
+      @line = line
+      @cls = cls
       @method = method
     end
 

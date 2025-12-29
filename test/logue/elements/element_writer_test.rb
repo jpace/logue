@@ -1,4 +1,4 @@
-require 'logue/write/element_writer'
+require 'logue/elements/element_writer'
 require 'logue/level'
 require 'logue/tc'
 require 'stringio'

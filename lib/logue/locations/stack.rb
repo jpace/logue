@@ -1,4 +1,4 @@
-require 'logue/frame'
+require 'logue/locations/frame'
 
 module Logue
   class Stack

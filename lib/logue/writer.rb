@@ -25,6 +25,13 @@ module Logue
       print lstr, level
     end
 
+    def write_block location, level, &blk
+      line = LineBlock.new blk
+      linestr = line.message_string
+      lstr = location + " " + linestr
+      print lstr, level
+    end
+
     def write location, str, level
       lstr = location + " " + str
       print lstr, level

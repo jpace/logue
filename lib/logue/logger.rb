@@ -13,9 +13,10 @@ require 'logue/colorable'
 require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
-require 'logue/stack'
+require 'logue/locations/stack'
 require 'logue/line'
-require 'logue/location'
+require 'logue/locations/location'
+require 'logue/core/object_util'
 
 #
 # == Logger
@@ -64,7 +65,7 @@ module Logue
       @writer = writer
     end
 
-    def quiet
+    def quiet?
       @level >= Level::WARN
     end
 
@@ -85,41 +86,23 @@ module Logue
       @format = LocationFormat.new file: file, line: line, method: method
     end
 
-    def debug msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::DEBUG, classname: classname, &blk
-    end
-
-    def info msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::INFO, classname: classname, &blk
-    end
-
-    def warn msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::WARN, classname: classname, &blk
-    end
-
-    def error msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::ERROR, classname: classname, &blk
-    end
-
-    def fatal msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::FATAL, classname: classname, &blk
-    end
-
-    def write msg = "", obj = nil, classname: nil, &blk
-      log msg, obj, level: Level::WARN, classname: classname, &blk
+    { :debug => Level::DEBUG, :info => Level::INFO, :warn => Level::WARN, :error => Level::ERROR, :fatal => Level::FATAL, :write => Level::WARN }.each do |methname, level|
+      define_method methname do |msg = ObjectUtil::NONE, obj = nil, classname: nil, &blk|
+        log msg, obj, level: level, classname: classname, &blk
+      end
     end
 
     # Logs the given message.
-    def log msg = "", obj = nil, level: Level::DEBUG, classname: nil, &blk
+    def log msg = ObjectUtil::NONE, obj = ObjectUtil::NONE, level: Level::DEBUG, classname: nil, &blk
       log_frames msg, obj, classname: classname, level: level, nframes: 0, &blk
     end
 
-    # Shows the current stack.
-    def stack msg = "", obj = nil, level: Level::DEBUG, classname: nil, &blk
+    # Writes the current stack, from where this method was invoked.
+    def stack msg = ObjectUtil::NONE, obj = ObjectUtil::NONE, level: Level::DEBUG, classname: nil, &blk
       log_frames msg, obj, classname: classname, level: level, nframes: -1, &blk
     end
 
-    def log_frames msg, obj = nil, classname: nil, level: nil, nframes: -1, &blk
+    def log_frames msg, obj = ObjectUtil::NONE, classname: nil, level: nil, nframes: -1, &blk
       if level >= @level
         stack = Stack.new
         stack.filtered[0..nframes].each do |frame|
@@ -140,7 +123,13 @@ module Logue
     def print_frame frame, msg, obj, classname: nil, level: nil, &blk
       location = Location.new frame.path, frame.line, classname, frame.method
       locstr = @format.format_location location
-      @writer.write_msg_obj locstr, msg, obj, level, &blk
+      if msg == ObjectUtil::NONE
+        @writer.write_block locstr, level, &blk
+      elsif blk
+        @writer.write_msg_obj locstr, msg, obj, level, &blk
+      else
+        @writer.write_msg_obj locstr, msg, obj, level
+      end
     end
   end
 end

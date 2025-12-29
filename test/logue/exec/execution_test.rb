@@ -73,7 +73,7 @@ module Logue
 
     def test_block
       expected = %Q{
-       [.../test/logue/exec/exec_abc.rb :   30] {ExecAbc#m_writes_block                       } : arg is: xyz
+       [.../test/logue/exec/exec_abc.rb :   30] {ExecAbc#m_writes_block                       } arg is: xyz
       }.strip.split("\n").map(&:strip)
       result = run_exec_test(Logue::Level::DEBUG, Logue::Writer2.new) do
         obj = ExecAbc.new

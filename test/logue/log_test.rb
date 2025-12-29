@@ -48,7 +48,7 @@ module Logue
         :level,
         :outfile=,
         :output,
-        :quiet,
+        :quiet?,
         :verbose,
         :ignore_class,
         :ignore_file,

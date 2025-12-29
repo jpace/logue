@@ -60,7 +60,7 @@ module Logue
                ] do |exp, level|
       logger = self.class.create_logger
       logger.level = level
-      assert_equal exp, logger.quiet
+      assert_equal exp, logger.quiet?
     end
 
     param_test [

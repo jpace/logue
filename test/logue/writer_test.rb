@@ -1,7 +1,7 @@
-require 'logue/location'
+require 'logue/locations/location'
 require 'logue/writer'
 require 'logue/level'
-require 'logue/frame'
+require 'logue/locations/frame'
 require 'logue/tc'
 require 'stringio'
 

@@ -1,5 +1,5 @@
 require 'logue/format/location_format'
-require 'logue/location'
+require 'logue/locations/location'
 require 'logue/tc'
 
 class Logue::LocationFormatTest < Logue::TestCase

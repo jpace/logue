@@ -1,9 +1,9 @@
+# warnings from teamcity/testrunner_events, so turn them off:
+$VERBOSE = false
+
 require 'logue/pathname_util'
 require 'test/unit'
 require 'paramesan'
-
-# warnings from teamcity/testrunner_events, so turn them off:
-$VERBOSE = false
 
 module Logue
   class TestCase < Test::Unit::TestCase

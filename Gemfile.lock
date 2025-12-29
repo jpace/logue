@@ -7,9 +7,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     paramesan (0.1.1)
-    power_assert (2.0.3)
+    power_assert (3.0.1)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (13.0.6)
     test-unit (3.6.1)
       power_assert
 
@@ -17,12 +17,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (>= 1.16)
+  bundler (>= 2.0)
   logue!
   paramesan (~> 0.1.1)
   rainbow (~> 3.0.0)
-  rake (~> 10.0)
-  test-unit (~> 3.1)
+  rake (~> 13.0.1)
+  test-unit (= 3.6.1)
 
 BUNDLED WITH
    2.1.4

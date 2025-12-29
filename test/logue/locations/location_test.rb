@@ -1,6 +1,6 @@
-require 'logue/location'
+require 'logue/locations/location'
 require 'logue/format/location_format'
-require 'logue/frame'
+require 'logue/locations/frame'
 require 'logue/tc'
 
 module Logue
