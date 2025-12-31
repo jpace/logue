@@ -1,4 +1,5 @@
 require 'logue/elements/element_writer'
+require 'logue/elements/verbose_element'
 require 'logue/level'
 require 'logue/tc'
 require 'stringio'

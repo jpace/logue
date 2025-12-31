@@ -1,5 +1,6 @@
 require 'logue/core/base_writer'
 require 'logue/elements/element_writer'
+require 'logue/elements/block_element'
 require 'logue/core/object_util'
 
 module Logue
