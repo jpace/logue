@@ -4,8 +4,8 @@ module Logue
   class LocationFormat
     module Defaults
       FILENAME = -25
-      LINE     =   4
-      METHOD   = -20
+      LINE = 4
+      METHOD = -20
     end
 
     attr_accessor :file
@@ -13,8 +13,8 @@ module Logue
     attr_accessor :method
 
     def initialize file: Defaults::FILENAME, line: Defaults::LINE, method: Defaults::METHOD
-      @file   = file
-      @line   = line
+      @file = file
+      @line = line
       @method = method
     end
 

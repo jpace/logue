@@ -2,6 +2,8 @@ require 'logue/locations/frame'
 
 module Logue
   class Stack
+    FILTER_RE = Regexp.new 'logue.*/lib/logue'
+
     attr_reader :frames
     
     def initialize depth: 2
@@ -14,8 +16,7 @@ module Logue
     end
 
     def filtered
-      re = Regexp.new 'logue.*/lib/logue'
-      logframe = @frames.rindex { |frm| frm.path.index re }
+      logframe = @frames.rindex { |frm| frm.path.index FILTER_RE }
       @frames[logframe + 1 .. -1]
     end
   end

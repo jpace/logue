@@ -1,5 +1,6 @@
-require 'logue/writer'
+require 'logue/core/base_writer'
 require 'logue/elements/element'
+require 'logue/core/object_util'
 
 module Logue
   class ElementWriter

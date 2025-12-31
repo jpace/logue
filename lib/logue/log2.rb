@@ -10,7 +10,7 @@
 #
 
 require 'logue/log'
-require 'logue/writer2'
+require 'logue/elements/element_log'
 
 #
 # == Log2
@@ -22,14 +22,6 @@ require 'logue/writer2'
 #
 
 module Logue
-  class Log2 < Log
-    def self.reset
-      # We're setting Log.@logger, used therein, not Log2.@logger, which
-      # wouldn't be. This is preferable to using class variables.
-      logger = Logger.new writer: Writer2.new
-      Log.instance_variable_set :@logger, logger
-    end
-
-    reset
+  class Log2 < ElementLog
   end
 end

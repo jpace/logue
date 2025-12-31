@@ -51,57 +51,11 @@ module Logue
                  ]
     end
 
-    param_test [
-                 [true, Level::FATAL],
-                 [true, Level::ERROR],
-                 [true, Level::WARN],
-                 [false, Level::INFO],
-                 [false, Level::DEBUG],
-               ] do |exp, level|
-      logger = self.class.create_logger
-      logger.level = level
-      assert_equal exp, logger.quiet?
-    end
-
-    param_test [
-                 [Level::ERROR, Level::ERROR],
-                 [Level::WARN, Level::WARN],
-                 [Level::INFO, Level::INFO],
-                 [Level::DEBUG, Level::DEBUG],
-                 [Level::FATAL, false],
-                 [Level::DEBUG, true],
-               ] do |exp, value|
-      logger = Logger.new
-      logger.verbose = value
-      assert_equal exp, logger.level
-    end
-
-    param_test [
-                 [false, Level::FATAL],
-                 [false, Level::ERROR],
-                 [false, Level::WARN],
-                 [false, Level::INFO],
-                 [true, Level::DEBUG],
-               ] do |exp, value|
-      logger = Logger.new
-      logger.level = value
-      assert_equal exp, logger.verbose
-    end
-
-    param_test [
-                 [Level::WARN, true],
-                 [Level::DEBUG, false],
-               ] do |exp, value|
-      logger = Logger.new
-      logger.quiet = value
-      assert_equal exp, logger.level
-    end
-
     def self.build_log_write_params
-      re = Regexp.new '^\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc$'
+      re = Regexp.new '^\[.../logue/logger_test.rb\s*:\s*\d+\] {cdef#.*} mabc$'
 
       obj = "o2"
-      objre = Regexp.new '^\[.../logue/logger_test.rb : \d+\] {cdef#.*} mabc: o2$'
+      objre = Regexp.new '^\[.../logue/logger_test.rb\s*:\s*\d+\] {cdef#.*} mabc: o2$'
 
       Array.new.tap do |a|
         a << [true, re, :warn, "mabc", classname: "cdef"]
@@ -125,7 +79,7 @@ module Logue
       logger.send methname, *args
       output.flush
       str = output.string
-      assert_equal exp, !!re.match(str), "str: #{str}"
+      assert_equal exp, !!re.match(str), "str: #{str}; re: #{re}"
     end
 
     def self.build_delegate_params

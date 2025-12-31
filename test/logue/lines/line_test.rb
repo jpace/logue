@@ -1,4 +1,4 @@
-require 'logue/line'
+require 'logue/lines/line'
 require 'logue/tc'
 
 class Logue::LineTest < Logue::TestCase

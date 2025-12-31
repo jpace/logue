@@ -14,7 +14,7 @@ module Logue
       blocks.each do |blk|
         begin
           blk.call
-        rescue Test::Unit::AssertionFailedError => err
+        rescue => err
           errors << [err, blk]
         end
       end
