@@ -29,4 +29,8 @@ class ExecAbc
   def m_writes_block arg
     info { "arg is: #{arg}" }
   end
+
+  def m_writes_stack
+    stack "param1", "value1"
+  end
 end

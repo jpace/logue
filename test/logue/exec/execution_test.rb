@@ -103,5 +103,19 @@ module Logue
       end
       assert_lines expected, result
     end
+
+    def test_stack
+      expected = %Q{
+        [.../test/logue/exec/exec_abc.rb :   34] {ExecAbc#m_writes_stack                       } param1: value1
+        [.../logue/exec/execution_test.rb:  116] {block in test_stack                          }
+        [.../logue/exec/execution_test.rb:   20] {run_exec_test                                }
+        [.../logue/exec/execution_test.rb:  114] {test_stack                                   }
+      }.strip.split("\n").map(&:strip)
+      result = run_exec_test(Logue::Level::DEBUG, Logue::Writer.new) do
+        obj = ExecAbc.new
+        obj.m_writes_stack
+      end
+      assert_lines expected, result[0, expected.size].map(&:strip)
+    end
   end
 end

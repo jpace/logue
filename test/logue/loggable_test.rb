@@ -59,31 +59,24 @@ module Logue
       assert_equal exp, invoked[:args]
     end
 
-    param_test [
-                 :debug,
-                 :error,
-                 :fatal,
-                 :info,
-                 :warn,
-                 :write,
-                 :log,
-                 :stack,
-               ].collect do |methname|
+    DYNAMIC_METHODS = [
+      :debug,
+      :error,
+      :fatal,
+      :info,
+      :warn,
+      :write,
+      :log,
+      :stack,
+    ]
+
+    param_test DYNAMIC_METHODS.collect do |methname|
       obj = Object.new
       obj.extend Loggable
       assert obj.methods.include?(methname)
     end
 
-    param_test [
-                 :debug,
-                 :error,
-                 :fatal,
-                 :info,
-                 :warn,
-                 :write,
-                 :log,
-                 :stack,
-               ].collect do |methname|
+    param_test DYNAMIC_METHODS.collect do |methname|
       obj = Object.new
       obj.extend Loggable
       assert obj.method methname
