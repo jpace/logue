@@ -17,8 +17,8 @@ module Logue
 
     def write_block location, level, &blk
       writer = ElementWriter.new @output, location
-      element = BlockElement.new writer, &blk
-      element.write_element ObjectUtil::NONE, Array.new
+      element = BlockElement.new ObjectUtil::NONE, writer, &blk
+      element.write_element Array.new
     end
   end
 end

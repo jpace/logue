@@ -48,5 +48,24 @@ module Logue
       strio.close
       assert_equal expected, strio.string
     end
+
+    def test_write_array_hash
+      expected = "loc1 ary.#: 2\n" +
+        "loc1 ary[0][this]: is\n" +
+        "loc1 ary[0][a]: test\n" +
+        "loc1 ary[1][so]: too\n" +
+        "loc1 ary[1][is]: this\n"
+      strio = StringIO.new
+      writer = Writer2.new output: strio
+      locstr = "loc1"
+      msg = "ary"
+      obj = Array.new
+      obj << { this: 'is', a: 'test'}
+      obj << { so: 'too', is: 'this'}
+      level = Level::DEBUG
+      writer.write_msg_obj locstr, msg, obj, level
+      strio.close
+      assert_equal expected, strio.string
+    end
   end
 end

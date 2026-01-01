@@ -4,13 +4,13 @@ require 'logue/core/object_util'
 
 module Logue
   class ElementWriter
-    def initialize output, prefix = ""
+    def initialize output, location = ""
       @output = output
-      @prefix = prefix
+      @location = location
     end
 
     def write str
-      lstr = @prefix + " " + str
+      lstr = @location + " " + str
       @output.puts lstr
     end
 
@@ -42,8 +42,8 @@ module Logue
     end
 
     def write_msg_block msg, current = Array.new, &blk
-      element = BlockElement.new self, &blk
-      element.write_element msg, current
+      element = BlockElement.new msg, self, &blk
+      element.write_element current
     end
   end
 end

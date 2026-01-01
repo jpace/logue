@@ -13,9 +13,5 @@ module Logue
       @cls = cls
       @method = method
     end
-
-    def format locformat
-      locformat.format @path, @line, @cls, @method
-    end
   end
 end

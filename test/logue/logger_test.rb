@@ -24,7 +24,7 @@ module Logue
                    lambda { assert_equal Level::WARN, logger.level },
                    lambda { assert_equal $stdout, logger.output },
                    lambda { assert_equal false, logger.colorize_line },
-                   lambda { assert_equal Filter.new, logger.filter },
+                   lambda { assert_empty logger.filter.files },
                    lambda { assert_equal false, logger.verbose },
                  ]
     end

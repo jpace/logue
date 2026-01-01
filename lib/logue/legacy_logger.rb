@@ -8,27 +8,27 @@ module Logue
     end
 
     def ignore_file fname
-      filter.ignore_file fname
+      filter.files << fname
     end
     
     def ignore_method methname
-      filter.ignore_method methname
+      filter.methods << methname
     end
     
     def ignore_class classname
-      filter.ignore_class classname
+      filter.classes << classname
     end
 
     def log_file fname
-      filter.log_file fname
+      filter.files.delete fname
     end
     
     def log_method methname
-      filter.log_method methname
+      filter.methods.delete methname
     end
     
     def log_class classname
-      filter.log_class classname
+      filter.classes.delete classname
     end
 
     def output
