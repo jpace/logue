@@ -86,7 +86,7 @@ module Logue
       if msg == ObjectUtil::NONE && blk
         @writer.write_block locstr, level, &blk
       elsif blk
-        @writer.write_msg_obj locstr, msg, obj, level, &blk
+        @writer.write_msg_blk locstr, msg, level, &blk
       else
         @writer.write_msg_obj locstr, msg, obj, level
       end

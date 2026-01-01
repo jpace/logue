@@ -21,11 +21,10 @@ module Logue
       writer = Writer2.new output: strio
       locstr = "loc1"
       msg = ""
-      obj = nil
       level = Level::DEBUG
       x = 17
       blk = Proc.new { "x: #{x}" }
-      writer.write_msg_obj locstr, msg, obj, level, &blk
+      writer.write_msg_blk locstr, msg, level, &blk
       strio.close
       assert_equal expected, strio.string
     end
@@ -40,11 +39,10 @@ module Logue
       writer = Writer2.new output: strio
       locstr = "loc1"
       msg = ""
-      obj = nil
       level = Level::DEBUG
       x = %w{ this is a test }
       blk = Proc.new { x }
-      writer.write_msg_obj locstr, msg, obj, level, &blk
+      writer.write_msg_blk locstr, msg, level, &blk
       strio.close
       assert_equal expected, strio.string
     end

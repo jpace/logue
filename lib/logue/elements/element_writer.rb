@@ -40,10 +40,5 @@ module Logue
         write "#{msg}: #{obj}"
       end
     end
-
-    def write_msg_block msg, current = Array.new, &blk
-      element = BlockElement.new msg, self, &blk
-      element.write_element current
-    end
   end
 end

@@ -11,8 +11,6 @@ module Logue
     def to_element obj, writer
       case obj
       when Element
-        # in case this was created/called with a different writer, or nil
-        obj.writer = writer
         obj
       when Struct
         StructElement.new obj, writer

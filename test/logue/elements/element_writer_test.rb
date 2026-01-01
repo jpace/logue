@@ -143,7 +143,7 @@ module Logue
         a << "loc1 m1.@ary[2]: trois"
       end
       result = run_writer_test do |writer|
-        arg = VerboseElement.new obj, writer: writer
+        arg = VerboseElement.new obj, writer
         writer.write_msg_obj "m1", arg
       end
       assert_lines expected, result

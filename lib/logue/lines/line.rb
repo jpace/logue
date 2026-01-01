@@ -5,6 +5,9 @@ module Logue
     def create msg, obj, &blk
       if blk
         LineBlock.new blk
+        if msg
+          LineMsgBlock.new msg, blk
+        end
       else
         Line.new msg, obj
       end
@@ -36,6 +39,17 @@ module Logue
 
     def message_string
       @blk.call.to_s
+    end
+  end
+
+  class LineMsgBlock
+    def initialize msg, blk
+      @msg = msg
+      @blk = blk
+    end
+
+    def message_string
+      @msg.to_s + ": " + @blk.call.to_s
     end
   end
 end

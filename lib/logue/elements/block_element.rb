@@ -1,9 +1,9 @@
-require 'logue/elements/element'
+require 'logue/elements/base_element'
 
 module Logue
-  class BlockElement < Element
+  class BlockElement < BaseElement
     def initialize msg, writer, &blk
-      super nil, writer
+      super writer
       @msg = msg
       @blk = blk
     end

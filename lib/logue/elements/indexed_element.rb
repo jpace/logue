@@ -6,11 +6,9 @@ module Logue
       if @object.respond_to? :size
         write_msg_object "#{msg}.#", @object.size, current
       end
-      index = 0
-      @object.each do |value|
+      @object.each_with_index do |value, index|
         newmsg = "#{msg}[#{index}]"
         write_msg_object newmsg, value, current
-        index += 1
       end
     end
   end

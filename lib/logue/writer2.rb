@@ -5,14 +5,18 @@ require 'logue/core/object_util'
 
 module Logue
   class Writer2 < BaseWriter
-    def write_msg_obj location, msg, obj, level, &blk
+    def write_msg_obj location, msg, obj, level
       # we're not using the level, which at this point only is for colorizing output
       writer = ElementWriter.new @output, location
-      if blk
-        writer.write_msg_block msg, &blk
-      else
-        writer.write_msg_obj msg, obj
-      end
+      writer.write_msg_obj msg, obj
+    end
+
+    def write_msg_blk location, msg, level, &blk
+      # we're not using the level, which at this point only is for colorizing output
+      current = Array.new
+      writer = ElementWriter.new @output, location
+      element = BlockElement.new msg, writer, &blk
+      element.write_element current
     end
 
     def write_block location, level, &blk
