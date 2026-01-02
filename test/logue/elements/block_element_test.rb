@@ -1,35 +1,38 @@
 require 'logue/elements/block_element'
-require 'logue/elements/element_writer'
+require 'logue/fixture/element_test_util'
 require 'logue/tc'
-require 'stringio'
+
 
 module Logue
   class BlockElementTest < TestCase
+    include ElementTestUtil
+
     def test_write_scalar_with_message
-      io = StringIO.new
-      writer = ElementWriter.new io
-      element = BlockElement.new("mabc", writer) { "abc-def" }
-      element.write_element Array.new
-      result = io.string
-      assert_equal " mabc: abc-def\n", result
+      run_write_test(" mabc: abc-def\n") do |lines|
+        element = BlockElement.new("mabc", lines) { "abc-def" }
+        element.write_element Array.new
+      end
     end
 
     def test_write_scalar_no_message
-      io = StringIO.new
-      writer = ElementWriter.new io
-      element = BlockElement.new(ObjectUtil::NONE, writer) { "abc-def" }
-      element.write_element Array.new
-      result = io.string
-      assert_equal " abc-def\n", result
+      run_write_test(" abc-def\n") do |lines|
+        element = BlockElement.new(ObjectUtil::NONE, lines) { "abc-def" }
+        element.write_element Array.new
+      end
     end
 
     def test_write_array
-      io = StringIO.new
-      writer = ElementWriter.new io
-      element = BlockElement.new("mabc", writer) { %w{ this is a test } }
-      element.write_element Array.new
-      result = io.string
-      assert_equal " mabc.#: 4\n mabc[0]: this\n mabc[1]: is\n mabc[2]: a\n mabc[3]: test\n", result
+      expected = %Q{
+ mabc.#: 4
+ mabc[0]: this
+ mabc[1]: is
+ mabc[2]: a
+ mabc[3]: test
+      }
+      run_write_test(expected) do |lines|
+        element = BlockElement.new("mabc", lines) { %w{ this is a test } }
+        element.write_element Array.new
+      end
     end
   end
 end

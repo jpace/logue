@@ -3,7 +3,7 @@ require 'logue/elements/element_factory'
 require 'logue/core/object_util'
 
 module Logue
-  class ElementWriter
+  class ElementLines
     def initialize output, location = ""
       @output = output
       @location = location
@@ -14,9 +14,9 @@ module Logue
       @output.puts lstr
     end
 
-    def write_msg_obj msg, obj, current = Array.new
+    def add_msg_obj msg, obj, current = Array.new
       if obj && current.include?(obj.object_id)
-        write_msg_obj msg, obj.object_id.to_s + " (recursed)"
+        add_msg_obj msg, obj.object_id.to_s + " (recursed)"
       elsif String === obj
         write_1 msg, obj
       elsif obj.nil? || obj == :none

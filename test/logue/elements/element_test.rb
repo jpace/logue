@@ -1,5 +1,5 @@
 require 'logue/elements/element'
-require 'logue/elements/element_writer'
+require 'logue/elements/element_lines'
 require 'logue/tc'
 
 module Logue

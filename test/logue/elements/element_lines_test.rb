@@ -1,4 +1,4 @@
-require 'logue/elements/element_writer'
+require 'logue/elements/element_lines'
 require 'logue/elements/verbose_element'
 require 'logue/level'
 require 'logue/tc'
@@ -6,12 +6,12 @@ require 'stringio'
 require 'bigdecimal'
 
 module Logue
-  class ElementWriterTest < TestCase
-    def run_writer_test &blk
+  class ElementLinesTest < TestCase
+    def run_lines_test &blk
       strio = StringIO.new
       locstr = "loc1"
-      writer = ElementWriter.new strio, locstr
-      blk.call writer
+      lines = ElementLines.new strio, locstr
+      blk.call lines
       strio.close
       strio.string
     end
@@ -20,8 +20,8 @@ module Logue
       expected = Array.new.tap do |a|
         a << "loc1 m1: obj2"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", "obj2"
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", "obj2"
       end
       assert_lines expected, result
     end
@@ -35,8 +35,8 @@ module Logue
         a << "loc1 m1[2]: a"
         a << "loc1 m1[3]: test"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -56,8 +56,8 @@ module Logue
         a << "loc1 m1[1][1]: mno"
         a << "loc1 m1[1][2]: pqr"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -69,8 +69,8 @@ module Logue
         a << "loc1 m1[second]: two"
         a << "loc1 m1[third]: iii"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -82,8 +82,8 @@ module Logue
         a << "loc1 m1[x]: 14"
         a << "loc1 m1[y]: abc"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -101,8 +101,8 @@ module Logue
         ary << "loc1 m1[2][0]: one"
         ary << Regexp.new('loc1 m1\[2\]\[1\]: \d+ \(recursed\)')
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -112,8 +112,8 @@ module Logue
       expected = Array.new.tap do |a|
         a << "loc1 m1"
       end
-      result = run_writer_test do |writer|
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end
@@ -133,7 +133,7 @@ module Logue
       obj = Xyz.new 3.166
       expected = Array.new.tap do |a|
         a << "loc1 m1: verbose"
-        a << "loc1 m1.class: Logue::ElementWriterTest::Xyz"
+        a << "loc1 m1.class: Logue::ElementLinesTest::Xyz"
         a << Regexp.new('loc1 m1.id: \d+')
         a << "loc1 m1: value: 3.166"
         a << "loc1 m1.@val: 3.166"
@@ -142,9 +142,9 @@ module Logue
         a << "loc1 m1.@ary[1][two]: dos"
         a << "loc1 m1.@ary[2]: trois"
       end
-      result = run_writer_test do |writer|
-        arg = VerboseElement.new obj, writer
-        writer.write_msg_obj "m1", arg
+      result = run_lines_test do |it|
+        arg = VerboseElement.new obj, it
+        it.add_msg_obj "m1", arg
       end
       assert_lines expected, result
     end

@@ -17,7 +17,7 @@ module Logue
       when Hash
         HashElement.new obj, writer
       when Enumerable
-        IndexedEnumerableElement.new obj, writer
+        IndexedElement.new obj, writer
       else
         nil
       end

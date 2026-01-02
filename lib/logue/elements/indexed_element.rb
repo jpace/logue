@@ -1,7 +1,7 @@
 require 'logue/elements/enum_element'
 
 module Logue
-  class IndexedEnumerableElement < EnumerableElement
+  class IndexedElement < EnumerableElement
     def write_element msg, current
       if @object.respond_to? :size
         write_msg_object "#{msg}.#", @object.size, current
