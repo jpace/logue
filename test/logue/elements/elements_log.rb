@@ -1,15 +1,13 @@
-require 'logue/log'
-require 'logue/log2'
-require 'logue/logger'
+require 'logue/elements/elements_log'
 require 'stringio'
 require 'logue/tc'
 
 module Logue
-  class Log2Test < TestCase
+  class ElementsLog < TestCase
     def test_complex
-      basere = '^\[.../logue/log2_test.rb\s*:\s*\d+\] \{test_complex\s*\}'
+      basere = '^\[.../elements_log_test.rb\s*:\s*\d+\] \{test_complex\s*\}'
       output = StringIO.new
-      Log2.reset
+      ElementsLog.reset
       writer = Log.logger.writer
       writer.output = output
       Log.warn "mabc", %w{this is a test}

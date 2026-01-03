@@ -1,6 +1,5 @@
-require 'logue/lines/line_writer'
+require 'logue/lines/lines_writer'
 
 module Logue
-  class Writer < LineWriter
-  end
+  Writer = LinesWriter
 end

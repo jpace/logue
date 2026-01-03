@@ -1,4 +1,5 @@
-require 'logue/lines/line'
+require 'logue/lines/line_msg_obj'
+require 'logue/lines/line_block'
 require 'logue/tc'
 
 module Logue
@@ -12,7 +13,7 @@ module Logue
     end
 
     param_test build_line_params do |expmsg, msg, obj = nil|
-      line = Line.new msg, obj
+      line = LineMsgObj.new msg, obj
       result = line.message_string
       assert_equal expmsg, result
     end

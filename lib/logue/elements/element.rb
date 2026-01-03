@@ -4,8 +4,9 @@ module Logue
   class Element < BaseElement
     attr_reader :object
 
-    def initialize object, writer
-      super writer
+    def initialize msg, object, context, writer
+      super context, writer
+      @msg = msg
       @object = object
     end
   end

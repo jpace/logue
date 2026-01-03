@@ -9,15 +9,15 @@ module Logue
 
     def test_write_scalar_with_message
       run_write_test(" mabc: abc-def\n") do |lines|
-        element = BlockElement.new("mabc", lines) { "abc-def" }
-        element.write_element Array.new
+        element = BlockElement.new("mabc", Array.new, lines) { "abc-def" }
+        element.write_element
       end
     end
 
     def test_write_scalar_no_message
       run_write_test(" abc-def\n") do |lines|
-        element = BlockElement.new(ObjectUtil::NONE, lines) { "abc-def" }
-        element.write_element Array.new
+        element = BlockElement.new(ObjectUtil::NONE, Array.new, lines) { "abc-def" }
+        element.write_element
       end
     end
 
@@ -30,8 +30,8 @@ module Logue
  mabc[3]: test
       }
       run_write_test(expected) do |lines|
-        element = BlockElement.new("mabc", lines) { %w{ this is a test } }
-        element.write_element Array.new
+        element = BlockElement.new("mabc", Array.new, lines) { %w{ this is a test } }
+        element.write_element
       end
     end
   end

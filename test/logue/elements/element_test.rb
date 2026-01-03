@@ -5,8 +5,9 @@ require 'logue/tc'
 module Logue
   class ElementTest < TestCase
     def test_init
-      obj = "xyz"
-      lo = Element.new obj, nil
+      msg = "mabc"
+      obj = "vxyz"
+      lo = Element.new msg, obj, Array.new, nil
       assert_same obj, lo.object
     end
   end

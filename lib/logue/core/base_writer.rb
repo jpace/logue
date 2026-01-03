@@ -1,5 +1,3 @@
-require 'logue/lines/line'
-
 module Logue
   class BaseWriter
     attr_accessor :output

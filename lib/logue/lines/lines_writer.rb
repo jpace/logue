@@ -1,10 +1,12 @@
-require 'logue/lines/line'
+require 'logue/lines/line_msg_block'
+require 'logue/lines/line_block'
+require 'logue/lines/line_msg_obj'
 require 'logue/core/base_writer'
 
 module Logue
-  class LineWriter < BaseWriter
+  class LinesWriter < BaseWriter
     def write_msg_obj location, msg, obj, level
-      line = Line.new msg, obj
+      line = LineMsgObj.new msg, obj
       write_line location, line, level
     end
 

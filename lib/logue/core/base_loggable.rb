@@ -12,7 +12,6 @@
 require 'logue/logger'
 require 'logue/log'
 require 'logue/core/object_util'
-require 'logue/core/base_loggable'
 
 #
 # == Loggable
@@ -41,15 +40,19 @@ require 'logue/core/base_loggable'
 #
 
 module Logue
-  module Loggable
-    include BaseLoggable
-
-    def logger
-      @logger ||= Log.logger
+  module BaseLoggable
+    [:stack, :log].each do |methname|
+      # level as positional and named arguments, for compatibility backward and with logger
+      define_method methname do |msg = ObjectUtil::NONE, obj = nil, lvl = nil, level: nil, &blk|
+        lvalue = level || lvl || Level::DEBUG
+        logger.send methname, msg, obj, level: lvalue, classname: self.class.to_s, &blk
+      end
     end
 
-    def logger= logger
-      @logger = logger
+    [:debug, :info, :warn, :error, :fatal, :write].each do |methname|
+      define_method methname do |msg = ObjectUtil::NONE, obj = nil, &blk|
+        logger.send methname, msg, obj, classname: self.class.to_s, &blk
+      end
     end
   end
 end

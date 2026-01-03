@@ -14,7 +14,6 @@ require 'logue/writer'
 require 'logue/filter'
 require 'logue/legacy_logger'
 require 'logue/locations/stack'
-require 'logue/lines/line'
 require 'logue/locations/location'
 require 'logue/core/object_util'
 require 'logue/levels/level_logger'
@@ -39,7 +38,7 @@ module Logue
     attr_accessor :filter
     attr_accessor :writer
 
-    def initialize format: LocationFormat.new, level: Level::WARN, filter: Filter.new, writer: Writer.new
+    def initialize format: LocationFormat.new, level: Level::WARN, filter: Filter.new, writer: ElementsWriter.new
       reset format: format, level: level, filter: filter, writer: writer
     end
 

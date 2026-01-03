@@ -2,15 +2,15 @@ require 'logue/elements/base_element'
 
 module Logue
   class BlockElement < BaseElement
-    def initialize msg, writer, &blk
-      super writer
+    def initialize msg, context, writer, &blk
+      super context, writer
       @msg = msg
       @blk = blk
     end
 
-    def write_element current
+    def write_element
       obj = @blk.call
-      write_msg_object @msg, obj, current
+      write_msg_object @msg, obj
     end
   end
 end
