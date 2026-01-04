@@ -5,6 +5,7 @@ require 'logue/elements/hash_element'
 require 'logue/elements/struct_element'
 require 'logue/elements/indexed_element'
 require 'logue/elements/msg_element'
+require 'logue/core/object_util'
 
 module Logue
   class ElementFactory
@@ -38,7 +39,8 @@ module Logue
     end
 
     def to_msg_element msg, obj, context
-      if obj == ObjectUtil::NONE || obj.nil? || obj == :none
+      # avoid using == on obj:
+      if obj.nil? || (obj.instance_of?(Object) && obj == ObjectUtil::NONE) || (obj.instance_of?(Symbol) && obj == :none)
         MsgElement.new msg, context, @writer
       else
         MsgObjElement.new msg, obj, context, @writer
