@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logue (1.0.19)
+    logue (1.1.0)
 
 GEM
   remote: https://rubygems.org/
